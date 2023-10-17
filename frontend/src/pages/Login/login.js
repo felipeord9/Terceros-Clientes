@@ -4,6 +4,8 @@ import './login.css';
 import useUser from '../../hooks/useUser';
 import * as Bs from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import { Fade } from "react-awesome-reveal";
+
 
 export default function Login() {
   const {login,isLoginLoading,hasLoginError,isLogged}=useUser()
@@ -27,7 +29,9 @@ export default function Login() {
     <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto " style={{userSelect:'none'}}>
       <div className='rounder-4'>
       <div className='login-wrapper p-2 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
+      <Fade cascade direction='down'>
       <img src={Logo} alt='' />
+      </Fade>
       <h1 style={{color:'black'}}><strong>Log In</strong></h1>
       <form onSubmit={handleLogin} className=''>
         <div className='input_group m-3 '>

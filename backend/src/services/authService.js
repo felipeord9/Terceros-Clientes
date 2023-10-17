@@ -53,8 +53,8 @@ const sendRecovery = async (email) => {
   const mail = {
     from: config.smtpEmail,
     to: user.email,
-    subject: 'Email para recuperar contraseña',
-    html: `<b>Ingresa aquí para recuperar la contraseña:  ${config.recoveryUrl}/${token}</b>`
+    subject: 'Email de recuperación de contraseña',
+    html: `<b>Ingresa aquí para recuperar su contraseña:  ${config.recoveryUrl}/${token}</b>`
   }
 
   const rta = await MailService.sendEmails(mail)

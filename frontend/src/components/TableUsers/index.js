@@ -10,7 +10,7 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
       name: "Identificación",
       selector: (row) => row.rowId,
       sortable: true,
-      width: '150px',
+      width: '120px',
     },
     {
       id: "name",

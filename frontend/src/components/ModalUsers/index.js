@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Swal from 'sweetalert2'
 import { createUser, updateUser } from "../../services/userService";
+import * as Bs from "react-icons/bs";
 
 export default function ModalUsers({
   user,
@@ -89,7 +90,8 @@ export default function ModalUsers({
       role: "",
     })
   }
-
+  const [shown,setShown]=useState("");
+  const switchShown =()=>setShown(!shown);
   return (
     <div className="wrapper d-flex justify-content-center align-content-center">
     <Modal show={showModal} style={{ fontSize: 18 }} centered>
@@ -159,18 +161,19 @@ export default function ModalUsers({
               </div>
               {!user && (
                 <div>
-                  <label className="fw-bold">Contraseña</label>
+                  <label className="fw-bold" for='password'>Contraseña</label>
                   <input
                     id="password"
+                    /* type={shown ? 'text':'password'} */
                     type="text"
                     value={info.password}
                     className="form-control form-control-sm"
                     minLength={8}
                     onChange={handleChange}
                     autoComplete="off"
-                    required
-                  />
-                </div>
+                    required></input>
+{/*                   <span for='password' className='position-absolute' onClick={switchShown} style={{ right: 10, cursor: "pointer",fontSize:25 }}>{shown ? <Bs.BsEye/>:<Bs.BsEyeSlash/>}</span>
+ */}                </div>
               )}
             </div>
             <div className="d-flex w-100 mt-2">

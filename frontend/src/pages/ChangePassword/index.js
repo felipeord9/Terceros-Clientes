@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import * as Bs from "react-icons/bs";
 import InputPassword from "../../components/InputPassword";
 import { changePassword } from "../../services/authService";
+import { Fade } from "react-awesome-reveal";
 
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -54,8 +55,12 @@ export default function ChangePassword() {
     <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto ">
       <div className='rounder-4'>
       <div className='login-wrapper p-2 shadow-lg border-light mt-5 rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
+      <Fade damping={0.5} direction="down">
       <img src={Logo} alt=''/>
-      <h1 style={{color:'black'}}><strong>Cambiar contraseña</strong></h1>
+      </Fade>
+      <Fade cascade>
+      <h2 className="mt-1" style={{color:'black'}}><strong>Cambiar contraseña</strong></h2>
+      </Fade>
       <form onSubmit={handleSubmit} className=''>
         <div className='input_group m-3 '>
         <input type={shown ? 'text':'password'} onChange={(e)=>setCurrentPassword(e.target.value)} id='current' className='input_group_input' required/>
@@ -74,7 +79,7 @@ export default function ChangePassword() {
         </div>
         <div className='align-content-center text-align-center align-items-center'>
           <center>
-          <button type="submit"><strong>Cambiar</strong></button>
+          <button type="submit"><strong>CAMBIAR</strong></button>
           </center>
         </div>
         <center>
@@ -83,7 +88,7 @@ export default function ChangePassword() {
       </form>
       <span
           className="text-center text-danger m-0"
-          style={{ fontSize: 13, height: 0 }}
+          style={{ fontSize: 15, height: 0 }}
         >
           {errorInput}
         </span>

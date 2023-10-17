@@ -7,7 +7,6 @@ import useUser from "../../hooks/useUser";
 import { NavBarData } from "./NavbarData";
 import Logo from "../../assest/item.png";
 import "./styles.css";
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -23,8 +22,22 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { AiFillEdit } from 'react-icons/ai'
+import Box from '@mui/material/Box';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  justifyContent:'center',
+  boxShadow: 24,
+  p: 4,
+  borderRadius:5
+};
 
 export default function Navbar() {
   const { isLogged, logout } = useUser();
@@ -43,7 +56,13 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const [cerrar,setCerrar]=useState(false);
+    const handleOpenCerrar=()=>{
+        setCerrar(true);
+    }
+    const handleCerrar=()=>{
+        setCerrar(false);
+    }
   return (
     <>
       {isLogged && (
@@ -77,28 +96,6 @@ export default function Navbar() {
                 style={{ cursor: "pointer",height:55, width:220 , userSelect:'none'}}
               />
             </div>
-            {/* <center>
-            <div className="d-flex flex-row">
-              <h1 className="text-danger">Tipo de solicitud:</h1>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Choose one </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={tipo}
-                  label="tipo"
-                  onChange={handleTipo}
-                >
-                <MenuItem value={10} onClick={(e)=>navigate('/contado/persona/natural')}>Persona Natural - Contado</MenuItem>
-                <MenuItem value={20}>Persona Natural - credito</MenuItem>
-                <MenuItem value={30}>Persona Juridica - Contado</MenuItem>
-                <MenuItem value={40}>Persona Juridica - credito</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-            </div>
-            </center> */}
 
             <div className="d-flex flex-row align-items-center">
               <div
@@ -169,12 +166,27 @@ export default function Navbar() {
                   Cambiar Contraseña
                   </Button>
                 </MenuItem>
-                <MenuItem onClick={(e)=>logout()} >
-                <button>
+                <MenuItem >
+                <button onClick={(e)=>logout()}>
                   <FiIcons.FiLogOut style={{width:25, height:25}}/>
                   <label className="ms-2" style={{fontSize:15}}>Cerrar sección</label>
                 </button>
-                </MenuItem>
+                {/* <Modal open={cerrar}
+                  onClose={handleCerrar}
+                  aria-labelledby="parent-modal-title"
+                  aria-describedby="parent-modal-description"
+                >  
+                <Box sx={style}>
+                <center>
+                <h2 id="parent-modal-title" className='text-danger text-align-center'>¿Está seguro que desea cerrar la sección?</h2>
+                <Button variant="contained" className='m-4' onClick={(e)=>logout()}>Yes</Button>
+                <Button variant="contained" className="m-4" color='error' onClick={handleCerrar}>No</Button> 
+                </center>        
+                </Box>
+                </Modal>   */}
+               
+                
+                  </MenuItem>
                 </center>
               </Menu>
 

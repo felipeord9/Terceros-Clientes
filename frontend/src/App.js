@@ -30,6 +30,7 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/recovery/password' element={<RecoveryPassword/>}/>
         <Route path='/send/recovery' element={<SendRecovery/>}/>
+        <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
 
         {/* <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/> */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio2}/>}/>

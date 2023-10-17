@@ -5,14 +5,14 @@ const { Op } = require('sequelize')
 
 const find = async () => {
   const users = await models.User.findAll({
-    where: {
+    /* where: {
       role: {
         [Op.not]: 'admin'
       }
     },
     attributes: {
       exclude: 'password'
-    }
+    } */
   })
   return users
 }
