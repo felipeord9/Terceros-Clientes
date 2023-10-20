@@ -1,6 +1,8 @@
+import axios from 'axios';
+
 const { config } = require('../config')
 
-const url = `${config.apiUrl2}/clasificaciones`;
+const url = `${config.apiUrl2}/clasificacion`;
 
 function getAllClasificaciones() {
   return fetch(url)

@@ -1,7 +1,7 @@
 const { models } = require('../libs/sequelize')
 
-const find = () => {
-  const clasificacion = models.clasificacion.findAll()
+const find = async() => {
+  const clasificacion = await models.clasificacion.findAll()
   return clasificacion
 }
 

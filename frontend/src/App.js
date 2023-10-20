@@ -19,6 +19,9 @@ import CreditoPersonaNatural from './pages/creditoPN';
 import CreditoPersonaJuridica from './pages/creditoPJ';
 import Users from './pages/Users';
 
+import DepaCiudad from './pages/depa-ciudad';
+
+
 function App() {
   return(
     <AuthContextProvider>
@@ -42,6 +45,8 @@ function App() {
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
         <Route path='*' element={<Page404/>}/>
         {/* <Route path='*' element={<Fondo/>}/> */}
+
+        <Route path='/depa' element={<DepaCiudad/>}/>
       </Routes>
       </div>
     </Router>
