@@ -1,29 +1,30 @@
 import { useEffect, useRef, useState, useContext } from "react";
-import ClasificacionContext from "../../context/clasifiacionContext";
+import DepartmentContext from "../../context/departamentoContext";
 import "./styles.css";
 
+
 function ComboBox({ id, options, item, setItem, invoiceType }) {
-  const { clasificacion } = useContext(ClasificacionContext);
+  const { departamento } = useContext(DepartmentContext);
   const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
   const ref = useRef();
 
   useEffect(() => {
-    if (!clasificacion) {
+    if (!departamento) {
       setInputValue("");
-      setItem(null);
+      /* setItem(null); */
     }
     if (!item) {
       ref.current.selectedIndex = 0;
     }
     setSuggestions(options);
-  }, [clasificacion, options, invoiceType]);
+  }, [departamento, options, invoiceType]);
 
   const handleChange = (e) => {
     const { value } = e.target;
     if (value !== "") {
       const filter = options?.filter((elem) =>
-        elem.clasificacion.toLowerCase().includes(value.toLowerCase())
+        elem.departamento.toLowerCase().includes(value.toLowerCase())
       );
       /* if (filter.length !== 1) {
         ref.current.selectedIndex = 0;
@@ -42,7 +43,7 @@ function ComboBox({ id, options, item, setItem, invoiceType }) {
     const { value } = e.target;
     const object = JSON.parse(value);
     setItem(object);
-    setInputValue(object.clasificacion);
+    setInputValue(object.departamento);
     setSuggestions(options);
   };
 
@@ -50,9 +51,9 @@ function ComboBox({ id, options, item, setItem, invoiceType }) {
     <div className="d-flex align-items-center position-relative w-100">
       <input
         type="search"
-        value={item ? item.clasificacion : inputValue}
+        value={item ? item.departamento : inputValue}
         className="form-control form-control-sm input-select"
-        placeholder={`Buscar por Razón Social`}
+        placeholder={`Buscar por departamento`}
         onChange={handleChange}
       />
       <select
@@ -74,7 +75,7 @@ function ComboBox({ id, options, item, setItem, invoiceType }) {
           ?.sort((a, b) => a.branch - b.branch)
           .map((elem, index) => (
             <option key={index} id={elem.id} value={JSON.stringify(elem)}>
-              {`${elem.id + ' - ' + elem.description} - ${elem.clasificacion}`}
+              {`${elem.id + ' - ' + elem.description} - ${elem.departamento}`}
             </option>
           ))}
       </select>

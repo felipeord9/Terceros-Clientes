@@ -1,8 +1,8 @@
 const { models } = require('../libs/sequelize')
 
 const find = () => {
-  const departamento = models.departamento.findAll()
-  return departamento
+  const departamentos = models.departamentos.findAll()
+  return departamentos
 }
 
 module.exports = {

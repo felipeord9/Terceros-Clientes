@@ -4,11 +4,12 @@ import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import { sendMail } from "../../services/mailService";
 import "./styles.css";
-import TextField from '@mui/material/TextField';
+/* import DepartmentContext  from "../../context/departamentoContext";
+ */import TextField from '@mui/material/TextField';
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
-import ComboBox from "../../components/comboBoxClasificacion";
-import { getAllDepartamentos } from "../../services/departamentoService";
+/* import ComboBox from "../../components/comboBoxDepartamento";
+ */import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
@@ -50,20 +51,20 @@ const ListaDepartamentos=[
 
 export default function ContadoPersonaNatural(){
   const { user, setUser } = useContext(AuthContext);
-
+/*   const {department,setDepartment}=useContext(DepartmentContext)
+ */
   /* Lista Departamento */
-  const [data,setData]=useState([]),
+  /* const [data,setData]=useState([]),
         [departamento,setDepartamento]=useState(''),
-        [ciudades,setCiudades]=useState([]);
+        [ciudades,setCiudades]=useState([]); */
 
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
   const [clasificacion,setClasificacion] = useState(null);
   const [document,setDocument]=useState(null);
-  /* const [ciudad, setCiudad] = useState(null);
-  const [departamento,setDepartamento]= useState(null); */
+  const [ciudad, setCiudad] = useState(null);
+  const [departamento,setDepartamento]= useState(null);
   
-  const [sucursal, setSucursal] = useState(null);
   const [clientes, setClientes] = useState([]);
   const [clientsPOS, setClientsPOS] = useState([]);
 
@@ -71,8 +72,8 @@ export default function ContadoPersonaNatural(){
   const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
   const [documentos,setDocumentos] = useState([]);
-  /* const [ciudades,setCiudades] = useState([]);
-  const [departamentos,setDepartamentos]=useState([]); */
+  const [ciudades,setCiudades] = useState([]);
+  const [departamentos,setDepartamentos]=useState([]);
 
   const [files, setFiles] = useState(null);
   const [productosAgr, setProductosAgr] = useState({
@@ -80,7 +81,7 @@ export default function ContadoPersonaNatural(){
     total: "0",
   });
   const [search, setSearch] = useState({
-    idCliente: "",
+    idDepartment: "",
     descCliente: "",
     deliveryDate: "",
     observations: "",
@@ -101,20 +102,20 @@ export default function ContadoPersonaNatural(){
 
   /* aqui se hace se le asigna los valores a las variables */
   useEffect(()=>{
-    setData(ListaDepartamentos);
+    /* setData(ListaDepartamentos); */
       getAllAgencies().then((data) => setAgencias(data));
       getAllClasificaciones().then((data) => setClasificaciones(data));
       getAllDocuments().then((data)=>setDocumentos(data));
-      /* getAllDepartamentos().then((data) => setDepartamentos(data));
-      getAllCiudades().then((data) => setCiudades(data)); */
+      getAllDepartamentos().then((data) => setDepartamentos(data));
+      getAllCiudades().then((data) => setCiudades(data));
   },[]);
-  useEffect(()=>{
+  /* useEffect(()=>{
     data.forEach((data) => {
       if (data.nombre === departamento) {
         setCiudades(data.ciudad);
       }
     });
-  }, [departamento]);
+  }, [departamento]); */
 
  /*  const getAllClasificaciones=()=>{
     setLoading(true)
@@ -129,13 +130,13 @@ export default function ContadoPersonaNatural(){
   } */
 
   const findById = (id, array, setItem) => {
-    const item = array.find((elem) => elem.nit === id);
+    const item = array.find((elem) => elem.id === id);
     if (item) {
       setItem(item);
     } else {
       setItem(null);
-      setSucursal(null);
-      selectBranchRef.current.selectedIndex = 0;
+      setCiudad(null);
+      selectCiudadRef.current.selectedIndex = 0;
     }
   };
 
@@ -171,12 +172,12 @@ export default function ContadoPersonaNatural(){
   const changeType = (e) => {
     setSearch({
       ...search,
-      idCliente: "",
+      idDepartment: "",
     });
     setInvoiceType(!invoiceType);
     /* setClient(null); */
-    setSucursal(null);
-    selectBranchRef.current.selectedIndex = 0;
+    setCiudad(null);
+    selectCiudadRef.current.selectedIndex = 0;
   };
 
   const handleSubmit = (e) => {
@@ -357,17 +358,24 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Departamento:</label>
+                {/* <ComboBox
+                  options={invoiceType ? departamento : null}
+                  id='department'
+                  item={department}
+                  setItem={setDepartment}
+                  invoiceType={invoiceType}/> */}
                 <select
-                    onChange={(event)=>setDepartamento(event.target.value)}
+/*                     onChange={(event)=>setDepartamento(event.target.value)}
+ */                    
+                    onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
                     ref={selectDepartamentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     required   
-/*                     onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}                 
- */                  >
+                 >
                   <option selected value='' disabled>
                     -- Seleccione el Departamento --
                   </option> 
-                  {data
+                  {/* {data
                     .map((data)=>{
                       return(
                       <option key={data.nombre} value={data.nombre}>
@@ -375,15 +383,15 @@ export default function ContadoPersonaNatural(){
                       </option>
                       );
                     })
-                  } 
-                  {/* {departamentos
-                  ?.sort((a,b)=>a.id - b.id)
+                  }  */}
+                  {departamentos
+                  .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
                     <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + ' - ' + elem.description} 
                     </option>
                   ))
-                } */}
+                }
                 </select>
                 </div>
                 <div className="d-flex flex-row w-100">
@@ -392,12 +400,12 @@ export default function ContadoPersonaNatural(){
                     ref={selectCiudadRef}
                     className="form-select form-select-sm w-100"
                     required
-/*                     onChange={(e)=>setCiudad(JSON.parse(e.target.value))}
- */                  >
+                    onChange={(e)=>setCiudad(JSON.parse(e.target.value))}
+                  >
                   <option selected value='' disabled>
                     -- Seleccione la Ciudad --
                   </option>  
-                  {ciudades.length &&
+                  {/* {ciudades.length &&
                   ciudades.map((nombre,key)=>{
                     return(
                       <option key={key} value={nombre}>
@@ -405,15 +413,15 @@ export default function ContadoPersonaNatural(){
                       </option>
                     );
                   })
-                  }
-                  {/* {ciudades.length && ciudades
+                  } */}
+                  {ciudades
                   .sort((a,b)=>a.id - b.id)
-                  .map((elem,key)=>(
-                    <option key={key} id={elem.id} value={JSON.stringify(elem)}>
+                  .map((elem)=>(
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + ' - ' + elem.description} 
                     </option>
                   ))
-                } */}
+                }
                   {/* <option>13 - Cédula de cuidadania</option> 
                   <option>22 - Cédula de Extranjería</option> 
                   <option>31 - NIT</option> 
