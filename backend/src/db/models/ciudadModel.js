@@ -4,19 +4,13 @@ const { DEPARTAMENTO_TABLE } = require('./departamentoModel')
 const CIUDAD_TABLE = 'ciudades'
 
 const CiudadSchema = {
-  departamentId:{
-    type:DataTypes.INTEGER,
-    allowNull:false,
-    field:'departament_id',
-    /* references:{
-      model:DEPARTAMENT_TABLE,
-      key:'id',
-    }, */
-    onUpdate: "CASCADE",
-    onDelete: "SET NULL",
+  id:{
+    type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
   },
-  id: {
-    type: DataTypes.INTEGER,
+  codigo: {
+    type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false
   },
@@ -28,11 +22,11 @@ const CiudadSchema = {
 
 class Ciudad extends Model {
   static associate(models) {
-/*     this.belongsTo(models.Departaments,{as:'departament'})
+    /*     this.belongsTo(models.Departaments,{as:'departament'})
  */  }
-
-  static config(sequelize) {
-    return {
+ 
+ static config(sequelize) {
+   return {
       sequelize,
       tableName: CIUDAD_TABLE,
       modelName: 'ciudades',

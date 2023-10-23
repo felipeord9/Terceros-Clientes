@@ -2,20 +2,40 @@ import { useEffect, useState, useContext, useRef } from "react";
 import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
-import { sendMail } from "../../services/mailService";
 import "./styles.css";
-import TextField from '@mui/material/TextField';
+import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
+import { getAllDepartamentos } from "../../services/departamentoService";
+import { getAllCiudades } from "../../services/ciudadService";
+import { getAllAgencies } from "../../services/agencyService";
+import { getAllClasificaciones } from "../../services/clasificacionService";
+import { getAllDocuments } from '../../services/documentService';
 
 export default function CreditoPersonaJuridica(){
-  const [Clasificacion,setClasificacion]=useState();
-    const { user, setUser } = useContext(AuthContext);
+  /* instancias de contexto */
+  const { user, setUser } = useContext(AuthContext);
+  const {department,setDepartment}=useContext(DepartmentContext)
+
+  /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
-  const [sucursal, setSucursal] = useState(null);
+  const [clasificacion,setClasificacion] = useState(null);
+  const [document,setDocument]=useState(null);
+  const [ciudad, setCiudad] = useState(null);
+  const [departamento,setDepartamento]= useState('');
+  const [city,setCity]=useState(null);
+  const [depart, setDepart]=useState('');
+  
   const [clientes, setClientes] = useState([]);
   const [clientsPOS, setClientsPOS] = useState([]);
+
+  /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
+  const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
+  const [documentos,setDocumentos] = useState([]);
+  const [ciudades,setCiudades] = useState([]);
+  const [departamentos,setDepartamentos]=useState([]);
+
   const [files, setFiles] = useState(null);
   const [productosAgr, setProductosAgr] = useState({
     agregados: [],
@@ -30,10 +50,24 @@ export default function CreditoPersonaJuridica(){
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
+
+  /* rama seleccionada de cada variable */
   const selectBranchRef = useRef();
+  const selectClasificacionRef =useRef();
+  const selectDocumentoRef=useRef();
+  const selectDepartamentoRef=useRef();
+  const selectCiudadRef=useRef();
+
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
+  useEffect(()=>{
+    getAllAgencies().then((data) => setAgencias(data));
+    getAllClasificaciones().then((data) => setClasificaciones(data));
+    getAllDocuments().then((data)=>setDocumentos(data));
+    getAllDepartamentos().then((data) => setDepartamentos(data));
+    getAllCiudades().then((data) => setCiudades(data));
+},[]);
 
   const findById = (id, array, setItem) => {
     const item = array.find((elem) => elem.nit === id);
@@ -41,7 +75,7 @@ export default function CreditoPersonaJuridica(){
       setItem(item);
     } else {
       setItem(null);
-      setSucursal(null);
+      /* setSucursal(null); */
       selectBranchRef.current.selectedIndex = 0;
     }
   };
@@ -92,10 +126,6 @@ export default function CreditoPersonaJuridica(){
       if (isConfirmed) window.location.reload();
     });
   };
-  const handleClasificacion=(e)=>{
-    e.preventDefault();
-    setClasificacion(e.target.value);
-  }
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto">
     <div className='rounder-4'>
@@ -121,26 +151,22 @@ export default function CreditoPersonaJuridica(){
                 <div className="d-flex flex-column me-4 w-100">
               <label className="fw-bold" style={{fontSize:18}}>Clasificación</label>
               <select
-                ref={selectBranchRef}
+                ref={selectClasificacionRef}
                 className="form-select form-select-sm"
-                onChange={(e) => setClasificacion()}
-                
+                onChange={(e)=>setClasificacion(JSON.parse(e.target.value))}
                 required
               >
                 <option selected value="" disabled>
                   -- Seleccione la Clasificación --
                 </option>
-                <option>Grandes Superficies</option>
-                <option>Mayoristas</option>
-                <option>Minoristas</option>
-                <option>Supermercados</option>
-                {/* {agencias
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
+                {clasificaciones
+                  .sort((a,b)=>a.id - b.id)
+                  .map((elem)=>(                    
                     <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.descripcion}
+                      {elem.id + ' - ' + elem.description} 
                     </option>
-                  ))} */}
+                  ))
+                }
               </select>
               </div>
               <div className="d-flex flex-column w-100 ">
@@ -149,12 +175,18 @@ export default function CreditoPersonaJuridica(){
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
-                
+                onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
               >
                 <option selected value='' disabled>
                   -- Seleccione la Agencia --
                 </option>
-                
+                {agencias
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
               </select>
               </div>
               </div>
@@ -163,7 +195,7 @@ export default function CreditoPersonaJuridica(){
               <input
                   id="solicitante"
                   type="text"
-                  placeholder="Nombre"
+                  placeholder="Nombre Solicitante"
                   className="form-control form-control-sm "
                   autoComplete="off"
                  required
@@ -215,41 +247,50 @@ export default function CreditoPersonaJuridica(){
               <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Departamento:</label>
-                <select
-                    ref={selectBranchRef}
+                <select                    
+                    onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
+                    ref={selectDepartamentoRef}
                     className="form-select form-select-sm m-100 me-3"
-                    required
-                    
-                  >
-                  <option selected value='' disabled>
+                    required   
+                 >
+                   <option selected value='' disabled>
                     -- Seleccione el Departamento --
-                  </option>  
-                  <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option> 
-                </select>
+                  </option>
+                      {departamentos
+                      .sort((a,b)=>a.id - b.id)
+                      .map((elem)=>(
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
+                          {elem.description} 
+                        </option>
+                      ))
+                    }
+                    </select>
                 </div>
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Ciudad:</label>
                 <select
-                    ref={selectBranchRef}
+                    ref={selectCiudadRef}
                     className="form-select form-select-sm w-100"
                     required
-                    
+                    disabled={departamento ? false : true}
+                    onChange={(e)=>setCiudad(JSON.parse(e.target.value))} 
                   >
+                    
                   <option selected value='' disabled>
                     -- Seleccione la Ciudad --
                   </option>  
-                  <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option> 
-                </select>
+                  {ciudades
+                  .sort((a,b)=>a.id - b.id)
+                  .map((elem)=>(
+                    elem.id == departamento.id ?
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                    {elem.description}
+                    </option>
+                    : 
+                    null
+                  ))
+                }
+                  </select>
                 </div>
               </div>
               <div className="d-flex flex-row mt-2 mb-2">
@@ -327,41 +368,50 @@ export default function CreditoPersonaJuridica(){
               <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Departamento:</label>
-                <select
-                    ref={selectBranchRef}
+                <select                    
+                    onChange={(e)=>setDepart(JSON.parse(e.target.value))}
+                    ref={selectDepartamentoRef}
                     className="form-select form-select-sm m-100 me-3"
-                    required
-                    
-                  >
-                  <option selected value='' disabled>
+                    required   
+                 >
+                   <option selected value='' disabled>
                     -- Seleccione el Departamento --
-                  </option>  
-                  <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option> 
-                </select>
+                  </option>
+                      {departamentos
+                      .sort((a,b)=>a.id - b.id)
+                      .map((elem)=>(
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
+                          {elem.description} 
+                        </option>
+                      ))
+                    }
+                    </select>
                 </div>
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Ciudad:</label>
                 <select
-                    ref={selectBranchRef}
+                    ref={selectCiudadRef}
                     className="form-select form-select-sm w-100"
                     required
-                    
+                    disabled={depart ? false : true}
+                    onChange={(e)=>setCity(JSON.parse(e.target.value))} 
                   >
+                    
                   <option selected value='' disabled>
                     -- Seleccione la Ciudad --
                   </option>  
-                  <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option> 
-                </select>
+                  {ciudades
+                  .sort((a,b)=>a.id - b.id)
+                  .map((elem)=>(
+                    elem.id == depart.id ?
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                    {elem.description}
+                    </option>
+                    : 
+                    null
+                  ))
+                }
+                  </select>
                 </div>
               </div>
               <div className="d-flex flex-row mt-2 mb-2">
@@ -438,22 +488,21 @@ export default function CreditoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">TipoDocumento:</label>
                   <select
-                    ref={selectBranchRef}
+                    ref={selectDocumentoRef}
                     className="form-select form-select-sm m-100 me-3"
+                    onChange={(e)=>setDocument(JSON.parse(e.target.value))}
                     required
-                    
                   >
-                  <option selected value='' disabled>
-                    <center>
-                    - Seleccione el Tipo de documento -
-                    </center>
-                  </option>  
-                  <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option> 
+                    <option selected value='' disabled>
+                  -- Seleccione el tipo de documento --
+                </option>
+                  {documentos
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option key={elem.id} id={elem.id} value={JSON.stringify(elem.id)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
               </select>
                 </div>  
                 <div className="d-flex flex-row align-items-start w-100">
@@ -464,7 +513,7 @@ export default function CreditoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={0}
                     required
-                     
+                    max='10'  
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -486,8 +535,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div>
                 <div className="ms-2 w-100">
                   <label className="fw-bold mt-1 me-2">COMPROMISO ANTICORRUPCIÓN: </label>
@@ -496,20 +544,8 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div>
-                {/* 
-                <div className="d-flex flex-row mt-1">
-                  <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <input
-                    id="files"
-                    type="file"
-                    placeholder="RUT"
-                    className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
-                </div> */}
               </div>
               <div className="d-flex flex-row">
               <div className="d-flex flex-column mt-2 w-100 me-2">
@@ -519,8 +555,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">PAGARE: </label>
@@ -529,8 +564,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -541,8 +575,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
@@ -551,8 +584,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -563,8 +595,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">ESTADOS FINANCIEROS: </label>
@@ -573,8 +604,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -585,8 +615,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
@@ -595,8 +624,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -607,8 +635,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
@@ -617,8 +644,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -629,8 +655,7 @@ export default function CreditoPersonaJuridica(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
+                    accept=".pdf"                  />
                 </div> 
                 
               </div>

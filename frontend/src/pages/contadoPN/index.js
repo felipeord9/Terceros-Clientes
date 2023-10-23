@@ -2,68 +2,28 @@ import { useEffect, useState, useContext, useRef } from "react";
 import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
-import { sendMail } from "../../services/mailService";
 import "./styles.css";
-/* import DepartmentContext  from "../../context/departamentoContext";
- */import TextField from '@mui/material/TextField';
+import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
-/* import ComboBox from "../../components/comboBoxDepartamento";
- */import { getAllDepartamentos } from "../../services/departamentoService";
+import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
 
-const ListaDepartamentos=[
-  {
-    nombre:'05 - ANTIOQUIA',
-    ciudad:['05002	ABEJORRAL','05004	ABRIAQUI','05021 ALEJANDRIA']
-  },{
-    nombre:'08 - ATLÁNTICO',
-    ciudad:['08078	BARANOA','08001	BARRANQUILLA']
-  },{
-    nombre:'11 - BOGOTA',
-    ciudad:['']
-  },{
-    nombre:"13 - BOLÍVAR",
-    ciudad:['13006	ACHÍ','13030	ALTOS DEL ROSARIO', '13042	ARENAL','13052	ARJONA']
-  },{
-    nombre:'15 - BOYACA',
-    ciudad:['']
-  },{
-      nombre:'17 - CALDAS',
-      ciudad:['']
-    },{
-      nombre:'18 - CAQUETÁ',
-      ciudad:['']
-    },{
-      nombre:'19 - CAUCA',
-      ciudad:['']
-    },{
-      nombre:'20 - CESAR',
-      ciudad:['']
-    },{
-      nombre:'23 - CORDOBA',
-      ciudad:['']
-    }
-]
-
 export default function ContadoPersonaNatural(){
+  /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
-/*   const {department,setDepartment}=useContext(DepartmentContext)
- */
-  /* Lista Departamento */
-  /* const [data,setData]=useState([]),
-        [departamento,setDepartamento]=useState(''),
-        [ciudades,setCiudades]=useState([]); */
+  const {department,setDepartment}=useContext(DepartmentContext)
 
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
   const [clasificacion,setClasificacion] = useState(null);
   const [document,setDocument]=useState(null);
   const [ciudad, setCiudad] = useState(null);
-  const [departamento,setDepartamento]= useState(null);
+  const [departamento,setDepartamento]= useState('');
+  
   
   const [clientes, setClientes] = useState([]);
   const [clientsPOS, setClientsPOS] = useState([]);
@@ -100,37 +60,17 @@ export default function ContadoPersonaNatural(){
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
-  /* aqui se hace se le asigna los valores a las variables */
+  /* asignacion de valores a las variables */
   useEffect(()=>{
-    /* setData(ListaDepartamentos); */
       getAllAgencies().then((data) => setAgencias(data));
       getAllClasificaciones().then((data) => setClasificaciones(data));
       getAllDocuments().then((data)=>setDocumentos(data));
       getAllDepartamentos().then((data) => setDepartamentos(data));
       getAllCiudades().then((data) => setCiudades(data));
   },[]);
-  /* useEffect(()=>{
-    data.forEach((data) => {
-      if (data.nombre === departamento) {
-        setCiudades(data.ciudad);
-      }
-    });
-  }, [departamento]); */
-
- /*  const getAllClasificaciones=()=>{
-    setLoading(true)
-    findClasificaciones()
-      .then(({data})=>{
-        setClasificacion(data)
-        setLoading(false)
-      })
-      .catch((error)=>{
-        setLoading(false)
-      });
-  } */
 
   const findById = (id, array, setItem) => {
-    const item = array.find((elem) => elem.id === id);
+    const item = array.find((elem) => elem.departament_id === id);
     if (item) {
       setItem(item);
     } else {
@@ -197,10 +137,7 @@ export default function ContadoPersonaNatural(){
       if (isConfirmed) window.location.reload();
     });
   };
-  /* const handleClasificacion=(e)=>{
-    e.preventDefault();
-    setClasificacion(e.target.value);
-  } */
+
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto">
     <div className='rounder-4'>
@@ -224,7 +161,7 @@ export default function ContadoPersonaNatural(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold">Clasificación</label>
+              <label className="fw-bold" style={{fontSize:18}}>Clasificación</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -236,16 +173,19 @@ export default function ContadoPersonaNatural(){
                 </option>
                 {clasificaciones
                   .sort((a,b)=>a.id - b.id)
-                  .map((elem)=>(
+                  .map((elem)=>(                    
+                    elem.id != 1 ?
                     <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + ' - ' + elem.description} 
                     </option>
+                    :
+                    null
                   ))
                 }
               </select>
               </div>
               <div className="d-flex flex-column w-100 ">
-              <label className="fw-bold">Agencia</label>
+              <label className="fw-bold" style={{fontSize:18}}>Agencia</label>
               <select
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
@@ -266,11 +206,11 @@ export default function ContadoPersonaNatural(){
               </div>
               </div>
               <div className="d-flex flex-row mt-2 mb-2  w-100">
-              <label className="fw-bold me-1">Solicitante:</label>
+              <label className="fw-bold me-1" style={{fontSize:18}}>Solicitante:</label>
               <input
                   id="solicitante"
                   type="text"
-                  placeholder="Nombre del solicitante"
+                  placeholder="Nombre Solicitante"
                   className="form-control form-control-sm "
                   autoComplete="off"
                   required
@@ -279,32 +219,23 @@ export default function ContadoPersonaNatural(){
             </div>
             <hr className="my-1" />
             <div>
-              <label className="fw-bold">CLIENTE</label>
+              <label className="fw-bold" style={{fontSize:20}}>CLIENTE</label>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">Nombres:</label>
+                  <label className="me-1 w-25">Nombres y apellidos:</label>
                   <input
                     id="nameCliente"
                     type="text"
                     className="form-control form-control-sm me-3"
-                                  
+                    max='50'  
+                    maxLength='50' 
+                    length='50'         
                     min={0}
                     required
                     placeholder="Campo obligatorio"
                   />
                 </div>   
-                <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">Apellidos:</label>
-                  <input
-                    id="apellidosCliente"
-                    type="text"
-                    className="form-control form-control-sm"
-                    min={0}
-                    required                       
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                </div>
+  
               </div>
 
               <div className="d-flex flex-row mt-2">
@@ -338,7 +269,15 @@ export default function ContadoPersonaNatural(){
                     className="form-control form-control-sm w-100"
                     min={0}
                     required
+                    max='10'
+                    pattern={1-9}
+                    
+                    length={10}
                     placeholder="Campo obligatorio"
+                    style={{
+                      maxLength:'10',
+                      pattern:'{1-9}'
+                    }}
                   >
                   </input>
                 </div>
@@ -358,41 +297,24 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Departamento:</label>
-                {/* <ComboBox
-                  options={invoiceType ? departamento : null}
-                  id='department'
-                  item={department}
-                  setItem={setDepartment}
-                  invoiceType={invoiceType}/> */}
-                <select
-/*                     onChange={(event)=>setDepartamento(event.target.value)}
- */                    
+                <select                    
                     onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
                     ref={selectDepartamentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     required   
                  >
-                  <option selected value='' disabled>
+                   <option selected value='' disabled>
                     -- Seleccione el Departamento --
-                  </option> 
-                  {/* {data
-                    .map((data)=>{
-                      return(
-                      <option key={data.nombre} value={data.nombre}>
-                        {data.nombre ? data.nombre : null}
-                      </option>
-                      );
-                    })
-                  }  */}
-                  {departamentos
-                  .sort((a,b)=>a.id - b.id)
-                  .map((elem)=>(
-                    <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + ' - ' + elem.description} 
-                    </option>
-                  ))
-                }
-                </select>
+                  </option>
+                      {departamentos
+                      .sort((a,b)=>a.id - b.id)
+                      .map((elem)=>(
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
+                          {elem.description} 
+                        </option>
+                      ))
+                    }
+                    </select>
                 </div>
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Ciudad:</label>
@@ -400,35 +322,25 @@ export default function ContadoPersonaNatural(){
                     ref={selectCiudadRef}
                     className="form-select form-select-sm w-100"
                     required
-                    onChange={(e)=>setCiudad(JSON.parse(e.target.value))}
+                    disabled={departamento ? false : true}
+                    onChange={(e)=>setCiudad(JSON.parse(e.target.value))} 
                   >
+                    
                   <option selected value='' disabled>
                     -- Seleccione la Ciudad --
                   </option>  
-                  {/* {ciudades.length &&
-                  ciudades.map((nombre,key)=>{
-                    return(
-                      <option key={key} value={nombre}>
-                        {nombre }
-                      </option>
-                    );
-                  })
-                  } */}
                   {ciudades
                   .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
+                    elem.id == departamento.id ?
                     <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + ' - ' + elem.description} 
+                    {elem.description}
                     </option>
+                    : 
+                    null
                   ))
                 }
-                  {/* <option>13 - Cédula de cuidadania</option> 
-                  <option>22 - Cédula de Extranjería</option> 
-                  <option>31 - NIT</option> 
-                  <option>42 - Tipo Doc. Extranjería</option> 
-                  <option>47 - Permiso de permanencia</option> 
-                  <option>99 - Otros</option>  */}
-                </select>
+                  </select>
                 </div>
               </div>
               <div className="d-flex flex-row mt-2 mb-2">
@@ -472,7 +384,7 @@ export default function ContadoPersonaNatural(){
                   </input>
               </div>
               <div className="d-flex flex-row align-items-start mt-2">
-                  <label className="me-1">Correo para la factura electrónica:</label>
+                  <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
                     id="correoFactura"
                     type="email"
@@ -488,7 +400,7 @@ export default function ContadoPersonaNatural(){
             </div>            
             <hr className="my-1" />
             <div className="w-100 mt-1">
-              <label className="fw-bold">DOCUMENTOS OBLIGATORIOS</label>
+              <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row m-1">
                 <div className="me-2 w-100">
                   <label className="fw-bold mt-1 ">RUT: </label>
@@ -497,7 +409,7 @@ export default function ContadoPersonaNatural(){
                     type="file"
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
+                    accept=".pdf"
                   />
                 </div>
                 <div className="ms-2 w-100">
@@ -507,20 +419,9 @@ export default function ContadoPersonaNatural(){
                     type="file"
                     placeholder="INFOLAFT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
+                    accept=".pdf"
                   />
                 </div>
-                {/* 
-                <div className="d-flex flex-row mt-1">
-                  <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <input
-                    id="files"
-                    type="file"
-                    placeholder="RUT"
-                    className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
-                  />
-                </div> */}
               </div>
               <div className="d-flex flex-row mt-2">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
@@ -529,14 +430,14 @@ export default function ContadoPersonaNatural(){
                     type="file"
                     placeholder="OTROS"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf, .xls, .xlsx"
+                    accept=".pdf"
                   />
                 </div> 
             </div>
           </div>
         </div>
         <div className="d-flex flex-column mb-3">
-          <label className="fw-bold">OBSERVACIONES</label>
+          <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
           <textarea
             id="observations"
             className="form-control"

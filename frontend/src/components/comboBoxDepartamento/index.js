@@ -67,7 +67,7 @@ function ComboBox({ id, options, item, setItem, invoiceType }) {
         required
       >
         <option selected disabled value="">
-          {suggestions?.length > 0
+          {suggestions?.length === 0
             ? "-- Seleccione --"
             : "No se encontraron coincidencias..."}
         </option>
