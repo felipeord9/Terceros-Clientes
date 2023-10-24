@@ -3,6 +3,9 @@ import { GoHomeFill } from 'react-icons/go'
 import { GoPeople } from 'react-icons/go'
 import { RiContactsBook2Fill , RiContactsBookFill} from 'react-icons/ri'
 import { RiContactsBook2Line , RiContactsBookLine} from 'react-icons/ri'
+import { BsFillPeopleFill } from "react-icons/bs";
+import { BsClipboardCheck } from "react-icons/bs";
+import { BsClipboardCheckFill } from "react-icons/bs";
 import { TbCircleLetterJ } from 'react-icons/tb' /*letra j*/
 
 export const NavBarData = [
@@ -43,14 +46,20 @@ export const NavBarData = [
   {
     title: "Usuarios",
     path: "/usuarios",
-    icon: <GoPeople />,
+    icon: <BsFillPeopleFill />,
     cName: "nav-text",
     access: ['admin']
   },
   {
-    title: "Terceros",
-    path: "/pos/clientes",
-    icon: <LiaIcons.LiaUsersSolid />,
+    title: "Terceros Contado",
+    path: "/terceros",
+    icon: <BsClipboardCheck />,
+    cName: "nav-text",
+    access: ['admin']
+  },{
+    title: "Terceros Crédito",
+    path: "/terceros",
+    icon: <BsClipboardCheckFill />,
     cName: "nav-text",
     access: ['admin']
   }

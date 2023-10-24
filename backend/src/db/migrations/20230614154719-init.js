@@ -1,4 +1,5 @@
 "use strict";
+const { CLIENTE_NATURAL_TABLE, ClienteNaturalSchema } = require('../models/clienteNaturalModel');
 const { DEPARTAMENTO_TABLE, DepartamentoSchema} = require('../models/departamentoModel');
 const { CIUDAD_TABLE,CiudadSchema } =require('../models/ciudadModel')
 const { DOCUMENT_TABLE, DocumentSchema } = require("../models/documentModel");
@@ -9,6 +10,7 @@ const { CLASIFICACION_TABLE,ClasificacionSchema } = require('../models/clasifica
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    await queryInterface.createTable(CLIENTE_NATURAL_TABLE,ClienteNaturalSchema);
     await queryInterface.createTable(DEPARTAMENTO_TABLE,DepartamentoSchema);
     await queryInterface.createTable(CIUDAD_TABLE,CiudadSchema);
     await queryInterface.createTable(DOCUMENT_TABLE,DocumentSchema);
@@ -24,5 +26,6 @@ module.exports = {
     await queryInterface.dropTable(AGENCY_TABLE);
     await queryInterface.dropTable(CLASIFICACION_TABLE);
     await queryInterface.dropTable(DOCUMENT_TABLE);
+    await queryInterface.dropTable(CLIENTE_NATURAL_TABLE);
   },
 };

@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
+import { createClienteNatural } from "../../services/clienteNaturalService";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
@@ -24,27 +25,25 @@ export default function CreditoPersonaNatural(){
   const [ciudad, setCiudad] = useState(null);
   const [departamento,setDepartamento]= useState('');
   
-  
-  const [clientes, setClientes] = useState([]);
-  const [clientsPOS, setClientsPOS] = useState([]);
-
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
   const [documentos,setDocumentos] = useState([]);
   const [ciudades,setCiudades] = useState([]);
   const [departamentos,setDepartamentos]=useState([]);
-  const [files, setFiles] = useState(null);
-  const [productosAgr, setProductosAgr] = useState({
-    agregados: [],
-    total: "0",
-  });
+
   const [search, setSearch] = useState({
-    idCliente: "",
-    descCliente: "",
-    deliveryDate: "",
+    tipoPersona: "Natural",
+    tipoPago: "Credito",
     observations: "",
-    order: "",
+    solicitante: "",
+    clienteNombre: "",
+    numeroIdentificacion:null,
+    direccion:"",
+    celular:"",
+    telefono:"",
+    correoContacto:"",
+    correoFactura:""
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -79,7 +78,6 @@ export default function CreditoPersonaNatural(){
 
   const handlerChangeSearch = (e) => {
     const { id, value } = e.target;
-    console.log(value);
     setSearch({
       ...search,
       [id]: value,
@@ -102,12 +100,72 @@ export default function CreditoPersonaNatural(){
       const newFile = new File([file], `Archivo-Adjunto.${ext}`, {
         type: file.type,
       });
-      setFiles(newFile);
+      /* setFiles(newFile); */
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    Swal.fire({
+      title: "¿Está seguro?",
+        text: "Se realizará el registro de tercero",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#198754",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+    }) .then(({isConfirmed})=>{
+      if(isConfirmed){
+        setLoading(true);
+        const f = new FormData();
+        const body={
+          clasficacion: clasificacion.description,
+          agency: agencia.description,
+          tipoDocumento: document.description,
+          departamento: departamento.description,
+          ciudad: ciudad.description,
+          createdAt: new Date(),
+          createdBy: user.name,
+          tipoPersona:search.tipoPersona,
+          tipoPago:search.tipoPago,
+          solicitante:search.solicitante,
+          clienteNombre:search.clienteNombre,
+          numeroIdentificacion:search.numeroIdentificacion,
+          direccion:search.direccion,
+          celular:search.celular,
+          telefono:search.telefono,
+          correoContacto:search.correoContacto,
+          correoFactura:search.correoFactura,
+          observations:search.observations,
+        };
+        createClienteNatural(body)
+          .then(() => {
+            setLoading(false)
+          /* reloadInfo(); */
+          Swal.fire({
+            title: 'Creación exitosa!',
+            text: 'El tercero se ha creado correctamente',
+            icon: 'success',
+            showConfirmButton: true,
+            confirmButtonText:'Aceptar',
+            timer: 2500
+          }).then(()=>{
+            window.location.reload();
+          })
+      })
+      .catch((err)=>{
+        setLoading(false);
+        Swal.fire({
+          title: "¡Ha ocurrido un error!",
+            text: `
+              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        });
+      });
+    };
+  });
   };
 
   const refreshForm = () => {
@@ -197,6 +255,8 @@ export default function CreditoPersonaNatural(){
                   id="solicitante"
                   type="text"
                   placeholder="Nombre Solicitante"
+                  value={search.solicitante}
+                  onChange={handlerChangeSearch}
                   className="form-control form-control-sm "
                   autoComplete="off"
                  
@@ -209,15 +269,15 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1 w-25">Nombres y apellidos:</label>
                   <input
-                    id="nameCliente"
+                    id="clienteNombre"
                     type="text"
                     className="form-control form-control-sm me-3"
-                    max='50'  
                     maxLength='50' 
-                    length='50'         
                     min={0}
                     required
                     placeholder="Campo obligatorio"
+                    value={search.clienteNombre}
+                    onChange={handlerChangeSearch}
                   />
                 </div>
 
@@ -236,7 +296,7 @@ export default function CreditoPersonaNatural(){
                   {documentos
                   .sort((a, b) => a.id - b.id)
                   .map((elem) => (
-                    <option key={elem.id} id={elem.id} value={JSON.stringify(elem.id)}>
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + " - " + elem.description}
                     </option>
                   ))}
@@ -247,13 +307,15 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Identificación:</label>
                   <input
-                    id="numeroDocumento"
+                    id="numeroIdentificacion"
                     type="number"
                     className="form-control form-control-sm w-100"
                     min={0}
-                    max='10'
+                    value={search.numeroIdentificacion}
+                    onChange={handlerChangeSearch}
                     required
                     placeholder="Campo obligatorio"
+                    maxLength={10}
                   >
                   </input>
                 </div>
@@ -261,6 +323,8 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-row mt-2 w-100">
                 <label className="me-1">Dirección:</label>
                 <input
+                value={search.direccion}
+                onChange={handlerChangeSearch}
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
@@ -323,7 +387,9 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Celular:</label>
                   <input
-                    id="numeroCelular"
+                  value={search.celular}
+                  onChange={handlerChangeSearch}
+                    id="celular"
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
@@ -336,11 +402,13 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Teléfono:</label>
                   <input
+                  value={search.telefono}
+                  onChange={handlerChangeSearch}
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
-                    
+                    required
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -349,8 +417,10 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-row align-items-start">
                   <label className="me-1">Correo de contacto:</label>
                   <input
-                    id="numeroDocumento"
-                    type="number"
+                  value={search.correoContacto}
+                  onChange={handlerChangeSearch}
+                    id="correoContacto"
+                    type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
@@ -362,8 +432,10 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-row align-items-start mt-2">
                   <label className="me-1">Correo para la factura electrónica:</label>
                   <input
+                  value={search.correoFactura}
+                  onChange={handlerChangeSearch}
                     id="correoFactura"
-                    type="number"
+                    type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
@@ -526,6 +598,8 @@ export default function CreditoPersonaNatural(){
         <div className="d-flex flex-column mb-3">
           <label className="fw-bold">OBSERVACIONES</label>
           <textarea
+          value={search.observations}
+          onChange={handlerChangeSearch}
             id="observations"
             className="form-control"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}

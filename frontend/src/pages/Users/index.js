@@ -56,7 +56,7 @@ export default function Users() {
     <div className="wrapper justify-content-center  h-100 w-100 m-auto">
     <div className='rounder-4'>
     <div className="login-wrapper d-flex flex-column mt-5 pt-3" >
-      <h1 className="text-danger fw-bold">Listado de usuarios registrados</h1>
+      <h1 className="text-danger fw-bold">Listado de Usuarios registrados</h1>
       <ModalUsers 
         user={selectedUser}
         setUser={setSelectedUser}
@@ -65,7 +65,7 @@ export default function Users() {
         reloadInfo={getAllUsers} 
       />
       <div className="d-flex flex-column gap-2 h-100">
-        <div className="d-flex justify-content-end mt-2 gap-3 mb-1">
+        <div className="d-flex justify-content-end mt-1 gap-3 mb-1">
           <input
             type="search"
             value={search}

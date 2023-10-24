@@ -5,6 +5,7 @@ import AuthContext from "../../context/authContext";
 import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
+import { createClienteNatural } from "../../services/clienteNaturalService";
 import { Navigate } from "react-router-dom";
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
@@ -20,13 +21,9 @@ export default function ContadoPersonaNatural(){
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
   const [clasificacion,setClasificacion] = useState(null);
-  const [document,setDocument]=useState(null);
+  const [document,setDocument] = useState(null);
   const [ciudad, setCiudad] = useState(null);
   const [departamento,setDepartamento]= useState('');
-  
-  
-  const [clientes, setClientes] = useState([]);
-  const [clientsPOS, setClientsPOS] = useState([]);
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
@@ -35,17 +32,18 @@ export default function ContadoPersonaNatural(){
   const [ciudades,setCiudades] = useState([]);
   const [departamentos,setDepartamentos]=useState([]);
 
-  const [files, setFiles] = useState(null);
-  const [productosAgr, setProductosAgr] = useState({
-    agregados: [],
-    total: "0",
-  });
   const [search, setSearch] = useState({
-    idDepartment: "",
-    descCliente: "",
-    deliveryDate: "",
+    tipoPersona: "Natural",
+    tipoPago: "Contado",
     observations: "",
-    order: "",
+    solicitante: "",
+    clienteNombre: "",
+    numeroIdentificacion:null,
+    direccion:"",
+    celular:"",
+    telefono:"",
+    correoContacto:"",
+    correoFactura:""
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -82,7 +80,6 @@ export default function ContadoPersonaNatural(){
 
   const handlerChangeSearch = (e) => {
     const { id, value } = e.target;
-    console.log(value);
     setSearch({
       ...search,
       [id]: value,
@@ -105,7 +102,7 @@ export default function ContadoPersonaNatural(){
       const newFile = new File([file], `Archivo-Adjunto.${ext}`, {
         type: file.type,
       });
-      setFiles(newFile);
+      /* setFiles(newFile); */
     }
   };
 
@@ -122,6 +119,66 @@ export default function ContadoPersonaNatural(){
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    Swal.fire({
+      title: "¿Está seguro?",
+        text: "Se realizará el registro de tercero",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#198754",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+    }) .then(({isConfirmed})=>{
+      if(isConfirmed){
+        setLoading(true);
+        const f = new FormData();
+        const body={
+          clasficacion: clasificacion.description,
+          agency: agencia.description,
+          tipoDocumento: document.description,
+          departamento: departamento.description,
+          ciudad: ciudad.description,
+          createdAt: new Date(),
+          createdBy: user.name,
+          tipoPersona:search.tipoPersona,
+          tipoPago:search.tipoPago,
+          solicitante:search.solicitante,
+          clienteNombre:search.clienteNombre,
+          numeroIdentificacion:search.numeroIdentificacion,
+          direccion:search.direccion,
+          celular:search.celular,
+          telefono:search.telefono,
+          correoContacto:search.correoContacto,
+          correoFactura:search.correoFactura,
+          observations:search.observations,
+        };
+        createClienteNatural(body)
+          .then(() => {
+            setLoading(false)
+          /* reloadInfo(); */
+          Swal.fire({
+            title: 'Creación exitosa!',
+            text: 'El tercero se ha creado correctamente',
+            icon: 'success',
+            showConfirmButton: true,
+            confirmButtonText:'Aceptar',
+            timer: 2500
+          }).then(()=>{
+            window.location.reload();
+          })
+      })
+      .catch((err)=>{
+        setLoading(false);
+        Swal.fire({
+          title: "¡Ha ocurrido un error!",
+            text: `
+              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        });
+      });
+    };
+  });
   };
 
   const refreshForm = () => {
@@ -211,8 +268,9 @@ export default function ContadoPersonaNatural(){
                   id="solicitante"
                   type="text"
                   placeholder="Nombre Solicitante"
+                  value={search.solicitante}
+                  onChange={handlerChangeSearch}
                   className="form-control form-control-sm "
-                  autoComplete="off"
                   required
               />
               </div>        
@@ -224,15 +282,16 @@ export default function ContadoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1 w-25">Nombres y apellidos:</label>
                   <input
-                    id="nameCliente"
+                    id="clienteNombre"
                     type="text"
-                    className="form-control form-control-sm me-3"
-                    max='50'  
-                    maxLength='50' 
-                    length='50'         
+                    className="form-control form-control-sm me-3"  
+                    max={50} 
+                    length={50}                   
                     min={0}
                     required
                     placeholder="Campo obligatorio"
+                    value={search.clienteNombre}
+                    onChange={handlerChangeSearch}
                   />
                 </div>   
   
@@ -253,7 +312,7 @@ export default function ContadoPersonaNatural(){
                   {documentos
                   .sort((a, b) => a.id - b.id)
                   .map((elem) => (
-                    <option key={elem.id} id={elem.id} value={JSON.stringify(elem.id)}>
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + " - " + elem.description}
                     </option>
                   ))}
@@ -264,20 +323,15 @@ export default function ContadoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Identificación:</label>
                   <input
-                    id="numDocumento"
+                    id="numeroIdentificacion"
                     type="number"
                     className="form-control form-control-sm w-100"
                     min={0}
+                    value={search.numeroIdentificacion}
+                    onChange={handlerChangeSearch}
                     required
-                    max='10'
-                    pattern={1-9}
-                    
-                    length={10}
+                    max={9999999999}
                     placeholder="Campo obligatorio"
-                    style={{
-                      maxLength:'10',
-                      pattern:'{1-9}'
-                    }}
                   >
                   </input>
                 </div>
@@ -285,6 +339,8 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row mt-2 w-100">
                 <label className="me-1">Dirección:</label>
                 <input
+                  value={search.direccion}
+                  onChange={handlerChangeSearch}
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
@@ -347,7 +403,9 @@ export default function ContadoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Celular:</label>
                   <input
-                    id="numeroCelular"
+                    value={search.celular}
+                    onChange={handlerChangeSearch}
+                    id="celular"
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
@@ -360,11 +418,13 @@ export default function ContadoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Teléfono:</label>
                   <input
+                    value={search.telefono}
+                    onChange={handlerChangeSearch}
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
-                    required
+                    
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -373,6 +433,8 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row align-items-start">
                   <label className="me-1">Correo de contacto:</label>
                   <input
+                    value={search.correoContacto}
+                    onChange={handlerChangeSearch}
                     id="correoContacto"
                     type="email"
                     className="form-control form-control-sm"
@@ -386,6 +448,8 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row align-items-start mt-2">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
+                    value={search.correoFactura}
+                    onChange={handlerChangeSearch}
                     id="correoFactura"
                     type="email"
                     className="form-control form-control-sm"
@@ -439,6 +503,8 @@ export default function ContadoPersonaNatural(){
         <div className="d-flex flex-column mb-3">
           <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
           <textarea
+            value={search.observations}
+            onChange={handlerChangeSearch}
             id="observations"
             className="form-control"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}

@@ -4,6 +4,7 @@ const { Clasificacion, ClasificacionSchema } = require('./clasificacionModel')
 const { Document, DocumentSchema } = require('./documentModel')
 const { Ciudad, CiudadSchema} = require('./ciudadModel')
 const { Departamento,DepartamentoSchema } = require('./departamentoModel')
+const { ClienteNatural, ClienteNaturalSchema } =require('./clienteNaturalModel')
 
 function setupModels(sequelize) {
   Departamento.init(DepartamentoSchema, Departamento.config(sequelize))
@@ -12,6 +13,7 @@ function setupModels(sequelize) {
   Clasificacion.init(ClasificacionSchema,Clasificacion.config(sequelize))
   Document.init(DocumentSchema,Document.config(sequelize))
   Ciudad.init(CiudadSchema,Ciudad.config(sequelize))
+  ClienteNatural.init(ClienteNaturalSchema,ClienteNatural.config(sequelize))
 
 
   User.associate(sequelize.models)
@@ -20,5 +22,6 @@ function setupModels(sequelize) {
   Clasificacion.associate(sequelize.models)
   Document.associate(sequelize.models)
   Ciudad.associate(sequelize.models)
+  ClienteNatural.associate(sequelize.models)
 }
 module.exports = setupModels

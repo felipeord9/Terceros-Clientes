@@ -53,12 +53,13 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
   
   return (
     <div
-      className="d-flex flex-column rounded"
-      style={{ height: "calc(100% - 60px)", width: '100%' , fontSize:18}}
+      className="wrapper justify-content-center d-flex flex-column rounded"
     >
+    <div className='rounder-4'>
+    <div className='login-wrapper rounder-4' style={{width:1040,height:400}} >
       <DataTable
         className="bg-light text-center border border-2 h-100"
-        style={{fontSize:20}}
+        style={{fontSize:20 , height:450}}
         columns={columns}
         data={users}
         fixedHeaderScrollHeight={200}
@@ -77,17 +78,11 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
         dense
         striped
         fixedHeader
-        pagination
-        paginationComponentOptions={{
-          rowsPerPageText: "Filas por página:",
-          rangeSeparatorText: "de",
-          selectAllRowsItem: false,
-        }}
-        paginationPerPage={15}
-        paginationRowsPerPageOptions={[15, 25, 50]}
-        noDataComponent={
-        <div style={{padding: 24}}>Ningún resultado encontrado.</div>}
+        
+        
       />
+    </div>
+    </div>
     </div>
   )
 }

@@ -7,6 +7,7 @@ const DepartamentoRoutes= require('./departamentoRoutes')
 const AgencyRoutes = require('./agencyRoutes')
 const ClasificacionRoutes = require('./clasificacionRoute')
 const DocumentRoutes = require('./documentRoutes')
+const ClienteNaturalRoutes = require('./clienteNaturalRoutes')
 
 function routerApi(app) {
     const router = express.Router()
@@ -20,6 +21,7 @@ function routerApi(app) {
     router.use('/departamentos',DepartamentoRoutes )
     router.use('/documents',DocumentRoutes)
     router.use('/agencies', AgencyRoutes)
+    router.use('/clienteNatural',ClienteNaturalRoutes)
     router.use('/clasificacion',ClasificacionRoutes)}
 
 module.exports = routerApi

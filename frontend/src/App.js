@@ -18,6 +18,7 @@ import ContadoPersonaJuridica from './pages/contadoPJ';
 import CreditoPersonaNatural from './pages/creditoPN';
 import CreditoPersonaJuridica from './pages/creditoPJ';
 import Users from './pages/Users';
+import Terceros from './pages/terceros';
 
 import DepaCiudad from './pages/depa-ciudad';
 
@@ -43,6 +44,7 @@ function App() {
         <Route path='/credito/persona/juridica' element={<PrivateRoute component={CreditoPersonaJuridica}/>}/>
         <Route path='/change/password' element={<PrivateRoute component={ChangePassword}/>}/>
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
+        <Route path='/terceros' element={<PrivateRoute component={Terceros}/>}/>
         <Route path='*' element={<Page404/>}/>
         {/* <Route path='*' element={<Fondo/>}/> */}
 
