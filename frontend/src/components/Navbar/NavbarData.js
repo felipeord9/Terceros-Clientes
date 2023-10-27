@@ -13,10 +13,8 @@ export const NavBarData = [
     title:'Inicio',
     path:'/inicio',
     icon:<GoHomeFill/>,
-    /* icon: <MdIcons.MdOutlineInventory />, */
     cName:'nav-text',
-    access:['admin','usuario']
-    
+    access:['admin','usuario']   
   }
   ,
   {title:'Persona natural - contado',
@@ -51,15 +49,9 @@ export const NavBarData = [
     access: ['admin']
   },
   {
-    title: "Terceros Contado",
+    title: "Clientes",
     path: "/terceros",
     icon: <BsClipboardCheck />,
-    cName: "nav-text",
-    access: ['admin']
-  },{
-    title: "Terceros Crédito",
-    path: "/terceros",
-    icon: <BsClipboardCheckFill />,
     cName: "nav-text",
     access: ['admin']
   }

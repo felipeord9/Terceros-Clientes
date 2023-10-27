@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { config } from "../config";
-const url = `${config.apiUrl2}/clienteNatural`;
+const url = `${config.apiUrl2}/clientes`;
 
-const findClientesNaturales = async () => {
+const findClientes = async () => {
     const token = JSON.parse(localStorage.getItem("token"))
     const { data } = await axios.get(url, {
       headers: {
@@ -12,7 +12,7 @@ const findClientesNaturales = async () => {
     return data
 } 
 
-const createClienteNatural = (body) => {
+const createCliente = (body) => {
     const token = JSON.parse(localStorage.getItem("token"))
     return fetch(url, {
       method: "POST",
@@ -28,6 +28,6 @@ const createClienteNatural = (body) => {
 };
 
 export {
-    findClientesNaturales,
-    createClienteNatural
+    findClientes,
+    createCliente
 }

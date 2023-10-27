@@ -171,71 +171,13 @@ export default function Navbar() {
                   <FiIcons.FiLogOut style={{width:25, height:25}}/>
                   <label className="ms-2" style={{fontSize:15}}>Cerrar sección</label>
                 </button>
-                {/* <Modal open={cerrar}
-                  onClose={handleCerrar}
-                  aria-labelledby="parent-modal-title"
-                  aria-describedby="parent-modal-description"
-                >  
-                <Box sx={style}>
-                <center>
-                <h2 id="parent-modal-title" className='text-danger text-align-center'>¿Está seguro que desea cerrar la sección?</h2>
-                <Button variant="contained" className='m-4' onClick={(e)=>logout()}>Yes</Button>
-                <Button variant="contained" className="m-4" color='error' onClick={handleCerrar}>No</Button> 
-                </center>        
-                </Box>
-                </Modal>   */}
-               
-                
                   </MenuItem>
                 </center>
               </Menu>
-
-              {/* <div
-                id="btn-session"
-                className="dropdown"
-                style={{ width: "60px", height: "60px" }}
-              >
-                <button
-                  className="d-flex align-items-center btn btn-danger rounded-circle w-100 h-100 m-0 p-0 border border-2 border-light overflow-hidden"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  data-bs-offset="0,10"
-                >
-                  <FaIcons.FaUser className="w-100 h-50" />
-                </button>
-                <ul
-                  className="dropdown-menu text-center p-0 rounded-3"
-                  style={{ width: "250px" }}
-                >
-                  <li className="border-bottom">
-                    <p className="fw-bold mt-1 mb-1">
-                      {user.role.toUpperCase()}
-                    </p>
-                  </li>
-                  <li style={{ cursor: "pointer" }} className="border-bottom">
-                    <Link
-                      to="/change/password"
-                      className="text-decoration-none"
-                    >
-                      <p className="dropdown-item fw-bold m-0">
-                        CAMBIAR CONTRASEÑA
-                      </p>
-                    </Link>
-                  </li>
-                  <li style={{ cursor: "pointer" }} onClick={(e) => logout()}>
-                    <p className="d-flex justify-content-center align-items-center gap-2 dropdown-item fw-bold text-danger m-0">
-                      CERRAR SESIÓN
-                      <FiIcons.FiLogOut />
-                    </p>
-                  </li>
-                </ul>
-              </div> */}
             </div>
           </div>
           <nav
             className={showSideBar ? "bg-light nav-menu active" : "nav-menu"}
-            
           >
             <ul
               className="nav-menu-items"

@@ -6,6 +6,9 @@ import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
+import { getAllResponsabilidad } from '../../services/responsabilidadService'
+import { getAllDetalles } from "../../services/detalleService";
+import { getAllRegimen } from "../../services/regimenService";
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
@@ -25,15 +28,18 @@ export default function CreditoPersonaJuridica(){
   const [departamento,setDepartamento]= useState('');
   const [city,setCity]=useState(null);
   const [depart, setDepart]=useState('');
-  
-  const [clientes, setClientes] = useState([]);
-  const [clientsPOS, setClientsPOS] = useState([]);
+  const [regimen,setRegimen]= useState(null);
+  const [detalle,setDetalle]=useState(null);
+  const [responsabilidad,setResponsabilidad ] = useState(null);
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
   const [documentos,setDocumentos] = useState([]);
   const [ciudades,setCiudades] = useState([]);
+  const [detalles,setDetalles]=useState([]);
+  const [regimenes,setRegimenes] = useState([]);
+  const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
 
   const [files, setFiles] = useState(null);
@@ -42,6 +48,8 @@ export default function CreditoPersonaJuridica(){
     total: "0",
   });
   const [search, setSearch] = useState({
+    tipoFormato:'Persona Jurídica Crédito',
+    tipoPersona:'2',
     idCliente: "",
     descCliente: "",
     deliveryDate: "",
@@ -57,11 +65,16 @@ export default function CreditoPersonaJuridica(){
   const selectDocumentoRef=useRef();
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
+  const selectRegimenRef=useRef();
+  const selectResponsabilidadRef=useRef();
 
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
   useEffect(()=>{
+    getAllDetalles().then((data)=>setDetalles(data));
+    getAllResponsabilidad().then((data)=>setResponsabilidades(data));
+    getAllRegimen().then((data)=>setRegimenes(data));
     getAllAgencies().then((data) => setAgencias(data));
     getAllClasificaciones().then((data) => setClasificaciones(data));
     getAllDocuments().then((data)=>setDocumentos(data));
@@ -127,17 +140,17 @@ export default function CreditoPersonaJuridica(){
     });
   };
     return(
-    <div className=" wrapper d-flex justify-content-center w-100 m-auto">
+    <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
     <div
-      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white'}}
+      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
     <center>
       <section className="d-flex flex-row justify-content-between align-items-center mb-2">
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <h1 className="fs-3 fw-bold m-1 ms-4 me-4 text-danger"><strong>Persona Jurídica - Pago a Crédito</strong></h1>
+          <h1 className="fs-3 fw-bold m-1 ms-4 me-4 text-danger"><strong>persona JURÍDICA - pago a CRÉDITO</strong></h1>
           </Fade>
           </center>
         </div>
@@ -149,7 +162,7 @@ export default function CreditoPersonaJuridica(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>Clasificación</label>
+              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -170,7 +183,7 @@ export default function CreditoPersonaJuridica(){
               </select>
               </div>
               <div className="d-flex flex-column w-100 ">
-              <label className="fw-bold" style={{fontSize:18}}>Agencia</label>
+              <label className="fw-bold" style={{fontSize:18}}>AGENCIA</label>
               <select
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
@@ -191,7 +204,7 @@ export default function CreditoPersonaJuridica(){
               </div>
               </div>
               <div className="d-flex flex-row mt-2 mb-2  w-100">
-              <label className="fw-bold me-1" style={{fontSize:18}}>Solicitante:</label>
+              <label className="fw-bold me-1" style={{fontSize:18}}>SOLICITANTE:</label>
               <input
                   id="solicitante"
                   type="text"
@@ -442,17 +455,96 @@ export default function CreditoPersonaJuridica(){
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start mb-3">
-                  <label className="me-1">Correo factura electrónica:</label>
+                  <label className="me-1">CorreoSucursal:</label>
                   <input
                     id="numeroDocumento"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:635}} 
+                    
                     placeholder="Campo obligatorio"
                   >
                   </input>
+              </div>
+              <hr className="my-1" />
+              <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
+              <div className="d-flex flex-row align-items-start mt-2 mb-2  ">
+                  <label className="me-1 mb-3">Correo para la factura electrónica:</label>
+                  <input
+                    value={search.correoFactura}
+                    onChange={handlerChangeSearch}
+                    id="correoFactura"
+                    type="email"
+                    className="form-control form-control-sm"
+                    min={0}
+                    required
+                    style={{width:550}} 
+                    placeholder="Campo obligatorio"
+                  >
+                  </input>
+              </div>
+              <div className="d-flex flex-row mb-4">
+                <div className="pe-3" style={{width:265}}>
+                <label className="fw-bold" style={{fontSize:18}}>Regimen fiscal:</label>
+                <select
+                ref={selectRegimenRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setRegimen(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione el regimen --
+                </option>
+                {regimenes
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
+                <div className=" pe-3" style={{width:265}}>
+                <label className="fw-bold" style={{fontSize:18}}>Responsabilidad fiscal:</label>
+                <select
+                ref={selectBranchRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setResponsabilidad(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione la responsabilidad --
+                </option>
+                {responsabilidades
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
+                <div className="" style={{width:265}}>
+                <label className="fw-bold" style={{fontSize:18}}>Detalle tributario:</label>
+                <select
+                ref={selectBranchRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione el detalle --
+                </option>
+                {detalles
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
               </div>
               <hr className="my-1" />
               <div className="mt-4">

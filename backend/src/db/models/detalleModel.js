@@ -1,40 +1,35 @@
 const { Model, DataTypes, Sequelize } = require("sequelize");
 
-const DOCUMENT_TABLE = 'documents'
+const DETALLE_TABLE = 'detalle'
 
-const DocumentSchema = {
+const DetalleSchema = {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false
   },
   description: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  codigo:{
-    type:DataTypes.STRING,
-    allowNull:false
   }
 }
 
-class Document extends Model {
+class Detalle extends Model {
   static associate(models) {
-    //
   }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: DOCUMENT_TABLE,
-      modelName: 'documents',
+      tableName: DETALLE_TABLE,
+      modelName: 'detalle',
       timestamps: false
     }
   }
 }
 
 module.exports = {
-  DOCUMENT_TABLE,
-  DocumentSchema,
-  Document
+  DETALLE_TABLE,
+  DetalleSchema,
+  Detalle
 }

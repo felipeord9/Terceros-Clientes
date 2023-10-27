@@ -1,5 +1,8 @@
 "use strict";
-const { CLIENTE_NATURAL_TABLE, ClienteNaturalSchema } = require('../models/clienteNaturalModel');
+const { RESPONSABILIDAD_FISCAL_TABLE,ResponsabilidadFiscalSchema } =require('../models/responsabilidadFiscalModel')
+const { REGIMEN_FISCAL_TABLE, RegimenFiscalSchema} = require('../models/regFiscalModel')
+const { CLIENTE_TABLE, ClienteSchema } = require('../models/clienteModel');
+const { DETALLE_TABLE, DetalleSchema} = require('../models/detalleModel');
 const { DEPARTAMENTO_TABLE, DepartamentoSchema} = require('../models/departamentoModel');
 const { CIUDAD_TABLE,CiudadSchema } =require('../models/ciudadModel')
 const { DOCUMENT_TABLE, DocumentSchema } = require("../models/documentModel");
@@ -10,22 +13,28 @@ const { CLASIFICACION_TABLE,ClasificacionSchema } = require('../models/clasifica
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(CLIENTE_NATURAL_TABLE,ClienteNaturalSchema);
     await queryInterface.createTable(DEPARTAMENTO_TABLE,DepartamentoSchema);
+    await queryInterface.createTable(CLIENTE_TABLE,ClienteSchema);
+    await queryInterface.createTable(RESPONSABILIDAD_FISCAL_TABLE,ResponsabilidadFiscalSchema);
     await queryInterface.createTable(CIUDAD_TABLE,CiudadSchema);
     await queryInterface.createTable(DOCUMENT_TABLE,DocumentSchema);
     await queryInterface.createTable(USER_TABLE, UserSchema);
+    await queryInterface.createTable(DETALLE_TABLE,DetalleSchema);
+    await queryInterface.createTable(REGIMEN_FISCAL_TABLE,RegimenFiscalSchema);
     await queryInterface.createTable(AGENCY_TABLE, AgencySchema);
     await queryInterface.createTable(CLASIFICACION_TABLE,ClasificacionSchema);
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable(DEPARTAMENTO_TABLE);
+    await queryInterface.dropTable(DETALLE_TABLE);
     await queryInterface.dropTable(CIUDAD_TABLE);
+    await queryInterface.dropTable(RESPONSABILIDAD_FISCAL_TABLE);
     await queryInterface.dropTable(USER_TABLE);
+    await queryInterface.dropTable(REGIMEN_FISCAL_TABLE);
     await queryInterface.dropTable(AGENCY_TABLE);
     await queryInterface.dropTable(CLASIFICACION_TABLE);
     await queryInterface.dropTable(DOCUMENT_TABLE);
-    await queryInterface.dropTable(CLIENTE_NATURAL_TABLE);
+    await queryInterface.dropTable(CLIENTE_TABLE);
   },
 };

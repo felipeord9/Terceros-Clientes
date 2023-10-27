@@ -5,8 +5,11 @@ import AuthContext from "../../context/authContext";
 import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
-import { createClienteNatural } from "../../services/clienteNaturalService";
+import { createCliente } from '../../services/clienteService';
 import { Navigate } from "react-router-dom";
+import { getAllResponsabilidad } from '../../services/responsabilidadService'
+import { getAllDetalles } from "../../services/detalleService";
+import { getAllRegimen } from "../../services/regimenService";
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
@@ -20,30 +23,55 @@ export default function ContadoPersonaNatural(){
 
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
+  const [regimen,setRegimen]= useState(null);
+  const [detalle,setDetalle]=useState(null);
   const [clasificacion,setClasificacion] = useState(null);
   const [document,setDocument] = useState(null);
   const [ciudad, setCiudad] = useState(null);
+  const [responsabilidad,setResponsabilidad ] = useState(null);
   const [departamento,setDepartamento]= useState('');
+
+  /* inicializar los documentos adjuntos */
+  const [docVinculacion,setDocVinculacion]=useState(0);
+  const [docComprAntc,setDocComprAntc]=useState(0);
+  const [docCtaInst,setDocCtaInst]=useState(0);
+  const [docPagare,setDocPagare]=useState(0);
+  const [docRut,setDocRut]=useState(0);
+  const [docCcio,setDocCcio]=useState(0);
+  const [docCrepL,setDocCrepL]=useState(0);
+  const [docEf,setDocEf]=useState(0);
+  const [docRefcom,setDocRefcom]=useState(0);
+  const [docCvbo,setDocCvbo]=useState(0);
+  const [docFirdoc,setDocFirdoc]=useState(0);
+  const [docInfemp,setDocInfemp]=useState(0);
+  const [docInfrl,setDocInfrl]=useState(0);
+  const [docOtros,setDocOtros]=useState(0);
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
   const [documentos,setDocumentos] = useState([]);
   const [ciudades,setCiudades] = useState([]);
+  const [detalles,setDetalles]=useState([]);
+  const [regimenes,setRegimenes] = useState([]);
+  const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
 
   const [search, setSearch] = useState({
-    tipoPersona: "Natural",
-    tipoPago: "Contado",
-    observations: "",
-    solicitante: "",
-    clienteNombre: "",
-    numeroIdentificacion:null,
-    direccion:"",
-    celular:"",
-    telefono:"",
-    correoContacto:"",
-    correoFactura:""
+    cedula:'',
+    tipoPersona:'1',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+    direccion:'',
+    celular:'',
+    telefono:'',
+    correoNotificaciones:'',
+    correoFacturaElectronica:'',
+    observations:'',
+    solicitante:'',
+    tipoFormulario:'Persona Natural Contado'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -54,12 +82,17 @@ export default function ContadoPersonaNatural(){
   const selectDocumentoRef=useRef();
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
+  const selectRegimenRef=useRef();
+  const selectResponsabilidadRef=useRef();
 
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
   /* asignacion de valores a las variables */
   useEffect(()=>{
+      getAllDetalles().then((data)=>setDetalles(data));
+      getAllResponsabilidad().then((data)=>setResponsabilidades(data));
+      getAllRegimen().then((data)=>setRegimenes(data));
       getAllAgencies().then((data) => setAgencias(data));
       getAllClasificaciones().then((data) => setClasificaciones(data));
       getAllDocuments().then((data)=>setDocumentos(data));
@@ -132,26 +165,58 @@ export default function ContadoPersonaNatural(){
         setLoading(true);
         const f = new FormData();
         const body={
-          clasficacion: clasificacion.description,
-          agency: agencia.description,
-          tipoDocumento: document.description,
-          departamento: departamento.description,
-          ciudad: ciudad.description,
+          clasificacion: clasificacion.description,
+          agencia: agencia.description,
+          tipoDocumento: document.codigo,
+          departamento: departamento.id,
+          ciudad: ciudad.codigo,
           createdAt: new Date(),
           createdBy: user.name,
-          tipoPersona:search.tipoPersona,
-          tipoPago:search.tipoPago,
-          solicitante:search.solicitante,
-          clienteNombre:search.clienteNombre,
-          numeroIdentificacion:search.numeroIdentificacion,
-          direccion:search.direccion,
-          celular:search.celular,
+          regimenFiscal: regimen.description,
+          responsabilidadFiscal: responsabilidad.description,
+          detalleTributario: detalle.description,
+          tipoDocRepLegal: document.codigo,
+          departamentoSucursal:departamento.id,
+          ciudadSucursal:ciudad.codigo,
+          cedula: search.cedula,
+          numeroDocumento: search.cedula,
+          tipoPersona: search.tipoPersona,
+          razonSocial: search.primerApellido +'_'+ search.segundoApellido +'_'+ search.primerNombre +'_'+ search.otrosNombres,
+          primerApellido:search.primerApellido,
+          segundoApellido:search.segundoApellido,
+          primerNombre:search.primerNombre,
+          otrosNombres:search.otrosNombres,
+          direccion: search.direccion,
+          celular: search.celular,
           telefono:search.telefono,
-          correoContacto:search.correoContacto,
-          correoFactura:search.correoFactura,
+          correoNotificaciones: search.correoNotificaciones,
+          nombreSucursal:search.primerNombre,
+          direccionSucursal:search.direccion,
+          telefonoSucursal:search.telefono,
+          correoSucursal:search.correoNotificaciones,
+          correoFacturaElectronica:search.correoFacturaElectronica,
+          numeroDocRepLegal: search.cedula,
+          nameRepLegal:search.primerNombre,
+          apellidoRepLegal:search.primerApellido,
           observations:search.observations,
+          solicitante:search.solicitante,
+          tipoFormulario:search.tipoFormulario,
+          docVinculacion:docVinculacion,
+          docComprAntc:docComprAntc,
+          docCtalnst:docCtaInst,
+          docPagare:docPagare,
+          docRut:docRut,
+          docCcio:docCcio,
+          docCrepL:docCrepL,
+          docEf:docEf,
+          docRefcom:docRefcom,
+          docCvbo:docCvbo,
+          docFirdoc:docFirdoc,
+          docInfemp:docInfemp,
+          docInfrl:docInfrl,
+          docOtros:docOtros,
         };
-        createClienteNatural(body)
+        createCliente(body)
           .then(() => {
             setLoading(false)
           /* reloadInfo(); */
@@ -196,17 +261,17 @@ export default function ContadoPersonaNatural(){
   };
 
     return(
-    <div className=" wrapper d-flex justify-content-center w-100 m-auto">
+    <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
     <div
-      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white'}}
+      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
     <center>
       <section className="d-flex flex-row justify-content-between align-items-center mb-2">
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger" style={{fontSize:150}}><strong>Persona Natural - Pago a Contado</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger" style={{fontSize:150}}><strong>persona NATURAL - pago a CONTADO</strong></label>
           </Fade>
           </center>
         </div>
@@ -218,7 +283,7 @@ export default function ContadoPersonaNatural(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>Clasificación</label>
+              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACION</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -242,7 +307,7 @@ export default function ContadoPersonaNatural(){
               </select>
               </div>
               <div className="d-flex flex-column w-100 ">
-              <label className="fw-bold" style={{fontSize:18}}>Agencia</label>
+              <label className="fw-bold" style={{fontSize:18}}>AGENCIA</label>
               <select
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
@@ -262,8 +327,8 @@ export default function ContadoPersonaNatural(){
               </select>
               </div>
               </div>
-              <div className="d-flex flex-row mt-2 mb-2  w-100">
-              <label className="fw-bold me-1" style={{fontSize:18}}>Solicitante:</label>
+              <div className="d-flex flex-row mt-3 mb-2  w-100">
+              <label className="fw-bold me-1" style={{fontSize:18}}>SOLICITANTE:</label>
               <input
                   id="solicitante"
                   type="text"
@@ -279,22 +344,58 @@ export default function ContadoPersonaNatural(){
             <div>
               <label className="fw-bold" style={{fontSize:20}}>CLIENTE</label>
               <div className="d-flex flex-row">
-                <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1 w-25">Nombres y apellidos:</label>
+                <div className="d-flex flex-column align-items-start w-25 pe-3">
+                  <label className="me-1 w-25">1er.Apellido:</label>
                   <input
-                    id="clienteNombre"
+                    id="primerApellido"
                     type="text"
-                    className="form-control form-control-sm me-3"  
-                    max={50} 
-                    length={50}                   
+                    className="form-control form-control-sm "                     
                     min={0}
                     required
                     placeholder="Campo obligatorio"
-                    value={search.clienteNombre}
+                    value={search.primerApellido}
                     onChange={handlerChangeSearch}
                   />
                 </div>   
-  
+                <div className="d-flex flex-column w-25 pe-3">
+                <label className="me-1 w-25">2do.Apellido:</label>
+                  <input
+                    id="segundoApellido"
+                    type="text"
+                    className="form-control form-control-sm "                     
+                    min={0}
+                    required
+                    placeholder="Campo obligatorio"
+                    value={search.segundoApellido}
+                    onChange={handlerChangeSearch}
+                  />
+                </div>
+                
+                <div className="d-flex flex-column w-25 pe-3">
+                <label className="me-1 w-25">1er.Nombre:</label>
+                  <input
+                    id="primerNombre"
+                    type="text"
+                    className="form-control form-control-sm "                     
+                    min={0}
+                    required
+                    placeholder="Campo obligatorio"
+                    value={search.primerNombre}
+                    onChange={handlerChangeSearch}
+                  />
+                </div>
+                <div className="d-flex flex-column w-25">
+                <label className="me-1 ">OtrosNombres:</label>
+                  <input
+                    id="otrosNombres"
+                    type="text"
+                    className="form-control form-control-sm w-100"                     
+                    min={0}
+                    placeholder="Campo obligatorio"
+                    value={search.otrosNombres}
+                    onChange={handlerChangeSearch}
+                  />
+                </div>
               </div>
 
               <div className="d-flex flex-row mt-2">
@@ -323,11 +424,11 @@ export default function ContadoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Identificación:</label>
                   <input
-                    id="numeroIdentificacion"
+                    id="cedula"
                     type="number"
                     className="form-control form-control-sm w-100"
                     min={0}
-                    value={search.numeroIdentificacion}
+                    value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
                     max={9999999999}
@@ -399,7 +500,7 @@ export default function ContadoPersonaNatural(){
                   </select>
                 </div>
               </div>
-              <div className="d-flex flex-row mt-2 mb-2">
+              <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Celular:</label>
                   <input
@@ -409,6 +510,7 @@ export default function ContadoPersonaNatural(){
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
+                    max={999999999999999}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -422,35 +524,36 @@ export default function ContadoPersonaNatural(){
                     onChange={handlerChangeSearch}
                     id="telefono"
                     type="number"
-                    className="form-control form-control-sm"
+                    className="form-control form-control-sm mb-2"
                     min={0}
-                    
+                    max={999999999999999}
                     placeholder="(Campo Opcional)"
                   >
                   </input>
                 </div>
               </div>
-              <div className="d-flex flex-row align-items-start">
-                  <label className="me-1">Correo de contacto:</label>
+              <div className="d-flex flex-row align-items-start ">
+                  <label className="me-1 mb-3">CorreoNotificaciones:</label>
                   <input
-                    value={search.correoContacto}
+                    value={search.correoNotificaciones}
                     onChange={handlerChangeSearch}
-                    id="correoContacto"
+                    id="correoNotificaciones"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:635}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
               </div>
-              <div className="d-flex flex-row align-items-start mt-2">
+              <hr className="my-1" />
+              <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRONICA</label>
+              <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
-                    value={search.correoFactura}
+                    value={search.correoFacturaElectronica}
                     onChange={handlerChangeSearch}
-                    id="correoFactura"
+                    id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
@@ -460,7 +563,68 @@ export default function ContadoPersonaNatural(){
                   >
                   </input>
               </div>
-              
+              <div className="d-flex flex-row mb-3">
+                <div className="pe-3" style={{width:255}}>
+                <label className="fw-bold" style={{fontSize:18}}>Regimen fiscal:</label>
+                <select
+                ref={selectRegimenRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setRegimen(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione el regimen --
+                </option>
+                {regimenes
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
+                <div className=" pe-3" style={{width:255}}>
+                <label className="fw-bold" style={{fontSize:18}}>Responsabilidad fiscal:</label>
+                <select
+                ref={selectBranchRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setResponsabilidad(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione la responsabilidad --
+                </option>
+                {responsabilidades
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
+                <div className="" style={{width:255}}>
+                <label className="fw-bold" style={{fontSize:18}}>Detalle tributario:</label>
+                <select
+                ref={selectBranchRef}
+                className="form-select form-select-sm w-100"
+                required
+                onChange={(e)=>setDetalle(JSON.parse(e.target.value))}
+              >
+                <option selected value='' disabled>
+                  -- Seleccione el detalle --
+                </option>
+                {detalles
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.id + " - " + elem.description}
+                    </option>
+                  ))}
+              </select>
+                </div>
+              </div>
             </div>            
             <hr className="my-1" />
             <div className="w-100 mt-1">
@@ -474,6 +638,8 @@ export default function ContadoPersonaNatural(){
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
+                    /* value={docRut} */
+                    onChange={(e)=>setDocRut(1)}
                   />
                 </div>
                 <div className="ms-2 w-100">
@@ -484,6 +650,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="INFOLAFT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
+                    onChange={(e)=>setDocInfemp(1)}
                   />
                 </div>
               </div>
@@ -495,6 +662,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="OTROS"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
+                    onChange={(e)=>setDocOtros(1)}
                   />
                 </div> 
             </div>

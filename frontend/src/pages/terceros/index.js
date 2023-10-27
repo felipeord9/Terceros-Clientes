@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as GoIcons from "react-icons/go"
-import TableTerceros from "../../components/TableTerceros"
-import { findClientesNaturales } from "../../services/clienteNaturalService"
+import TableTerceros from "../../components/TableTercerosContado"
+import { findClientes } from "../../services/clienteService"
 
 export default function Terceros() {
   const [terceros, setTerceros] = useState([]);
@@ -15,7 +15,7 @@ export default function Terceros() {
 
   const getAllTerceros = () => {
     setLoading(true)
-    findClientesNaturales()
+    findClientes()
       .then(({ data }) => {
         setTerceros(data)
         setSuggestions(data)
@@ -31,24 +31,11 @@ export default function Terceros() {
     if(value !== "") {
       const filteredTerceros = terceros.filter((elem) => {
         if(
-/*           elem.id.includes(value) ||
- */          elem.tipoPersona.toLowerCase().includes(value) ||
-          elem.tipoPago.includes(value) ||
-          elem.clasificacionDescription.includes(value) ||
-          elem.agenciaDescription.includes(value) ||
-          elem.solicitante.includes(value) ||
-          elem.clienteNombre.includes(value) ||
-          elem.tipoDocumento.includes(value) ||
-/*           elem.numeroIdentificacion.includes(value) ||
- */          elem.direccion.includes(value) ||
-          elem.departamento.includes(value) ||
-          elem.ciudad.includes(value) ||
-          elem.celular.includes(value) ||
-          elem.telefono.includes(value) ||
-          elem.correoContacto.includes(value) ||
-          elem.correoFactura.includes(value) ||
-          elem.observations.includes(value) ||
-          elem.userName.includes(value) 
+          /* elem.tipoPersona.includes(value) ||   */       
+          elem.cedula === value ||
+          elem.tipoDocumento.includes(value)||
+          elem.razonSocial.includes(value) ||
+          elem.userName.includes(value)
         ) {
           return elem
         }
@@ -68,14 +55,14 @@ export default function Terceros() {
     <div className="wrapper justify-content-center  h-100 w-100 m-auto">
     <div className='rounder-4'>
     <div className="login-wrapper d-flex flex-column mt-5 pt-3" >
-      <h1 className="text-danger fw-bold">Listado de Terceros registrados</h1>
+      <h1 className="text-danger fw-bold">Listado de Clientes registrados</h1>
       <div className="d-flex flex-column gap-2 h-100">
         <div className="d-flex justify-content-end mt-2 gap-3 mb-1">
           <input
             type="search"
             value={search}
             className="form-control form-control-sm w-100"
-            placeholder="Buscar Tercero"
+            placeholder="Buscar Ciente"
             onChange={searchTerceros}
             style={{width:500, fontSize:20}}
           />

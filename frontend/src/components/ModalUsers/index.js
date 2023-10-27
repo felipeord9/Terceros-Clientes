@@ -93,7 +93,7 @@ export default function ModalUsers({
   const [shown,setShown]=useState("");
   const switchShown =()=>setShown(!shown);
   return (
-    <div className="wrapper d-flex justify-content-center align-content-center">
+    <div className="wrapper d-flex justify-content-center align-content-center" style={{userSelect:'none'}}>
     <Modal show={showModal} style={{ fontSize: 18 }} centered>
       <Modal.Header>
         <center>
@@ -140,7 +140,7 @@ export default function ModalUsers({
                 <input
                   id="name"
                   type="text"
-                  value={info.name.toUpperCase()}
+                  value={info.name}
                   className="form-control form-control-sm"
                   onChange={handleChange}
                   autoComplete="off"

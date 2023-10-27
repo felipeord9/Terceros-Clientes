@@ -53,7 +53,7 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
   
   return (
     <div
-      className="wrapper justify-content-center d-flex flex-column rounded"
+      className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none'}}
     >
     <div className='rounder-4'>
     <div className='login-wrapper rounder-4' style={{width:1040,height:400}} >
