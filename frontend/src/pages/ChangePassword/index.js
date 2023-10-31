@@ -24,19 +24,35 @@ export default function ChangePassword() {
       setErrorInput("La contraseña anterior es igual a la actual");
       return setTimeout(() => setErrorInput(""), 3000);
     }
-
-    changePassword({ currentPassword, newPassword })
-      .then((data) => {
-        Swal.fire({
-          title: "¡Correcto!",
-          text: "Contraseña actualizada exitosamente",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 2500,
-        }).then(() => {
+    Swal.fire({
+      title: '¿Está segur@ de querer cambiar su contraseña?',
+          showDenyButton: true,
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#D92121',
+          denyButtonText: `Cancelar`,
+          denyButtonColor:'blue',
+          icon:'question'
+    }).then((result)=>{
+      if(result.isConfirmed){
+        changePassword({ currentPassword, newPassword })
+          .then((data) => {
+            Swal.fire({
+              title: "¡Correcto!",
+              text: "Contraseña actualizada exitosamente",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 2500,
+            }).then(() => {
+              navigate("/inicio");
+            });
+          })
+      }else if(result.isDenied){
+        Swal.fire('Oops', 'La información suministrada se ha descartado', 'info')
+        .then(() => {
           navigate("/inicio");
         });
-      })
+      }
+  })
       .catch((error) => {
         setErrorInput("¡Contraseña actual incorrecta!");
         return setTimeout(() => setErrorInput(""), 3000);

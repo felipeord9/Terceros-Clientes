@@ -41,18 +41,39 @@ export default function CreditoPersonaNatural(){
   const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
 
+  /* Inicializar los documentos adjuntos */
+  const [docVinculacion,setDocVinculacion]=useState(0);
+  const [docComprAntc,setDocComprAntc]=useState(0);
+  const [docCtaInst,setDocCtaInst]=useState(0);
+  const [docPagare,setDocPagare]=useState(0);
+  const [docRut,setDocRut]=useState(0);
+  const [docCcio,setDocCcio]=useState(0);
+  const [docCrepL,setDocCrepL]=useState(0);
+  const [docEf,setDocEf]=useState(0);
+  const [docRefcom,setDocRefcom]=useState(0);
+  const [docCvbo,setDocCvbo]=useState(0);
+  const [docFirdoc,setDocFirdoc]=useState(0);
+  const [docInfemp,setDocInfemp]=useState(0);
+  const [docInfrl,setDocInfrl]=useState(0);
+  const [docOtros,setDocOtros]=useState(0);
+  const [docCerBan, setDocCerBan] = useState(0);
+  const [docValAnt,setDocValAnt] = useState(0);
+
   const [search, setSearch] = useState({
-    tipoPersona: "Natural",
-    tipoPago: "Credito",
-    observations: "",
-    solicitante: "",
-    clienteNombre: "",
-    numeroIdentificacion:null,
-    direccion:"",
-    celular:"",
-    telefono:"",
-    correoContacto:"",
-    correoFactura:""
+    cedula:'',
+    tipoPersona:'1',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+    direccion:'',
+    celular:'',
+    telefono:'',
+    correoNotificaciones:'',
+    correoFacturaElectronica:'',
+    observations:'',
+    solicitante:'',
+    tipoFormulario:'PNCR'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -121,9 +142,9 @@ export default function CreditoPersonaNatural(){
   const handleSubmit = (e) => {
     e.preventDefault();
     Swal.fire({
-      title: "¿Está seguro?",
+      title: "¿Está segur@?",
         text: "Se realizará el registro de tercero",
-        icon: "warning",
+        icon: "question",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
         showCancelButton: true,
@@ -133,32 +154,67 @@ export default function CreditoPersonaNatural(){
         setLoading(true);
         const f = new FormData();
         const body={
-          clasficacion: clasificacion.description,
-          agency: agencia.description,
-          tipoDocumento: document.description,
-          departamento: departamento.description,
-          ciudad: ciudad.description,
+          clasificacion: clasificacion.id,
+          agencia: agencia.id,
+          tipoDocumento: document.codigo,
+          departamento: departamento.codigo,
+          ciudad: ciudad.codigo,
           createdAt: new Date(),
           createdBy: user.name,
-          tipoPersona:search.tipoPersona,
-          tipoPago:search.tipoPago,
-          solicitante:search.solicitante,
-          clienteNombre:search.clienteNombre,
-          numeroIdentificacion:search.numeroIdentificacion,
-          direccion:search.direccion,
-          celular:search.celular,
+          regimenFiscal: regimen.id,
+          responsabilidadFiscal: responsabilidad.id,
+          detalleTributario: detalle.id,
+          tipoDocRepLegal: document.codigo,
+          departamentoSucursal:departamento.codigo,
+          ciudadSucursal:ciudad.codigo,
+          cedula: search.cedula,
+          numeroDocumento: search.cedula,
+          tipoPersona: search.tipoPersona,
+          razonSocial: search.primerApellido +'  '+ search.segundoApellido +'  '+ search.primerNombre +'  '+ search.otrosNombres,
+          primerApellido:search.primerApellido,
+          segundoApellido:search.segundoApellido,
+          primerNombre:search.primerNombre,
+          otrosNombres:search.otrosNombres,
+          direccion: search.direccion,
+          celular: search.celular,
           telefono:search.telefono,
-          correoContacto:search.correoContacto,
-          correoFactura:search.correoFactura,
+          correoNotificaciones: search.correoNotificaciones,
+          nombreSucursal:search.primerNombre,
+          direccionSucursal:search.direccion,
+          celularSucursal:search.celular,
+          telefonoSucursal:search.telefono,
+          correoSucursal:search.correoNotificaciones,
+          correoFacturaElectronica:search.correoFacturaElectronica,
+          numeroDocRepLegal: search.cedula,
+          nameRepLegal:search.primerNombre,
+          apellidoRepLegal:search.primerApellido,
           observations:search.observations,
+          solicitante:search.solicitante,
+          tipoFormulario:search.tipoFormulario,
+          docVinculacion:docVinculacion,
+          docComprAntc:docComprAntc,
+          docCtalnst:docCtaInst,
+          docPagare:docPagare,
+          docRut:docRut,
+          docCcio:docCcio,
+          docCrepL:docCrepL,
+          docEf:docEf,
+          docRefcom:docRefcom,
+          docCvbo:docCvbo,
+          docFirdoc:docFirdoc,
+          docInfemp:docInfemp,
+          docInfrl:docInfrl,
+          docValAnt:docValAnt,
+          docCerBan:docCerBan,
+          docOtros:docOtros,
         };
         createCliente(body)
           .then(() => {
             setLoading(false)
           /* reloadInfo(); */
           Swal.fire({
-            title: 'Creación exitosa!',
-            text: 'El tercero se ha creado correctamente',
+            title: '¡Creación exitosa!',
+            text: 'El Cliente se ha registrado de manera éxitosa',
             icon: 'success',
             showConfirmButton: true,
             confirmButtonText:'Aceptar',
@@ -195,10 +251,7 @@ export default function CreditoPersonaNatural(){
       if (isConfirmed) window.location.reload();
     });
   };
-  const handleClasificacion=(e)=>{
-    e.preventDefault();
-    setClasificacion(e.target.value);
-  }
+
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
@@ -210,9 +263,10 @@ export default function CreditoPersonaNatural(){
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger" style={{fontSize:150}}><strong>persona NATURAL - pago a CRÉDITO</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger pb-2" style={{fontSize:150}}><strong>persona NATURAL - pago a CRÉDITO</strong></label>
           </Fade>
           </center>
+        <hr className="my-1" />
         </div>
       </section>
     </center>
@@ -222,7 +276,7 @@ export default function CreditoPersonaNatural(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACION</label>
+              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -272,7 +326,6 @@ export default function CreditoPersonaNatural(){
                   value={search.solicitante}
                   onChange={handlerChangeSearch}
                   className="form-control form-control-sm "
-                  autoComplete="off"
                  
               />
               </div>        
@@ -290,20 +343,19 @@ export default function CreditoPersonaNatural(){
                     min={0}
                     required
                     placeholder="Campo obligatorio"
-                    value={search.clienteNombre}
+                    value={search.primerApellido}
                     onChange={handlerChangeSearch}
                   />
                 </div>   
                 <div className="d-flex flex-column w-25 pe-3">
                 <label className="me-1 w-25">2do.Apellido:</label>
                   <input
-                    id="primerApellido"
+                    id="segundoApellido"
                     type="text"
                     className="form-control form-control-sm "                     
                     min={0}
-                    required
-                    placeholder="Campo obligatorio"
-                    value={search.clienteNombre}
+                    placeholder="(Campo Opcional)"
+                    value={search.segundoApellido}
                     onChange={handlerChangeSearch}
                   />
                 </div>
@@ -311,26 +363,25 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-column w-25 pe-3">
                 <label className="me-1 w-25">1er.Nombre:</label>
                   <input
-                    id="primerApellido"
+                    id="primerNombre"
                     type="text"
                     className="form-control form-control-sm "                     
                     min={0}
                     required
                     placeholder="Campo obligatorio"
-                    value={search.clienteNombre}
+                    value={search.primerNombre}
                     onChange={handlerChangeSearch}
                   />
                 </div>
                 <div className="d-flex flex-column w-25">
                 <label className="me-1 ">OtrosNombres:</label>
                   <input
-                    id="primerApellido"
+                    id="otrosNombres"
                     type="text"
                     className="form-control form-control-sm w-100"                     
                     min={0}
-                    required
-                    placeholder="Campo obligatorio"
-                    value={search.clienteNombre}
+                    placeholder="(Campo Opcional)"
+                    value={search.otrosNombres}
                     onChange={handlerChangeSearch}
                   />
                 </div>
@@ -362,11 +413,12 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Identificación:</label>
                   <input
-                    id="numeroIdentificacion"
+                    id="cedula"
                     type="number"
                     className="form-control form-control-sm w-100"
                     min={0}
-                    value={search.numeroIdentificacion}
+                    max={10000000000}
+                    value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
                     placeholder="Campo obligatorio"
@@ -427,7 +479,7 @@ export default function CreditoPersonaNatural(){
                   {ciudades
                   .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
-                    elem.id == departamento.id ?
+                    elem.id === departamento.id ?
                     <option id={elem.id} value={JSON.stringify(elem)}>
                     {elem.description}
                     </option>
@@ -448,6 +500,7 @@ export default function CreditoPersonaNatural(){
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
+                    max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -463,23 +516,21 @@ export default function CreditoPersonaNatural(){
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
-                    required
                     placeholder="(Campo Opcional)"
                   >
                   </input>
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start">
-                  <label className="me-1">Correo de contacto:</label>
+                  <label className="me-1">CorreoNotificaciones:</label>
                   <input
-                  value={search.correoContacto}
+                  value={search.correoNotificaciones}
                   onChange={handlerChangeSearch}
-                    id="correoContacto"
+                    id="correoNotificaciones"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:635}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -491,9 +542,9 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
-                    value={search.correoFactura}
+                    value={search.correoFacturaElectronica}
                     onChange={handlerChangeSearch}
-                    id="correoFactura"
+                    id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
@@ -550,7 +601,7 @@ export default function CreditoPersonaNatural(){
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
-                onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
+                onChange={(e)=>setDetalle(JSON.parse(e.target.value))}
               >
                 <option selected value='' disabled>
                   -- Seleccione el detalle --
@@ -574,18 +625,19 @@ export default function CreditoPersonaNatural(){
                 <div className="me-2 w-100">
                   <label className="fw-bold mt-1 ">FORMATO DE VINCULACIÓN: </label>
                   <input
-                    id="files"
+                    id="FormatoVinculacion"
                     type="file"
-                    placeholder="RUT"
                     className="form-control form-control-sm w-100"
-                    accept=".pdf"                  />
+                    accept=".pdf"        
+                    onChange={(e)=>setDocVinculacion(1)}          
+                    />
                 </div>
                 <div className="ms-2 w-100">
                   <label className="fw-bold mt-1 me-2">COMPROMISO ANTICORRUPCIÓN: </label>
                   <input
-                    id="files"
+                    id="DocComprAntc"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocComprAntc(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -594,18 +646,18 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">CARTA DE INSTRUCCIONES: </label>
                   <input
-                    id="files"
+                    id="DocCtaInst"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocCtaInst(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">PAGARE: </label>
                   <input
-                    id="files"
+                    id="DocPagare"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocPagare(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -614,18 +666,18 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">RUT: </label>
                   <input
-                    id="files"
+                    id="DocRut"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocRut(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
                   <input
-                    id="files"
+                    id="DocCcio"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocCcio(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -634,8 +686,9 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">CÉDULA: </label>
                   <input
-                    id="files"
+                    id="DocCrepL"
                     type="file"
+                    onChange={(e)=>setDocCrepL(1)}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
@@ -643,8 +696,9 @@ export default function CreditoPersonaNatural(){
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">ESTADOS FINANCIEROS O CERTIFICADO DE CONTADOR: </label>
                   <input
-                    id="files"
+                    id="DocEf"
                     type="file"
+                    onChange={(e)=>setDocEf(1)}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
@@ -654,18 +708,18 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">CERTIFICACIÓN BANCARIA: </label>
                   <input
-                    id="files"
+                    id="DocCerBan"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocCerBan(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
                   <input
-                    id="files"
+                    id="DocRefcom"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocRefcom(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -674,18 +728,18 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">CARTA VISTO BUENO ADMINISTRADOR DE LA AGENCIA: </label>
                   <input
-                    id="files"
+                    id="DocCvbo"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocCvbo(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">VALIDACIÓN DE ANTECEDENTES: </label>
                   <input
-                    id="files"
+                    id="DocValAnt"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocValAnt(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -694,18 +748,18 @@ export default function CreditoPersonaNatural(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">FICHA RELACIÓN DOCUMENTOS: </label>
                   <input
-                    id="files"
+                    id="DocFirdoc"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocFirdoc(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <input
-                    id="files"
+                    id="DocOtros"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocOtros(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 

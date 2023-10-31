@@ -24,9 +24,9 @@ export default function Inicio() {
   };
   
   return(
-    <div className=" wrapper d-flex flex-row justify-content-center align-items-center vh-100 w-100 m-auto">
+    <div className=" wrapper d-flex flex-row justify-content-center align-items-center vh-100 w-100 m-auto" style={{boxShadow:100,bgcolor: 'background.paper'}}>
       <div className='rounder-4'>
-      <div className='d-flex flex-row p-2 m-2'>
+      <div className='d-flex flex-row p-2 m-2' >
       <img src={Logo} alt=''/>
       <div >
       <center>

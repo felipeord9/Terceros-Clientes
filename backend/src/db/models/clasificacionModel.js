@@ -4,7 +4,7 @@ const CLASIFICACION_TABLE = 'clasificacion'
 
 const ClasificacionSchema = {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false
   },

@@ -104,10 +104,15 @@ const ClienteSchema={
         allowNull:false,
         field:'cod_city_sucursal'
     },
-    telefonoSucursal:{
-        type:DataTypes.INTEGER,
+    celularSucursal:{
+        type:DataTypes.STRING,
         allowNull:false,
-        field:'No_sucursal'
+        field:'no_sucursal'
+    },
+    telefonoSucursal:{
+        type:DataTypes.STRING,
+        allowNull:true,
+        field:'telefono_sucursal'
     },
     correoSucursal:{
         type:DataTypes.STRING,
@@ -243,6 +248,16 @@ const ClienteSchema={
         type: DataTypes.INTEGER,
         allowNull: false,
         field: "doc_infrl",
+    },
+    docCerBan:{
+        type: DataTypes.INTEGER,
+        allowNull:false,
+        field:'doc_cerban'
+    },
+    docValAnt:{
+        type: DataTypes.INTEGER,
+        allowNull:false,
+        field:'doc_valant'
     },
     docOtros:{
         type: DataTypes.INTEGER,

@@ -41,19 +41,36 @@ export default function ModalUsers({
 
   const handleCreateNewUser = (e) => {
     e.preventDefault();
-    createUser(info)
-      .then((data) => {
-        setShowModal(!showModal)
-        reloadInfo();
-        Swal.fire({
-          title: '¡Correcto!',
-          text: 'El usuario se ha creado correctamente',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 2500
-        })
+    Swal.fire({
+      title: '¿Está segur@ de querer agregar este usuario?',
+          showDenyButton: true,
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#D92121',
+          denyButtonText: `Cancelar`,
+          denyButtonColor:'blue',
+          icon:'question'
+    }).then((result)=>{
+      if(result.isConfirmed){
+        createUser(info)
+          .then((data) => {
+            setShowModal(!showModal)
+            reloadInfo();
+            Swal.fire(
+              '¡Correcto!', 'El usuario se ha creado con éxito', 'success'
+              /* title: '¡Correcto!',
+              text: 'El usuario se ha creado correctamente',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 2500 */
+            )
+            
+          })
+        }else if(result.isDenied){
+          Swal.fire('Oops', 'La información suministrada se ha descartado', 'info')
+          setShowModal(!showModal)
+        }
         cleanForm()
-      })
+    })
       .catch((error) => {
         setError(error.response.data.errors.original.detail)
         setTimeout(() => setError(''), 2500)
@@ -62,19 +79,34 @@ export default function ModalUsers({
 
   const handleUpdateUser = (e) => {
     e.preventDefault();
-    updateUser(user.id, info)
-      .then((data) => {
-        cleanForm()
+    Swal.fire({
+      title: '¿Está segur@ de querer editar este usuario?',
+          showDenyButton: true,
+          confirmButtonText: 'Confirmar',
+          confirmButtonColor: '#D92121',
+          denyButtonText: `Cancelar`,
+          denyButtonColor:'blue',
+          icon:'question'
+    }).then((result)=>{
+      if(result.isConfirmed){
+        updateUser(user.id, info)
+          .then((data) => {           
+            setShowModal(!showModal)
+            reloadInfo();
+            Swal.fire({
+              title: '¡Correcto!',
+              text: 'El usuario se ha actualizado correctamente',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 2500
+            })
+          })
+      }else if(result.isDenied){
+        Swal.fire('Oops', 'La información suministrada se ha descartado', 'info')
         setShowModal(!showModal)
-        reloadInfo();
-        Swal.fire({
-          title: '¡Correcto!',
-          text: 'El usuario se ha actualizado correctamente',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 2500
-        })
-      })
+      }
+      cleanForm()
+    })
       .catch((error) => {
         setError(error.response.data.errors.original.detail)
         setTimeout(() => setError(''), 2500)

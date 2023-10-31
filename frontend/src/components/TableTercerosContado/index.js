@@ -9,13 +9,14 @@ export default function TableTerceros({ terceros, loading }) {
       selector: (row) => row.id,
       sortable: true,
       width: '80px',
+      
     },
     {
       id: "tipoPersona",
-      name: "Tipo Persona",
+      name: "TipoPersona",
       selector: (row) => row.tipoPersona,
       sortable: true,
-      width: '140px'
+      width: '120px'
     },
     {
       id: "cedula",
@@ -26,10 +27,10 @@ export default function TableTerceros({ terceros, loading }) {
     },
     {
       id: "tipoDocumento",
-      name: "Tipo Doc",
+      name: "TipoDoc",
       selector: (row) => row.tipoDocumento,
       sortable: true,
-      width: '120px',
+      width: '110px',
     }, 
     {
       id: "razonSocial",
@@ -61,17 +62,17 @@ export default function TableTerceros({ terceros, loading }) {
       },
       {
         id: "regimen",
-        name: "regimen",
+        name: "Regimen",
         selector: (row) => row.regimenFiscal,
         sortable: true,
-        width: '180px',
+        width: '120px',
       },
       {
         id: "responsabilidad",
-        name: "respo.Fiscal",
+        name: "Respo.Fiscal",
         selector: (row) => row.responsabilidadFiscal,
         sortable: true,
-        width: '180px'
+        width: '130px'
       },
       {
         id: "detalle",
@@ -99,26 +100,26 @@ export default function TableTerceros({ terceros, loading }) {
         name: "Observaciones",
         selector: (row) => row.observations,
         sortable: true,
-        width: '150px',
+        width: '250px',
       },
       {
         id: "clasificacion",
-        name: "Clasificacion",
+        name: "Clasificación",
         selector: (row) => row.clasificacion,
         sortable: true,
         width: '130px',
       },{
         id: "agencia",
-        name: "agencia",
+        name: "Agencia",
         selector: (row) => row.agencia,
         sortable: true,
-        width: '180px',
+        width: '110px',
       },{
         id: "tipoFormulario",
-        name: "Tipo Formulario",
+        name: "TipoFormulario",
         selector: (row) => row.tipoFormulario,
         sortable: true,
-        width: '200px',
+        width: '150px',
       },{
         id: "Create by",
         name: "Creado por",
@@ -126,13 +127,11 @@ export default function TableTerceros({ terceros, loading }) {
         sortable: true,
         width: '150px',
       }
-
-    
   ]
   
   return (
     <div
-      className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none'}}
+      className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none',fontSize:20}}
     >
     <div className='rounder-4'>
     <div className='login-wrapper rounder-4' style={{width:1000,height:400}} >

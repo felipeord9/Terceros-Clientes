@@ -5,7 +5,7 @@ const CIUDAD_TABLE = 'ciudades'
 
 const CiudadSchema = {
   id:{
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
   },

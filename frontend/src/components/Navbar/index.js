@@ -5,6 +5,7 @@ import * as FaIcons from "react-icons/fa";
 import AuthContext from "../../context/authContext";
 import useUser from "../../hooks/useUser";
 import { NavBarData } from "./NavbarData";
+import Swal from "sweetalert2";
 import Logo from "../../assest/item.png";
 import "./styles.css";
 import InputLabel from '@mui/material/InputLabel';
@@ -19,10 +20,14 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
+import Icono from '../../assest/iconoAdver.png';
+import Icon2 from '../../assest/icon2.png'
+import Icon3 from '../../assest/gif.gif'
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import { Button, Modal } from "react-bootstrap";
+import  Button from "@mui/material/Button";
+import Modal from '@mui/material/Modal'
 import { AiFillEdit } from 'react-icons/ai'
 import Box from '@mui/material/Box';
 
@@ -35,7 +40,7 @@ const style = {
   bgcolor: 'background.paper',
   justifyContent:'center',
   boxShadow: 24,
-  p: 4,
+  p: 3,
   borderRadius:5
 };
 
@@ -53,6 +58,7 @@ export default function Navbar() {
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
+  
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -62,6 +68,16 @@ export default function Navbar() {
     }
     const handleCerrar=()=>{
         setCerrar(false);
+    }
+
+    /* Modal instancias */
+    const [openModal,setOpenModal]=useState(false);
+    const handleOpenModal=(e)=>{
+      setOpenModal(true);
+    } 
+    const handleCloseModal=()=>{
+      setOpenModal(false);
+      
     }
   return (
     <>
@@ -125,7 +141,8 @@ export default function Navbar() {
                   id="account-menu"
                   open={open}
                   onClose={handleClose}
-                  onClick={handleClose}
+                  /* Aqui hace que se cierre el menu cuando se da click en un iten */
+                  /* onClick={handleClose} */
                   PaperProps={{
                     elevation: 0,
                     sx: {
@@ -157,21 +174,43 @@ export default function Navbar() {
                 >
                   <center>
                 <p className="fw-bold mt-1 mb-1">
-                  {user.role.toUpperCase()}
+                  {user.role}
                 </p>
                 <hr style={{width:200, color:'black'}}/>
-                <MenuItem onClick={(e)=>navigate('/change/password')}>
-                  <Button style={{height:50}}>
+                <MenuItem onClick={handleClose}>
+                  <Button onClick={(e)=>navigate('/change/password')} style={{height:55}} variant="contained">
                   <AiFillEdit/>
                   Cambiar Contraseña
                   </Button>
                 </MenuItem>
-                <MenuItem >
-                <button onClick={(e)=>logout()}>
-                  <FiIcons.FiLogOut style={{width:25, height:25}}/>
-                  <label className="ms-2" style={{fontSize:15}}>Cerrar sección</label>
-                </button>
-                  </MenuItem>
+                <MenuItem >         
+                  <button onClick={handleOpenModal}>
+                    <FiIcons.FiLogOut style={{width:18, height:18}}/>
+                    <label className="ms-1" style={{fontSize:15}}>CERRAR SECCIÓN</label>
+                  </button>          
+                  <Modal open={openModal}
+                    onClose={handleCloseModal}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description">
+                    <Box sx={style}>
+                      <center>
+                          <img src={Icon3} style={{width:100}}/>
+                        <div className="d-flex flex-row">
+                        {/* <hr className="my-1" /> */}
+                        <h3 id="parent-modal-title" className=' d-flex'>¿Está segur@ que desea cerrar la sección?</h3>
+                        </div>
+                        <div className="d-flex flex-row justify-content-center">
+                          <div onClick={handleClose} >
+                            <button  className='m-4' onClick={(e)=>logout(e)} style={{fontSize:18}}><strong>YES</strong></button>
+                          </div>
+                        <div>
+                          <Button variant="contained" color="primary" style={{width:90, height:55,fontSize:22}} className="m-4" onClick={handleCloseModal}>NO</Button> 
+                        </div>
+                        </div>
+                      </center>
+                    </Box>
+                  </Modal>
+                </MenuItem>
                 </center>
               </Menu>
             </div>

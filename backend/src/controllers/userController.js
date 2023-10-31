@@ -20,8 +20,8 @@ const findOneUser = async (req, res, next) => {
 
     res.status(200).json({
       message: 'OK',
-      data
-    })
+      data,
+    });
   } catch (error) {
     next(error)
   }

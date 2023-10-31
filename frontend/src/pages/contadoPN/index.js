@@ -46,6 +46,8 @@ export default function ContadoPersonaNatural(){
   const [docInfemp,setDocInfemp]=useState(0);
   const [docInfrl,setDocInfrl]=useState(0);
   const [docOtros,setDocOtros]=useState(0);
+  const [docCerBan, setDocCerBan] = useState(0);
+  const [docValAnt,setDocValAnt] = useState(0);
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
@@ -71,7 +73,7 @@ export default function ContadoPersonaNatural(){
     correoFacturaElectronica:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'Persona Natural Contado'
+    tipoFormulario:'PNC'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -153,9 +155,9 @@ export default function ContadoPersonaNatural(){
   const handleSubmit = (e) => {
     e.preventDefault();
     Swal.fire({
-      title: "¿Está seguro?",
-        text: "Se realizará el registro de tercero",
-        icon: "warning",
+      title: "¿Está segur@?",
+        text: "Se realizará el registro de Cliente",
+        icon:'question',
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
         showCancelButton: true,
@@ -165,23 +167,23 @@ export default function ContadoPersonaNatural(){
         setLoading(true);
         const f = new FormData();
         const body={
-          clasificacion: clasificacion.description,
-          agencia: agencia.description,
+          clasificacion: clasificacion.id,
+          agencia: agencia.id,
           tipoDocumento: document.codigo,
-          departamento: departamento.id,
+          departamento: departamento.codigo,
           ciudad: ciudad.codigo,
           createdAt: new Date(),
           createdBy: user.name,
-          regimenFiscal: regimen.description,
-          responsabilidadFiscal: responsabilidad.description,
-          detalleTributario: detalle.description,
+          regimenFiscal: regimen.id,
+          responsabilidadFiscal: responsabilidad.id,
+          detalleTributario: detalle.id,
           tipoDocRepLegal: document.codigo,
-          departamentoSucursal:departamento.id,
+          departamentoSucursal:departamento.codigo,
           ciudadSucursal:ciudad.codigo,
           cedula: search.cedula,
           numeroDocumento: search.cedula,
           tipoPersona: search.tipoPersona,
-          razonSocial: search.primerApellido +'_'+ search.segundoApellido +'_'+ search.primerNombre +'_'+ search.otrosNombres,
+          razonSocial: search.primerApellido +'  '+ search.segundoApellido +'  '+ search.primerNombre +'  '+ search.otrosNombres,
           primerApellido:search.primerApellido,
           segundoApellido:search.segundoApellido,
           primerNombre:search.primerNombre,
@@ -192,6 +194,7 @@ export default function ContadoPersonaNatural(){
           correoNotificaciones: search.correoNotificaciones,
           nombreSucursal:search.primerNombre,
           direccionSucursal:search.direccion,
+          celularSucursal: search.celular,
           telefonoSucursal:search.telefono,
           correoSucursal:search.correoNotificaciones,
           correoFacturaElectronica:search.correoFacturaElectronica,
@@ -214,6 +217,8 @@ export default function ContadoPersonaNatural(){
           docFirdoc:docFirdoc,
           docInfemp:docInfemp,
           docInfrl:docInfrl,
+          docValAnt:docValAnt,
+          docCerBan:docCerBan,
           docOtros:docOtros,
         };
         createCliente(body)
@@ -222,8 +227,9 @@ export default function ContadoPersonaNatural(){
           /* reloadInfo(); */
           Swal.fire({
             title: 'Creación exitosa!',
-            text: 'El tercero se ha creado correctamente',
+            text: 'El Cliente se ha registrado de manera éxitosa',
             icon: 'success',
+            position:'center',
             showConfirmButton: true,
             confirmButtonText:'Aceptar',
             timer: 2500
@@ -248,11 +254,11 @@ export default function ContadoPersonaNatural(){
 
   const refreshForm = () => {
     Swal.fire({
-      title: "¿Está seguro?",
-      text: "Se descartará todo el proceso que lleva",
+      title: "¿Está segur@?",
+      text: "Se descartará toda la información que haya ingresado",
       icon: "warning",
       confirmButtonText: "Aceptar",
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#D92121",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
     }).then(({ isConfirmed }) => {
@@ -271,9 +277,10 @@ export default function ContadoPersonaNatural(){
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger" style={{fontSize:150}}><strong>persona NATURAL - pago a CONTADO</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>persona NATURAL - pago a CONTADO</strong></label>
           </Fade>
           </center>
+          <hr className="my-1" />
         </div>
       </section>
     </center>
@@ -283,7 +290,7 @@ export default function ContadoPersonaNatural(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACION</label>
+              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -365,7 +372,7 @@ export default function ContadoPersonaNatural(){
                     className="form-control form-control-sm "                     
                     min={0}
                     required
-                    placeholder="Campo obligatorio"
+                    placeholder="(Campo Opcional)"
                     value={search.segundoApellido}
                     onChange={handlerChangeSearch}
                   />
@@ -391,7 +398,7 @@ export default function ContadoPersonaNatural(){
                     type="text"
                     className="form-control form-control-sm w-100"                     
                     min={0}
-                    placeholder="Campo obligatorio"
+                    placeholder="(Campo Opcional)"
                     value={search.otrosNombres}
                     onChange={handlerChangeSearch}
                   />
@@ -414,8 +421,8 @@ export default function ContadoPersonaNatural(){
                   .sort((a, b) => a.id - b.id)
                   .map((elem) => (
                     <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
+                    {elem.id + " - " + elem.description}
+                  </option>
                   ))}
               </select>
                 </div>
@@ -431,7 +438,7 @@ export default function ContadoPersonaNatural(){
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
-                    max={9999999999}
+                    max={10000000000}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -510,7 +517,7 @@ export default function ContadoPersonaNatural(){
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
-                    max={999999999999999}
+                    max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -526,7 +533,7 @@ export default function ContadoPersonaNatural(){
                     type="number"
                     className="form-control form-control-sm mb-2"
                     min={0}
-                    max={999999999999999}
+                    max={10000000000}
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -547,7 +554,7 @@ export default function ContadoPersonaNatural(){
                   </input>
               </div>
               <hr className="my-1" />
-              <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRONICA</label>
+              <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
               <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
@@ -630,7 +637,7 @@ export default function ContadoPersonaNatural(){
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row m-1">
-                <div className="me-2 w-100">
+                <div className="pe-2 w-50">
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <input
                     id="RUT"
@@ -638,11 +645,10 @@ export default function ContadoPersonaNatural(){
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
-                    /* value={docRut} */
                     onChange={(e)=>setDocRut(1)}
                   />
                 </div>
-                <div className="ms-2 w-100">
+                <div className="ps-2 w-50">
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
                   <input
                     id="INFOLAFT"

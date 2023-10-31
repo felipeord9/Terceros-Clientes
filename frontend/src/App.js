@@ -20,8 +20,6 @@ import CreditoPersonaJuridica from './pages/creditoPJ';
 import Users from './pages/Users';
 import Terceros from './pages/terceros';
 
-import DepaCiudad from './pages/depa-ciudad';
-
 
 function App() {
   return(
@@ -32,8 +30,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate to='/login'/>}/>
         <Route path='/login' element={<Login/>}/>
-        <Route path='/recovery/password' element={<RecoveryPassword/>}/>
-        <Route path='/send/recovery' element={<SendRecovery/>}/>
+{/*         <Route path='/recovery/password' element={<RecoveryPassword/>}/>
+ */}        <Route path='/send/recovery' element={<SendRecovery/>}/>
         <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
 
         {/* <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/> */}
@@ -48,7 +46,6 @@ function App() {
         <Route path='*' element={<Page404/>}/>
         {/* <Route path='*' element={<Fondo/>}/> */}
 
-        <Route path='/depa' element={<DepaCiudad/>}/>
       </Routes>
       </div>
     </Router>

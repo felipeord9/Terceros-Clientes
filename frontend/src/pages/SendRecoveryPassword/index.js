@@ -12,12 +12,12 @@ export default function SendRecoveryPassword() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (isLogged) navigate('/inicio');
-  }, [isLogged, navigate]);
+  }, [isLogged, navigate]); */
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     sendRecovery(email)
       .then((data) => {
         Swal.fire({
@@ -28,10 +28,21 @@ export default function SendRecoveryPassword() {
         })
         navigate('/login')
       })
-      .catch((error) => {
+      /* .catch((error) => {
         setError(error)
         setTimeout(() => setError(''), 2500)
-      })
+      }) */
+      .catch((err)=>{
+        /* setLoading(false); */
+        Swal.fire({
+          title: "¡Algo salio mal!",
+            text: `
+              Hubo un error al momento de enviar el correo de recuperación, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        });
+      });
   }
 
   return (
@@ -40,7 +51,7 @@ export default function SendRecoveryPassword() {
       <div className='login-wrapper p-2 shadow border-light rounded-4 border border-1 bg-gradient d-flexjustify-content-between' style={{backgroundColor:'white'}}>
       <img src={Logo} alt=''/>
       <h1 style={{color:'black'}}><strong>Validar correo</strong></h1>
-      <form onSubmit={handleSubmit} className=''>
+      <form onSubmit={handleSubmit}>
         <div className='input_group m-3 '>
           <input type='text' id='usuario' va className='input_group_input' required onChange={(e)=> setEmail(e.target.value)}/>
           <label for="usuario" className='input_group_label'>Correo electrónico</label>

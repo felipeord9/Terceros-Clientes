@@ -8,6 +8,10 @@ const DepartamentoSchema = {
     primaryKey: true,
     allowNull: false
   },
+  codigo:{
+    type: DataTypes.STRING,
+    allowNull:false,
+  },
   description: {
     type: DataTypes.STRING,
     allowNull: false

@@ -4,7 +4,7 @@ const AGENCY_TABLE = 'agencies'
 
 const AgencySchema = {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false
   },

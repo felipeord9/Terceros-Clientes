@@ -14,6 +14,7 @@ import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService';
+import { createCliente } from "../../services/clienteService";
 
 export default function ContadoPersonaJuridica(){
   /* instancias de contexto */
@@ -41,22 +42,57 @@ export default function ContadoPersonaJuridica(){
   const [regimenes,setRegimenes] = useState([]);
   const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
-  const [files, setFiles] = useState(null);
-  const [productosAgr, setProductosAgr] = useState({
-    agregados: [],
-    total: "0",
-  });
+
+  /* Inicializar los documentos adjuntos */
+  const [docVinculacion,setDocVinculacion]=useState(0);
+  const [docComprAntc,setDocComprAntc]=useState(0);
+  const [docCtaInst,setDocCtaInst]=useState(0);
+  const [docPagare,setDocPagare]=useState(0);
+  const [docRut,setDocRut]=useState(0);
+  const [docCcio,setDocCcio]=useState(0);
+  const [docCrepL,setDocCrepL]=useState(0);
+  const [docEf,setDocEf]=useState(0);
+  const [docRefcom,setDocRefcom]=useState(0);
+  const [docCvbo,setDocCvbo]=useState(0);
+  const [docFirdoc,setDocFirdoc]=useState(0);
+  const [docInfemp,setDocInfemp]=useState(0);
+  const [docInfrl,setDocInfrl]=useState(0);
+  const [docOtros,setDocOtros]=useState(0);
+  const [docCerBan, setDocCerBan] = useState(0);
+  const [docValAnt,setDocValAnt] = useState(0);
+
+  /* Inicializar los input */
   const [search, setSearch] = useState({
-    tipoFormato:'Persona Jurídica Contado',
+    cedula:'',
+    tipoDocumento:'N',
     tipoPersona:'2',
-    idCliente: "",
-    descCliente: "",
-    deliveryDate: "",
-    observations: "",
-    order: "",
+    razonSocial:'',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+    direccion:'',
+    celular:'',
+    telefono:'',
+    correoNotificaciones:'',
+    nombreSucursal:'',
+    direccionSucursal:'',
+    celularSucursal:'',
+    telefonoSucursal:'',
+    correoSucursal:'',
+    correoFacturaElectronica:'',
+    numeroDocRepLegal:'',
+    nameRepLegal:'',
+    apellidoRepLegal:'',
+    observations:'',
+    solicitante:'',
+    tipoFormulario:'PJC',
+    tipo
+    :'N'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
+
   /* rama seleccionada de cada variable */
   const selectBranchRef = useRef();
   const selectClasificacionRef =useRef();
@@ -116,12 +152,105 @@ export default function ContadoPersonaJuridica(){
       const newFile = new File([file], `Archivo-Adjunto.${ext}`, {
         type: file.type,
       });
-      setFiles(newFile);
+      /* setFiles(newFile); */
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    Swal.fire({
+      title:'¿Está segur@?',
+      text:'Se realizará el registro del Cliente',
+      icon:'question',
+      confirmButtonText:'Aceptar',
+      confirmButtonColor:'#198754',
+      showCancelButton:true,
+      cancelButtonText:'Cancelar',
+    }) .then(({isConfirmed})=>{
+      if(isConfirmed){
+        setLoading(true);
+        const body={
+          cedula:search.cedula,
+          numeroDocumento: search.cedula,
+          tipoDocumento:search.tipoDocumento,
+          tipoPersona:search.tipoPersona,
+          razonSocial:search.razonSocial,
+          primerApellido:search.primerApellido,
+          segundoApellido:search.segundoApellido,
+          primerNombre:search.primerNombre,
+          otrosNombres:search.otrosNombres,
+          departamento:departamento.codigo,
+          ciudad: ciudad.codigo,
+          direccion: search.direccion,
+          celular: search.celular,
+          telefono: search.telefono,
+          correoNotificaciones: search.correoNotificaciones,
+          nombreSucursal:search.nombreSucursal,
+          direccionSucursal: search.direccionSucursal,
+          departamentoSucursal: depart.codigo,
+          ciudadSucursal: city.codigo,
+          celularSucursal: search.celularSucursal,
+          telefonoSucursal: search.telefonoSucursal,
+          correoSucursal: search.correoSucursal,
+          correoFacturaElectronica: search.correoFacturaElectronica,
+          regimenFiscal: regimen.id,
+          responsabilidadFiscal: responsabilidad.id,
+          detalleTributario: detalle.id,
+          numeroDocRepLegal: search.numeroDocRepLegal,
+          nameRepLegal: search.nameRepLegal,
+          tipoDocRepLegal: document.codigo,
+          apellidoRepLegal: search.apellidoRepLegal,
+          observations: search.observations,
+          createdAt: new Date(),
+          createdBy: user.name,
+          solicitante: search.solicitante,
+          docVinculacion:docVinculacion,
+          docComprAntc:docComprAntc,
+          docCtalnst:docCtaInst,
+          docPagare:docPagare,
+          docRut:docRut,
+          docCcio:docCcio,
+          docCrepL:docCrepL,
+          docEf:docEf,
+          docRefcom:docRefcom,
+          docCvbo:docCvbo,
+          docFirdoc:docFirdoc,
+          docInfemp:docInfemp,
+          docInfrl:docInfrl,
+          docValAnt: docValAnt,
+          docCerBan: docCerBan,
+          docOtros:docOtros,
+          clasificacion: clasificacion.id,
+          agencia: agencia.id,
+          tipoFormulario: search.tipoFormulario,
+        };
+        createCliente(body)
+          .then(()=>{
+            setLoading(false)
+            Swal.fire({
+              title:'¡Creación exitosa!',
+              text:'El cliente se ha registrado de manera éxitosa',
+              icon:'success',
+              showConfirmButton:true,
+              confirmButtonText:'Aceptar',
+              timer:2500
+            }).then(()=>{
+              window.location.reload();
+            })
+          })
+          .catch((err)=>{
+            setLoading(false);
+            Swal.fire({
+              title:'¡Ha ocurrido un error!',
+              text: `
+              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            });
+          });
+      };
+    });
   };
 
   const refreshForm = () => {
@@ -148,9 +277,10 @@ export default function ContadoPersonaJuridica(){
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <h1 className="fs-3 fw-bold m-1 ms-4 me-4 text-danger"><strong>persona JURÍDICA - pago a CONTADO</strong></h1>
+          <h1 className="fs-3 fw-bold m-1 ms-4 me-4 text-danger pb-2" style={{fontSize:150}}><strong>persona JURÍDICA - pago a CONTADO</strong></h1>
           </Fade>
           </center>
+          <hr className="my-1" />
         </div>
       </section>
     </center>
@@ -160,7 +290,7 @@ export default function ContadoPersonaJuridica(){
             <div>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACION</label>
+              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
               <select
                 ref={selectClasificacionRef}
                 className="form-select form-select-sm"
@@ -207,8 +337,9 @@ export default function ContadoPersonaJuridica(){
                   id="solicitante"
                   type="text"
                   placeholder="Nombre Solicitante"
+                  value={search.solicitante}
+                  onChange={handlerChangeSearch}
                   className="form-control form-control-sm "
-                  autoComplete="off"
                  required
               />
               </div>        
@@ -220,10 +351,11 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">RazónSocial:</label>
                   <input
-                    id="idCliente"
+                    id="razonSocial"
                     type="text"
                     className="form-control form-control-sm me-3"
-                                  
+                    value={search.razonSocial}
+                    onChange={handlerChangeSearch}
                     min={0}
                     required
                     placeholder="Campo obligatorio"
@@ -232,12 +364,13 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">NIT:</label>
                   <input
-                    id="apellidos"
+                    id="cedula"
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                     
+                    value={search.cedula}
+                    onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -249,6 +382,8 @@ export default function ContadoPersonaJuridica(){
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
+                  value={search.direccion}
+                  onChange={handlerChangeSearch}
                   className="form-control form-control-sm w-75"
                   min={0}
                   required
@@ -293,7 +428,7 @@ export default function ContadoPersonaJuridica(){
                   {ciudades
                   .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
-                    elem.id == departamento.id ?
+                    elem.id === departamento.id ?
                     <option id={elem.id} value={JSON.stringify(elem)}>
                     {elem.description}
                     </option>
@@ -308,10 +443,13 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Celular:</label>
                   <input
-                    id="numeroCelular"
+                    id="celular"
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
+                    max={10000000000}
+                    value={search.celular}
+                    onChange={handlerChangeSearch}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -325,7 +463,9 @@ export default function ContadoPersonaJuridica(){
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
-                    required
+                    max={10000000000}
+                    value={search.telefono}
+                    onChange={handlerChangeSearch}
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -334,10 +474,12 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start mb-3 w-100">
                   <label className="me-1">Correo de notificación:</label>
                   <input
-                    id="numeroDocumento"
+                    id="correoNotificaciones"
                     type="email"
                     className="form-control form-control-sm "
                     min={0}
+                    value={search.correoNotificaciones}
+                    onChange={handlerChangeSearch}
                     required
                     style={{width:635}} 
                     placeholder="Campo obligatorio"
@@ -352,10 +494,12 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">NombreSucursal:</label>
                   <input
-                    id="numeroDocumento"
+                    id="nombreSucursal"
                     type="text"
                     className="form-control form-control-sm w-100"
                     min={0}
+                    value={search.nombreSucursal}
+                    onChange={handlerChangeSearch}
                     required
                     style={{width:635}} 
                     placeholder="Campo obligatorio"
@@ -365,7 +509,9 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start w-100 mt-2">
                   <label className="me-1">DirecciónSucursal:</label>
                   <input
-                    id="numeroDocumento"
+                    id="direccionSucursal"
+                    value={search.direccionSucursal}
+                    onChange={handlerChangeSearch}
                     type="text"
                     className="form-control form-control-sm w-100"
                     min={0}
@@ -429,10 +575,13 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Celular:</label>
                   <input
-                    id="numeroCelular"
+                    id="celularSucursal"
+                    value={search.celularSucursal}
+                    onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm me-3"
                     min={0}
+                    max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -442,10 +591,13 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Teléfono:</label>
                   <input
-                    id="telefono"
+                    id="telefonoSucursal"
+                    value={search.telefonoSucursal}
+                    onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
+                    max={10000000000}
                     required
                     placeholder="(Campo Opcional)"
                   >
@@ -455,12 +607,13 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start mb-3">
                   <label className="me-1">CorreoSucursal:</label>
                   <input
-                    id="numeroDocumento"
+                    id="correoSucursal"
+                    value={search.correoSucursal}
+                    onChange={handlerChangeSearch}
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
-                    required
-                    
+                    required                   
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -470,9 +623,9 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-row align-items-start mt-2 mb-2  ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
-                    value={search.correoFactura}
+                    value={search.correoFacturaElectronica}
                     onChange={handlerChangeSearch}
-                    id="correoFactura"
+                    id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
@@ -484,7 +637,7 @@ export default function ContadoPersonaJuridica(){
               </div>
               <div className="d-flex flex-row mb-4">
                 <div className="pe-3" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Regimen fiscal:</label>
+                <label className="fw-bold" style={{fontSize:18}}>Régimen fiscal:</label>
                 <select
                 ref={selectRegimenRef}
                 className="form-select form-select-sm w-100"
@@ -529,7 +682,7 @@ export default function ContadoPersonaJuridica(){
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
-                onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
+                onChange={(e)=>setDetalle(JSON.parse(e.target.value))}
               >
                 <option selected value='' disabled>
                   -- Seleccione el detalle --
@@ -551,10 +704,11 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Nombres:</label>
                   <input
-                    id="idCliente"
+                    id="nameRepLegal"
                     type="text"
                     className="form-control form-control-sm me-3"
-                                  
+                    value={search.nameRepLegal}
+                    onChange={handlerChangeSearch}              
                     min={0}
                     required
                     placeholder="Campo obligatorio"
@@ -563,12 +717,13 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Apellidos:</label>
                   <input
-                    id="apellidos"
+                    id="apellidoRepLegal"
                     type="text"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                     
+                    value={search.apellidoRepLegal}
+                    onChange={handlerChangeSearch} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -589,7 +744,7 @@ export default function ContadoPersonaJuridica(){
                   {documentos
                   .sort((a, b) => a.id - b.id)
                   .map((elem) => (
-                    <option key={elem.id} id={elem.id} value={JSON.stringify(elem.id)}>
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + " - " + elem.description}
                     </option>
                   ))}
@@ -598,12 +753,14 @@ export default function ContadoPersonaJuridica(){
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">No.Identificacion:</label>
                   <input
-                    id="noIdentificacion"
+                    id="numeroDocRepLegal"
+                    value={search.numeroDocRepLegal}
+                    onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    max='10' 
+                    max='10000000000' 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -618,20 +775,19 @@ export default function ContadoPersonaJuridica(){
                 <div className="me-2 w-100">
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <input
-                    id="files"
+                    id="DocRut"
+                    onChange={(e)=>setDocRut(1)}
                     type="file"
-                    placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
-                    
                   />
                 </div>
                 <div className="ms-2 w-100">
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
                   <input
-                    id="files"
+                    id="DocInfemp"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocInfemp(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -640,8 +796,9 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
                   <input
-                    id="files"
+                    id="DocInfrl"
                     type="file"
+                    onChange={(e)=>setDocInfrl(1)}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100 me-2"
                     accept=".pdf"                  />
@@ -649,9 +806,9 @@ export default function ContadoPersonaJuridica(){
               <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <input
-                    id="files"
+                    id="DocOtros"
                     type="file"
-                    placeholder="RUT"
+                    onChange={(e)=>setDocOtros(1)}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -664,6 +821,8 @@ export default function ContadoPersonaJuridica(){
           <textarea
             id="observations"
             className="form-control"
+            value={search.observations}
+            onChange={handlerChangeSearch}
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>

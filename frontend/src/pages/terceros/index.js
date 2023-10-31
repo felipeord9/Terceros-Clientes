@@ -56,8 +56,8 @@ export default function Terceros() {
     <div className='rounder-4'>
     <div className="login-wrapper d-flex flex-column mt-5 pt-3" >
       <h1 className="text-danger fw-bold">Listado de Clientes registrados</h1>
-      <div className="d-flex flex-column gap-2 h-100">
-        <div className="d-flex justify-content-end mt-2 gap-3 mb-1">
+      <div className="d-flex flex-column gap-1 h-100">
+        <div className="d-flex justify-content-end mt-1 gap-3 mb-1">
           <input
             type="search"
             value={search}
