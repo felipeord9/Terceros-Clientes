@@ -126,7 +126,7 @@ export default function ModalUsers({
   const switchShown =()=>setShown(!shown);
   return (
     <div className="wrapper d-flex justify-content-center align-content-center" style={{userSelect:'none'}}>
-    <Modal show={showModal} style={{ fontSize: 18 }} centered>
+    <Modal show={showModal} style={{ fontSize: 18, userSelect:'none' }} centered>
       <Modal.Header>
         <center>
         <Modal.Title className="text-danger" style={{fontSize:40}}>

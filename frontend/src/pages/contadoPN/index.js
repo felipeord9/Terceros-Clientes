@@ -16,6 +16,10 @@ import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
 
+function mayus(e){
+  e.value = e.value.toUpperCase();
+}
+
 export default function ContadoPersonaNatural(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
@@ -62,8 +66,8 @@ export default function ContadoPersonaNatural(){
   const [search, setSearch] = useState({
     cedula:'',
     tipoPersona:'1',
-    primerApellido:'',
-    segundoApellido:'',
+    primerApellido:''.toUpperCase(),
+    segundoApellido:''.toUpperCase(),
     primerNombre:'',
     otrosNombres:'',
     direccion:'',
@@ -156,7 +160,7 @@ export default function ContadoPersonaNatural(){
     e.preventDefault();
     Swal.fire({
       title: "¿Está segur@?",
-        text: "Se realizará el registro de Cliente",
+        text: "Se realizará el registro del Cliente",
         icon:'question',
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
@@ -173,7 +177,7 @@ export default function ContadoPersonaNatural(){
           departamento: departamento.codigo,
           ciudad: ciudad.codigo,
           createdAt: new Date(),
-          createdBy: user.name,
+          createdBy: user.name.toUpperCase(),
           regimenFiscal: regimen.id,
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
@@ -183,26 +187,26 @@ export default function ContadoPersonaNatural(){
           cedula: search.cedula,
           numeroDocumento: search.cedula,
           tipoPersona: search.tipoPersona,
-          razonSocial: search.primerApellido +'  '+ search.segundoApellido +'  '+ search.primerNombre +'  '+ search.otrosNombres,
-          primerApellido:search.primerApellido,
-          segundoApellido:search.segundoApellido,
-          primerNombre:search.primerNombre,
-          otrosNombres:search.otrosNombres,
-          direccion: search.direccion,
+          razonSocial: search.primerApellido.toUpperCase() +' '+ search.segundoApellido.toUpperCase() +' '+ search.primerNombre.toUpperCase() +' '+ search.otrosNombres.toUpperCase(),
+          primerApellido:search.primerApellido.toUpperCase(),
+          segundoApellido:search.segundoApellido.toUpperCase(),
+          primerNombre:search.primerNombre.toUpperCase(),
+          otrosNombres:search.otrosNombres.toUpperCase(),
+          direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono:search.telefono,
           correoNotificaciones: search.correoNotificaciones,
           nombreSucursal:search.primerNombre,
-          direccionSucursal:search.direccion,
+          direccionSucursal:search.direccion.toUpperCase(),
           celularSucursal: search.celular,
           telefonoSucursal:search.telefono,
           correoSucursal:search.correoNotificaciones,
           correoFacturaElectronica:search.correoFacturaElectronica,
           numeroDocRepLegal: search.cedula,
-          nameRepLegal:search.primerNombre,
-          apellidoRepLegal:search.primerApellido,
+          nameRepLegal:search.primerNombre.toUpperCase(),
+          apellidoRepLegal:search.primerApellido.toUpperCase(),
           observations:search.observations,
-          solicitante:search.solicitante,
+          solicitante:search.solicitante.toUpperCase(),
           tipoFormulario:search.tipoFormulario,
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
@@ -222,22 +226,21 @@ export default function ContadoPersonaNatural(){
           docOtros:docOtros,
         };
         createCliente(body)
-          .then(() => {
+          .then(({data}) => {
             setLoading(false)
           /* reloadInfo(); */
           Swal.fire({
             title: 'Creación exitosa!',
-            text: 'El Cliente se ha registrado de manera éxitosa',
+            text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
             icon: 'success',
             position:'center',
             showConfirmButton: true,
+            confirmButtonColor:'#198754',
             confirmButtonText:'Aceptar',
-            timer: 2500
           }).then(()=>{
             window.location.reload();
-          })
-      })
-      .catch((err)=>{
+          });
+      }).catch((err)=>{
         setLoading(false);
         Swal.fire({
           title: "¡Ha ocurrido un error!",
@@ -255,7 +258,7 @@ export default function ContadoPersonaNatural(){
   const refreshForm = () => {
     Swal.fire({
       title: "¿Está segur@?",
-      text: "Se descartará toda la información que haya ingresado",
+      text: "Se descartará toda la información que haya registrado",
       icon: "warning",
       confirmButtonText: "Aceptar",
       confirmButtonColor: "#D92121",
@@ -342,7 +345,8 @@ export default function ContadoPersonaNatural(){
                   placeholder="Nombre Solicitante"
                   value={search.solicitante}
                   onChange={handlerChangeSearch}
-                  className="form-control form-control-sm "
+                  className="form-control form-control-sm"
+                  style={{textTransform:"uppercase"}}
                   required
               />
               </div>        
@@ -358,6 +362,7 @@ export default function ContadoPersonaNatural(){
                     type="text"
                     className="form-control form-control-sm "                     
                     min={0}
+                    style={{textTransform:"uppercase"}}
                     required
                     placeholder="Campo obligatorio"
                     value={search.primerApellido}
@@ -371,7 +376,7 @@ export default function ContadoPersonaNatural(){
                     type="text"
                     className="form-control form-control-sm "                     
                     min={0}
-                    required
+                    style={{textTransform:"uppercase"}}
                     placeholder="(Campo Opcional)"
                     value={search.segundoApellido}
                     onChange={handlerChangeSearch}
@@ -385,6 +390,7 @@ export default function ContadoPersonaNatural(){
                     type="text"
                     className="form-control form-control-sm "                     
                     min={0}
+                    style={{textTransform:"uppercase"}}
                     required
                     placeholder="Campo obligatorio"
                     value={search.primerNombre}
@@ -398,6 +404,7 @@ export default function ContadoPersonaNatural(){
                     type="text"
                     className="form-control form-control-sm w-100"                     
                     min={0}
+                    style={{textTransform:"uppercase"}}
                     placeholder="(Campo Opcional)"
                     value={search.otrosNombres}
                     onChange={handlerChangeSearch}
@@ -429,19 +436,24 @@ export default function ContadoPersonaNatural(){
                 <div>
                 </div>
                 <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">No.Identificación:</label>
+                  <label for='cedula' className="me-1">No.Identificación:</label>
                   <input
                     id="cedula"
-                    type="number"
+                    type="number" 
                     className="form-control form-control-sm w-100"
                     min={0}
+                    name="cedula"
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
                     max={10000000000}
+                    minLength={0}
+                    maxLength={10}
+                    size={10}
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
               </div>
               <div className="d-flex flex-row mt-2 w-100">
@@ -452,6 +464,7 @@ export default function ContadoPersonaNatural(){
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
+                  style={{textTransform:"uppercase"}}
                   className="form-control form-control-sm"
                   min={0}
                   required
@@ -515,12 +528,13 @@ export default function ContadoPersonaNatural(){
                     onChange={handlerChangeSearch}
                     id="celular"
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm "
                     min={0}
                     max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
+                  <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -534,9 +548,11 @@ export default function ContadoPersonaNatural(){
                     className="form-control form-control-sm mb-2"
                     min={0}
                     max={10000000000}
+                    
                     placeholder="(Campo Opcional)"
                   >
                   </input>
+                  {/* <span className="validity fw-bold "></span> */}
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start ">
@@ -552,6 +568,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <hr className="my-1" />
               <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
@@ -569,6 +586,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <div className="d-flex flex-row mb-3">
                 <div className="pe-3" style={{width:255}}>

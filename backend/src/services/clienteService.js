@@ -7,7 +7,7 @@ const find=()=>{
 
 const create = async(body)=>{
     const newCliente = await models.Clientes.create(body)
-    return newCliente
+    return newCliente    
 }
 
 const findOne = async (id) => {

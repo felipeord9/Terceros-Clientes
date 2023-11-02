@@ -84,7 +84,7 @@ export default function Navbar() {
       {isLogged && (
         <div
           className="position-fixed bg-light shadow w-100"
-          style={{ fontSize: 20, left: 0, height: "60px", zIndex: 2 }}
+          style={{ fontSize: 20, left: 0, height: "60px", zIndex: 2, userSelect:'none' }}
         >
           <div className="d-flex flex-row justify-content-between w-100 h-100 px-4 shadow">
             <div
@@ -141,6 +141,7 @@ export default function Navbar() {
                   id="account-menu"
                   open={open}
                   onClose={handleClose}
+                  style={{userSelect:'none'}}
                   /* Aqui hace que se cierre el menu cuando se da click en un iten */
                   /* onClick={handleClose} */
                   PaperProps={{
@@ -183,7 +184,7 @@ export default function Navbar() {
                   Cambiar Contraseña
                   </Button>
                 </MenuItem>
-                <MenuItem >         
+                <MenuItem style={{userSelect:'none'}}>         
                   <button onClick={handleOpenModal}>
                     <FiIcons.FiLogOut style={{width:18, height:18}}/>
                     <label className="ms-1" style={{fontSize:15}}>CERRAR SECCIÓN</label>

@@ -68,7 +68,7 @@ export default function ChangePassword() {
   const switchSee=()=>setSee(!see);
 
   return (
-    <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto ">
+    <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto " style={{userSelect:'none'}}>
       <div className='rounder-4'>
       <div className='login-wrapper p-2 shadow-lg border-light mt-5 rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
       <Fade damping={0.5} direction="down">

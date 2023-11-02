@@ -143,7 +143,7 @@ export default function CreditoPersonaNatural(){
     e.preventDefault();
     Swal.fire({
       title: "¿Está segur@?",
-        text: "Se realizará el registro de tercero",
+        text: "Se realizará el registro del cliente",
         icon: "question",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
@@ -160,7 +160,7 @@ export default function CreditoPersonaNatural(){
           departamento: departamento.codigo,
           ciudad: ciudad.codigo,
           createdAt: new Date(),
-          createdBy: user.name,
+          createdBy: user.name.toUpperCase(),
           regimenFiscal: regimen.id,
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
@@ -170,26 +170,26 @@ export default function CreditoPersonaNatural(){
           cedula: search.cedula,
           numeroDocumento: search.cedula,
           tipoPersona: search.tipoPersona,
-          razonSocial: search.primerApellido +'  '+ search.segundoApellido +'  '+ search.primerNombre +'  '+ search.otrosNombres,
-          primerApellido:search.primerApellido,
-          segundoApellido:search.segundoApellido,
-          primerNombre:search.primerNombre,
-          otrosNombres:search.otrosNombres,
-          direccion: search.direccion,
+          razonSocial: search.primerApellido.toUpperCase() +' '+ search.segundoApellido.toUpperCase() +' '+ search.primerNombre.toUpperCase() +' '+ search.otrosNombres.toUpperCase(),
+          primerApellido:search.primerApellido.toUpperCase(),
+          segundoApellido:search.segundoApellido.toUpperCase(),
+          primerNombre:search.primerNombre.toUpperCase(),
+          otrosNombres:search.otrosNombres.toUpperCase(),
+          direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono:search.telefono,
           correoNotificaciones: search.correoNotificaciones,
-          nombreSucursal:search.primerNombre,
-          direccionSucursal:search.direccion,
+          nombreSucursal:search.primerNombre.toUpperCase(),
+          direccionSucursal:search.direccion.toUpperCase(),
           celularSucursal:search.celular,
           telefonoSucursal:search.telefono,
           correoSucursal:search.correoNotificaciones,
           correoFacturaElectronica:search.correoFacturaElectronica,
           numeroDocRepLegal: search.cedula,
-          nameRepLegal:search.primerNombre,
-          apellidoRepLegal:search.primerApellido,
+          nameRepLegal:search.primerNombre.toUpperCase(),
+          apellidoRepLegal:search.primerApellido.toUpperCase(),
           observations:search.observations,
-          solicitante:search.solicitante,
+          solicitante:search.solicitante.toUpperCase(),
           tipoFormulario:search.tipoFormulario,
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
@@ -209,16 +209,16 @@ export default function CreditoPersonaNatural(){
           docOtros:docOtros,
         };
         createCliente(body)
-          .then(() => {
-            setLoading(false)
-          /* reloadInfo(); */
+        .then(({data})=>{
+          setLoading(false)
           Swal.fire({
-            title: '¡Creación exitosa!',
-            text: 'El Cliente se ha registrado de manera éxitosa',
-            icon: 'success',
-            showConfirmButton: true,
-            confirmButtonText:'Aceptar',
-            timer: 2500
+            title: 'Creación exitosa!',
+          text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
+          icon: 'success',
+          position:'center',
+          showConfirmButton: true,
+          confirmButtonColor:'#198754',
+          confirmButtonText:'Aceptar',
           }).then(()=>{
             window.location.reload();
           })
@@ -240,11 +240,11 @@ export default function CreditoPersonaNatural(){
 
   const refreshForm = () => {
     Swal.fire({
-      title: "¿Está seguro?",
-      text: "Se descartará todo el proceso que lleva",
+      title: "¿Está segur@?",
+      text: "Se descartará toda la información que haya registrado",
       icon: "warning",
       confirmButtonText: "Aceptar",
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#D92121",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
     }).then(({ isConfirmed }) => {
@@ -322,6 +322,7 @@ export default function CreditoPersonaNatural(){
               <input
                   id="solicitante"
                   type="text"
+                  style={{textTransform:"uppercase"}}
                   placeholder="Nombre Solicitante"
                   value={search.solicitante}
                   onChange={handlerChangeSearch}
@@ -339,6 +340,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="primerApellido"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm "                     
                     min={0}
                     required
@@ -352,6 +354,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="segundoApellido"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm "                     
                     min={0}
                     placeholder="(Campo Opcional)"
@@ -365,6 +368,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="primerNombre"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm "                     
                     min={0}
                     required
@@ -378,6 +382,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="otrosNombres"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm w-100"                     
                     min={0}
                     placeholder="(Campo Opcional)"
@@ -425,6 +430,7 @@ export default function CreditoPersonaNatural(){
                     maxLength={10}
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
               </div>
               <div className="d-flex flex-row mt-2 w-100">
@@ -435,6 +441,7 @@ export default function CreditoPersonaNatural(){
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
+                  style={{textTransform:"uppercase"}}
                   className="form-control form-control-sm"
                   min={0}
                   required
@@ -498,12 +505,13 @@ export default function CreditoPersonaNatural(){
                   onChange={handlerChangeSearch}
                     id="celular"
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm"
                     min={0}
                     max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
+                  <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -534,6 +542,7 @@ export default function CreditoPersonaNatural(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
             
             </div> 
@@ -549,10 +558,11 @@ export default function CreditoPersonaNatural(){
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:535}} 
+                    style={{width:505}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <div className="d-flex flex-row mb-3">
                 <div className="pe-3" style={{width:255}}>

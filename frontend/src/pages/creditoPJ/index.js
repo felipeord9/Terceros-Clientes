@@ -155,7 +155,7 @@ export default function CreditoPersonaJuridica(){
     e.preventDefault();
     Swal.fire({
       title: "¿Está segur@?",
-        text: "Se realizará el registro de tercero",
+        text: "Se realizará el registro del cliente",
         icon: "question",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
@@ -169,19 +169,19 @@ export default function CreditoPersonaJuridica(){
           numeroDocumento: search.cedula,
           tipoDocumento: search.tipoDocumento,
           tipoPersona: search.tipoPersona,
-          razonSocial: search.razonSocial,
-          primerApellido:search.primerApellido,
-          segundoApellido: search.segundoApellido,
-          primerNombre: search.primerNombre,
-          otrosNombres: search.otrosNombres,
+          razonSocial: search.razonSocial.toUpperCase(),
+          primerApellido:search.primerApellido.toUpperCase(),
+          segundoApellido: search.segundoApellido.toUpperCase(),
+          primerNombre: search.primerNombre.toUpperCase(),
+          otrosNombres: search.otrosNombres.toUpperCase(),
           departamento: departamento.codigo,
           ciudad: ciudad.codigo,
-          direccion: search.direccion,
+          direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono: search.telefono,
           correoNotificaciones: search.correoNotificaciones,
-          nombreSucursal: search.nombreSucursal,
-          direccionSucursal: search.direccionSucursal,
+          nombreSucursal: search.nombreSucursal.toUpperCase(),
+          direccionSucursal: search.direccionSucursal.toUpperCase(),
           departamentoSucursal: depart.codigo,
           ciudadSucursal: city.codigo,
           celularSucursal: search.celularSucursal,
@@ -193,12 +193,12 @@ export default function CreditoPersonaJuridica(){
           detalleTributario: detalle.id,
           tipoDocRepLegal: document.codigo,
           numeroDocRepLegal: search.numeroDocRepLegal,
-          nameRepLegal: search.nameRepLegal,
-          apellidoRepLegal: search.apellidoRepLegal,
+          nameRepLegal: search.nameRepLegal.toUpperCase(),
+          apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
           observations: search.observations,
           createdAt: new Date(),
-          createdBy: user.name,
-          solicitante: search.solicitante,
+          createdBy: user.name.toUpperCase(),
+          solicitante: search.solicitante.toUpperCase(),
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
           docCtalnst:docCtaInst,
@@ -220,16 +220,16 @@ export default function CreditoPersonaJuridica(){
           tipoFormulario: search.tipoFormulario,
         };
         createCliente(body)
-          .then(() => {
-            setLoading(false)
-          /* reloadInfo(); */
+        .then(({data})=>{
+          setLoading(false)
           Swal.fire({
-            title: '¡Creación exitosa!',
-            text: 'El Cliente se ha registrado de manera éxitosa',
-            icon: 'success',
-            showConfirmButton: true,
-            confirmButtonText:'Aceptar',
-            timer: 2500
+            title: 'Creación exitosa!',
+          text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
+          icon: 'success',
+          position:'center',
+          showConfirmButton: true,
+          confirmButtonColor:'#198754',
+          confirmButtonText:'Aceptar',
           }).then(()=>{
             window.location.reload();
           })
@@ -251,11 +251,11 @@ export default function CreditoPersonaJuridica(){
 
   const refreshForm = () => {
     Swal.fire({
-      title: "¿Está seguro?",
-      text: "Se descartará todo el proceso que lleva",
+      title: "¿Está segur@?",
+      text: "Se descartará toda la información que haya registrado",
       icon: "warning",
       confirmButtonText: "Aceptar",
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#D92121",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
     }).then(({ isConfirmed }) => {
@@ -335,6 +335,7 @@ export default function CreditoPersonaJuridica(){
                   onChange={handlerChangeSearch}
                   type="text"
                   min={0}
+                  style={{textTransform:"uppercase"}}
                   placeholder="Nombre Solicitante"
                   className="form-control form-control-sm "
                  required
@@ -350,6 +351,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="razonSocial"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm me-3"
                     value={search.razonSocial}
                     onChange={handlerChangeSearch}              
@@ -357,7 +359,8 @@ export default function CreditoPersonaJuridica(){
                     required
                     placeholder="Campo obligatorio"
                   />
-                </div>   
+                </div>
+                <div className="d-flex flex-row w-100">   
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">NIT:</label>
                   <input
@@ -372,6 +375,21 @@ export default function CreditoPersonaJuridica(){
                   >
                   </input>
                 </div>
+                <div className="d-flex flex-row ms-2" >
+                    <label>DV:</label>
+                    <input 
+                    id="DV"
+                    type="number" 
+                    placeholder="#"
+                    minLength={0}
+                    maxLength={1}
+                    max={9}
+                    aria-pressed='none'
+                    className="form-control form-control-sm ms-1" 
+                    style={{width:30}}>
+                    </input>
+                </div>
+                </div>
               </div>
               <div className="d-flex flex-row mt-2">
                 <label className="me-1">Dirección oficina principal:</label>
@@ -379,6 +397,7 @@ export default function CreditoPersonaJuridica(){
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
+                  style={{textTransform:"uppercase"}}
                   className="form-control form-control-sm w-75"
                   min={0}
                   required
@@ -442,7 +461,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="celular"
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm "
                     min={0}
                     max={10000000000}
                     required
@@ -450,6 +469,7 @@ export default function CreditoPersonaJuridica(){
                     onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
                   />
+                <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -478,10 +498,11 @@ export default function CreditoPersonaJuridica(){
                     value={search.correoNotificaciones}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635}} 
+                    style={{width:595}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               
             </div>            
@@ -498,7 +519,7 @@ export default function CreditoPersonaJuridica(){
                     value={search.nombreSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635}} 
+                    style={{width:635, textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -513,7 +534,7 @@ export default function CreditoPersonaJuridica(){
                     value={search.direccionSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635}} 
+                    style={{width:635, textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -574,7 +595,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="celularSucursal"
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm"
                     min={0}
                     max={10000000000}
                     value={search.celularSucursal}
@@ -582,6 +603,7 @@ export default function CreditoPersonaJuridica(){
                     required
                     placeholder="Campo obligatorio"
                   />
+                  <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -595,7 +617,6 @@ export default function CreditoPersonaJuridica(){
                     max={10000000000}
                     value={search.telefonoSucursal}
                     onChange={handlerChangeSearch}
-                    required
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -614,6 +635,7 @@ export default function CreditoPersonaJuridica(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <hr className="my-1" />
               <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
@@ -627,10 +649,11 @@ export default function CreditoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:550}} 
+                    style={{width:530}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <div className="d-flex flex-row mb-4">
                 <div className="pe-3" style={{width:265}}>
@@ -703,6 +726,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="nameRepLegal"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm me-3"
                     value={search.nameRepLegal}  
                     onChange={handlerChangeSearch}           
@@ -716,6 +740,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="apellidoRepLegal"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm"
                     min={0}
                     required
@@ -761,6 +786,7 @@ export default function CreditoPersonaJuridica(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
               </div>
               </div>

@@ -174,19 +174,19 @@ export default function ContadoPersonaJuridica(){
           numeroDocumento: search.cedula,
           tipoDocumento:search.tipoDocumento,
           tipoPersona:search.tipoPersona,
-          razonSocial:search.razonSocial,
-          primerApellido:search.primerApellido,
-          segundoApellido:search.segundoApellido,
-          primerNombre:search.primerNombre,
-          otrosNombres:search.otrosNombres,
+          razonSocial:search.razonSocial.toUpperCase(),
+          primerApellido:search.primerApellido.toUpperCase(),
+          segundoApellido:search.segundoApellido.toUpperCase(),
+          primerNombre:search.primerNombre.toUpperCase(),
+          otrosNombres:search.otrosNombres.toUpperCase(),
           departamento:departamento.codigo,
           ciudad: ciudad.codigo,
-          direccion: search.direccion,
+          direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono: search.telefono,
           correoNotificaciones: search.correoNotificaciones,
-          nombreSucursal:search.nombreSucursal,
-          direccionSucursal: search.direccionSucursal,
+          nombreSucursal:search.nombreSucursal.toUpperCase(),
+          direccionSucursal: search.direccionSucursal.toUpperCase(),
           departamentoSucursal: depart.codigo,
           ciudadSucursal: city.codigo,
           celularSucursal: search.celularSucursal,
@@ -197,13 +197,13 @@ export default function ContadoPersonaJuridica(){
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
           numeroDocRepLegal: search.numeroDocRepLegal,
-          nameRepLegal: search.nameRepLegal,
+          nameRepLegal: search.nameRepLegal.toUpperCase(),
           tipoDocRepLegal: document.codigo,
-          apellidoRepLegal: search.apellidoRepLegal,
+          apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
           observations: search.observations,
           createdAt: new Date(),
-          createdBy: user.name,
-          solicitante: search.solicitante,
+          createdBy: user.name.toUpperCase(),
+          solicitante: search.solicitante.toUpperCase(),
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
           docCtalnst:docCtaInst,
@@ -225,15 +225,16 @@ export default function ContadoPersonaJuridica(){
           tipoFormulario: search.tipoFormulario,
         };
         createCliente(body)
-          .then(()=>{
+          .then(({data})=>{
             setLoading(false)
             Swal.fire({
-              title:'¡Creación exitosa!',
-              text:'El cliente se ha registrado de manera éxitosa',
-              icon:'success',
-              showConfirmButton:true,
-              confirmButtonText:'Aceptar',
-              timer:2500
+              title: 'Creación exitosa!',
+            text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
+            icon: 'success',
+            position:'center',
+            showConfirmButton: true,
+            confirmButtonColor:'#198754',
+            confirmButtonText:'Aceptar',
             }).then(()=>{
               window.location.reload();
             })
@@ -255,11 +256,11 @@ export default function ContadoPersonaJuridica(){
 
   const refreshForm = () => {
     Swal.fire({
-      title: "¿Está seguro?",
-      text: "Se descartará todo el proceso que lleva",
+      title: "¿Está segur@?",
+      text: "Se descartará toda la información que haya registrado",
       icon: "warning",
       confirmButtonText: "Aceptar",
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#D92121",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
     }).then(({ isConfirmed }) => {
@@ -336,6 +337,7 @@ export default function ContadoPersonaJuridica(){
               <input
                   id="solicitante"
                   type="text"
+                  style={{textTransform:"uppercase"}}
                   placeholder="Nombre Solicitante"
                   value={search.solicitante}
                   onChange={handlerChangeSearch}
@@ -353,6 +355,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="razonSocial"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm me-3"
                     value={search.razonSocial}
                     onChange={handlerChangeSearch}
@@ -360,7 +363,8 @@ export default function ContadoPersonaJuridica(){
                     required
                     placeholder="Campo obligatorio"
                   />
-                </div>   
+                </div> 
+                <div className="d-flex flex-row w-100"> 
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">NIT:</label>
                   <input
@@ -368,6 +372,7 @@ export default function ContadoPersonaJuridica(){
                     type="number"
                     className="form-control form-control-sm"
                     min={0}
+                    max={10000000000}
                     required
                     value={search.cedula}
                     onChange={handlerChangeSearch}
@@ -375,6 +380,21 @@ export default function ContadoPersonaJuridica(){
                   >
                   </input>
                 </div>
+                <div className="d-flex flex-row ms-2" >
+                    <label>DV:</label>
+                    <input 
+                    id="DV"
+                    type="number" 
+                    placeholder="#"
+                    minLength={0}
+                    maxLength={1}
+                    max={9}
+                    aria-pressed='none'
+                    className="form-control form-control-sm ms-1" 
+                    style={{width:30}}>
+                    </input>
+                </div>
+                </div> 
               </div>
               <div className="d-flex flex-row mt-2">
                 <label className="me-1">Dirección oficina principal:</label>
@@ -382,6 +402,7 @@ export default function ContadoPersonaJuridica(){
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
+                  style={{textTransform:"uppercase"}}
                   value={search.direccion}
                   onChange={handlerChangeSearch}
                   className="form-control form-control-sm w-75"
@@ -445,7 +466,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="celular"
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm"
                     min={0}
                     max={10000000000}
                     value={search.celular}
@@ -453,6 +474,7 @@ export default function ContadoPersonaJuridica(){
                     required
                     placeholder="Campo obligatorio"
                   />
+                  <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -481,10 +503,11 @@ export default function ContadoPersonaJuridica(){
                     value={search.correoNotificaciones}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635}} 
+                    style={{width:580}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               
             </div>            
@@ -501,7 +524,7 @@ export default function ContadoPersonaJuridica(){
                     value={search.nombreSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635}} 
+                    style={{textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -516,7 +539,7 @@ export default function ContadoPersonaJuridica(){
                     className="form-control form-control-sm w-100"
                     min={0}
                     required
-                    style={{width:635}} 
+                    style={{ textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -579,12 +602,13 @@ export default function ContadoPersonaJuridica(){
                     value={search.celularSucursal}
                     onChange={handlerChangeSearch}
                     type="number"
-                    className="form-control form-control-sm me-3"
+                    className="form-control form-control-sm"
                     min={0}
                     max={10000000000}
                     required
                     placeholder="Campo obligatorio"
                   />
+                  <span className="validity fw-bold me-3"></span>
                 </div>
                 <div>
                 </div>
@@ -598,7 +622,6 @@ export default function ContadoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={0}
                     max={10000000000}
-                    required
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -617,6 +640,7 @@ export default function ContadoPersonaJuridica(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <hr className="my-1" />
               <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
@@ -630,10 +654,11 @@ export default function ContadoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:535}} 
+                    style={{width:495}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
               </div>
               <div className="d-flex flex-row mb-4">
                 <div className="pe-3" style={{width:255}}>
@@ -706,6 +731,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="nameRepLegal"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm me-3"
                     value={search.nameRepLegal}
                     onChange={handlerChangeSearch}              
@@ -719,6 +745,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="apellidoRepLegal"
                     type="text"
+                    style={{textTransform:"uppercase"}}
                     className="form-control form-control-sm"
                     min={0}
                     required
@@ -764,6 +791,7 @@ export default function ContadoPersonaJuridica(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
               </div>
               </div>
