@@ -8,8 +8,6 @@ import RecoveryPassword from './pages/RecoveryPassword';
 import SendRecovery from './pages/SendRecoveryPassword'
 import Page404 from './pages/Page404'
 import ChangePassword from './pages/ChangePassword'
-import Fondo from './components/fondo'
-import Inicio from './pages/inicio';
 import Inicio2 from './pages/inicio2';
 import ContadoPersonaNatural from './pages/contadoPN';
 import React, { Component } from "react";
@@ -34,7 +32,6 @@ function App() {
  */}        <Route path='/send/recovery' element={<SendRecovery/>}/>
         <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
 
-        {/* <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/> */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio2}/>}/>
         <Route path='/contado/persona/natural' element={<PrivateRoute component={ContadoPersonaNatural}/>}/>
         <Route path='/contado/persona/juridica' element={<PrivateRoute component={ContadoPersonaJuridica}/>}/>
@@ -44,7 +41,6 @@ function App() {
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
         <Route path='/terceros' element={<PrivateRoute component={Terceros}/>}/>
         <Route path='*' element={<Page404/>}/>
-        {/* <Route path='*' element={<Fondo/>}/> */}
 
       </Routes>
       </div>

@@ -4,7 +4,8 @@ import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
 import { Fade } from "react-awesome-reveal";
-import { createCliente } from "../../services/clienteService";
+import { createCliente, deleteCliente } from "../../services/clienteService";
+import { fileSend, deleteFile } from "../../services/fileService";
 import { getAllResponsabilidad } from '../../services/responsabilidadService'
 import { getAllDetalles } from "../../services/detalleService";
 import { getAllRegimen } from "../../services/regimenService";
@@ -58,8 +59,22 @@ export default function CreditoPersonaJuridica(){
   const [docCerBan, setDocCerBan] = useState(0);
   const [docValAnt,setDocValAnt] = useState(0);
 
+//------------------------------------------
+  /* Variable de todos los pdf y el nombre de la carpeta*/
+  const [files, setFiles] = useState([]);
+/*   const [folderName, setFolderName] = useState('');
+ */
+  /* Variable para agregar los pdf */
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files];
+    newFiles[index] = event.target.files[0];
+    setFiles(newFiles);
+  };
+  //------------------------------------------
+
   const [search, setSearch] = useState({
     cedula:'',
+    DV:'',
     tipoDocumento:'N',
     tipoPersona:'2',
     razonSocial:'',
@@ -164,23 +179,31 @@ export default function CreditoPersonaJuridica(){
     }).then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
+        const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        })
         const body={
-          cedula: search.cedula,
-          numeroDocumento: search.cedula,
-          tipoDocumento: search.tipoDocumento,
-          tipoPersona: search.tipoPersona,
-          razonSocial: search.razonSocial.toUpperCase(),
+          cedula:search.cedula+'-'+search.DV,
+          numeroDocumento: search.cedula+'-'+search.DV,
+          /* cedula:search.cedula+search.DV,
+          numeroDocumento: search.cedula+search.DV, */
+          tipoDocumento:search.tipoDocumento,
+          tipoPersona:search.tipoPersona,
+          razonSocial:search.razonSocial.toUpperCase(),
           primerApellido:search.primerApellido.toUpperCase(),
-          segundoApellido: search.segundoApellido.toUpperCase(),
-          primerNombre: search.primerNombre.toUpperCase(),
-          otrosNombres: search.otrosNombres.toUpperCase(),
-          departamento: departamento.codigo,
+          segundoApellido:search.segundoApellido.toUpperCase(),
+          primerNombre:search.primerNombre.toUpperCase(),
+          otrosNombres:search.otrosNombres.toUpperCase(),
+          departamento:departamento.codigo,
           ciudad: ciudad.codigo,
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono: search.telefono,
           correoNotificaciones: search.correoNotificaciones,
-          nombreSucursal: search.nombreSucursal.toUpperCase(),
+          nombreSucursal:search.nombreSucursal.toUpperCase(),
           direccionSucursal: search.direccionSucursal.toUpperCase(),
           departamentoSucursal: depart.codigo,
           ciudadSucursal: city.codigo,
@@ -191,9 +214,9 @@ export default function CreditoPersonaJuridica(){
           regimenFiscal: regimen.id,
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
-          tipoDocRepLegal: document.codigo,
           numeroDocRepLegal: search.numeroDocRepLegal,
           nameRepLegal: search.nameRepLegal.toUpperCase(),
+          tipoDocRepLegal: document.codigo,
           apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
           observations: search.observations,
           createdAt: new Date(),
@@ -219,34 +242,80 @@ export default function CreditoPersonaJuridica(){
           agencia: agencia.id,
           tipoFormulario: search.tipoFormulario,
         };
+        //creamos una constante la cual llevará el nombre de nuestra carpeta
+        const folderName = search.cedula+'-'+search.DV+' '+ search.razonSocial.toUpperCase();
+        //agregamos la carpeta donde alojaremos los archivos
+        formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
-        .then(({data})=>{
-          setLoading(false)
-          Swal.fire({
-            title: 'Creación exitosa!',
-          text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
-          icon: 'success',
-          position:'center',
-          showConfirmButton: true,
-          confirmButtonColor:'#198754',
-          confirmButtonText:'Aceptar',
-          }).then(()=>{
-            window.location.reload();
-          })
+        .then(({data}) => {
+          fileSend(formData)
+          .then(()=>{
+            setLoading(false)
+            setFiles([])
+            Swal.fire({
+              title: 'Creación exitosa!',
+              text: `El Cliente "${data.razonSocial}" con Número 
+              de documento "${data.cedula}" se ha registrado de manera exitosa`,
+              icon: 'success',
+              position:'center',
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          }) 
+          .catch((err)=>{
+            setLoading(false);
+            if(!data){
+              deleteFile(folderName);
+            }else{
+              deleteCliente(data.id);
+            }
+            Swal.fire({
+              title: "¡Ha ocurrido un error!",
+              text: `
+              Ha ocurrido un error al momento de guardar los pdf, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+              icon: "error",
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',       
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          });
       })
       .catch((err)=>{
         setLoading(false);
+        deleteFile(folderName);
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
-        });
+        })
+        .then(()=>{
+          window.location.reload();
+        })
       });
     };
-  });
+  })
+  .catch((err)=>{
+    setLoading(false);
+        Swal.fire({
+          title: "¡Ha ocurrido un error!",
+            text: `
+              Hubo un error al momento de registrar el cliente, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+            icon: "error",
+            confirmButtonText: "Aceptar"});
+      })
   };
 
   const refreshForm = () => {
@@ -367,27 +436,32 @@ export default function CreditoPersonaJuridica(){
                     id="cedula"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
+                    min={10000000}
+                    max={999999999}
                     required
                     value={search.cedula}
-                    onChange={handlerChangeSearch} 
+                    onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
                 <div className="d-flex flex-row ms-2" >
-                    <label>DV:</label>
+                <label>DV:</label>
                     <input 
                     id="DV"
                     type="number" 
                     placeholder="#"
-                    minLength={0}
-                    maxLength={1}
+                    min={0}
                     max={9}
+                    required
+                    value={search.DV}
+                    onChange={handlerChangeSearch}
                     aria-pressed='none'
                     className="form-control form-control-sm ms-1" 
                     style={{width:30}}>
                     </input>
+                    <span className="validity fw-bold"></span>
                 </div>
                 </div>
               </div>
@@ -462,8 +536,8 @@ export default function CreditoPersonaJuridica(){
                     id="celular"
                     type="number"
                     className="form-control form-control-sm "
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     required
                     value={search.celular}
                     onChange={handlerChangeSearch}
@@ -479,8 +553,8 @@ export default function CreditoPersonaJuridica(){
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     value={search.telefono}
                     onChange={handlerChangeSearch}
                     placeholder="(Campo Opcional)"
@@ -596,8 +670,8 @@ export default function CreditoPersonaJuridica(){
                     id="celularSucursal"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     value={search.celularSucursal}
                     onChange={handlerChangeSearch}
                     required
@@ -613,8 +687,8 @@ export default function CreditoPersonaJuridica(){
                     id="telefonoSucursal"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     value={search.telefonoSucursal}
                     onChange={handlerChangeSearch}
                     placeholder="(Campo Opcional)"
@@ -778,8 +852,8 @@ export default function CreditoPersonaJuridica(){
                     id="numeroDocRepLegal"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={10000000}
+                    max={9999999999}
                     value={search.numeroDocRepLegal}
                     onChange={handlerChangeSearch}
                     required
@@ -803,7 +877,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocVinculacion"
                     type="file"
-                    onChange={(e)=>setDocVinculacion(1)}
+                    onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -812,7 +886,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocComprAntc"
                     type="file"
-                    onChange={(e)=>setDocComprAntc(1)}
+                    onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -823,7 +897,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCtaInst"
                     type="file"
-                    onChange={(e)=>setDocCtaInst(1)}
+                    onChange={(e)=>(handleFileChange(e, 2),setDocCtaInst(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -832,7 +906,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocPagare"
                     type="file"
-                    onChange={(e)=>setDocPagare(1)}
+                    onChange={(e)=>(handleFileChange(e, 3),setDocPagare(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -843,7 +917,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocRut"
                     type="file"
-                    onChange={(e)=>setDocRut(1)}
+                    onChange={(e)=>(handleFileChange(e, 4),setDocRut(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -852,7 +926,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCcio"
                     type="file"
-                    onChange={(e)=>setDocCcio(1)}
+                    onChange={(e)=>(handleFileChange(e, 5),setDocCcio(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -863,7 +937,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCrepL"
                     type="file"
-                    onChange={(e)=>setDocCrepL(1)}
+                    onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -872,7 +946,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocEf"
                     type="file"
-                    onChange={(e)=>setDocEf(1)}
+                    onChange={(e)=>(handleFileChange(e, 7),setDocEf(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -883,7 +957,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCvbo"
                     type="file"
-                    onChange={(e)=>setDocCvbo(1)}
+                    onChange={(e)=>(handleFileChange(e, 8),setDocCvbo(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -892,7 +966,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocRefcom"
                     type="file"
-                    onChange={(e)=>setDocRefcom(1)}
+                    onChange={(e)=>(handleFileChange(e, 9),setDocRefcom(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -903,7 +977,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocInfemp"
                     type="file"
-                    onChange={(e)=>setDocInfemp(1)}
+                    onChange={(e)=>(handleFileChange(e, 10),setDocInfemp(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -912,7 +986,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocInfrl"
                     type="file"
-                    onChange={(e)=>setDocInfrl(1)}
+                    onChange={(e)=>(handleFileChange(e, 11),setDocInfrl(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -923,7 +997,7 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocOtros"
                     type="file"
-                    onChange={(e)=>setDocOtros(1)}
+                    onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 

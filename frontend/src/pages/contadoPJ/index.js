@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext, useRef, Suspense } from "react";
 import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
@@ -14,7 +14,8 @@ import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService';
-import { createCliente } from "../../services/clienteService";
+import { createCliente, deleteCliente } from "../../services/clienteService";
+import { fileSend, deleteFile } from "../../services/fileService";
 
 export default function ContadoPersonaJuridica(){
   /* instancias de contexto */
@@ -61,9 +62,23 @@ export default function ContadoPersonaJuridica(){
   const [docCerBan, setDocCerBan] = useState(0);
   const [docValAnt,setDocValAnt] = useState(0);
 
+//------------------------------------------
+  /* Variable de todos los pdf y el nombre de la carpeta*/
+  const [files, setFiles] = useState([]);
+/*   const [folderName, setFolderName] = useState('');
+ */
+  /* Variable para agregar los pdf */
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files];
+    newFiles[index] = event.target.files[0];
+    setFiles(newFiles);
+  };
+  //------------------------------------------
+
   /* Inicializar los input */
   const [search, setSearch] = useState({
     cedula:'',
+    DV:'',
     tipoDocumento:'N',
     tipoPersona:'2',
     razonSocial:'',
@@ -169,9 +184,17 @@ export default function ContadoPersonaJuridica(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
+        const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        })
         const body={
-          cedula:search.cedula,
-          numeroDocumento: search.cedula,
+          cedula:search.cedula+'-'+search.DV,
+          numeroDocumento: search.cedula+'-'+search.DV,
+          /* cedula:search.cedula+search.DV,
+          numeroDocumento: search.cedula+search.DV, */
           tipoDocumento:search.tipoDocumento,
           tipoPersona:search.tipoPersona,
           razonSocial:search.razonSocial.toUpperCase(),
@@ -224,34 +247,80 @@ export default function ContadoPersonaJuridica(){
           agencia: agencia.id,
           tipoFormulario: search.tipoFormulario,
         };
+        //creamos una constante la cual llevará el nombre de nuestra carpeta
+        const folderName = search.cedula+'-'+search.DV+' '+ search.razonSocial.toUpperCase();
+        //agregamos la carpeta donde alojaremos los archivos
+        formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
-          .then(({data})=>{
+        .then(({data}) => {
+          fileSend(formData)
+          .then(()=>{
             setLoading(false)
+            setFiles([])
             Swal.fire({
               title: 'Creación exitosa!',
-            text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
-            icon: 'success',
-            position:'center',
-            showConfirmButton: true,
-            confirmButtonColor:'#198754',
-            confirmButtonText:'Aceptar',
-            }).then(()=>{
+              text: `El Cliente "${data.razonSocial}" con Número 
+              de documento "${data.cedula}" se ha registrado de manera exitosa`,
+              icon: 'success',
+              position:'center',
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',
+            })
+            .then(()=>{
               window.location.reload();
             })
-          })
+          }) 
           .catch((err)=>{
             setLoading(false);
+            if(!data){
+              deleteFile(folderName);
+            }else{
+              deleteCliente(data.id);
+            }
             Swal.fire({
-              title:'¡Ha ocurrido un error!',
+              title: "¡Ha ocurrido un error!",
               text: `
-              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Ha ocurrido un error al momento de guardar los pdf, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+              icon: "error",
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',       
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          });
+      })
+      .catch((err)=>{
+        setLoading(false);
+        deleteFile(folderName);
+        Swal.fire({
+          title: "¡Ha ocurrido un error!",
+            text: `
+              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
-            });
-          });
-      };
-    });
+        })
+        .then(()=>{
+          window.location.reload();
+        })
+      });
+    };
+  })
+  .catch((err)=>{
+    setLoading(false);
+    Swal.fire({
+      title: "¡Ha ocurrido un error!",
+      text: `
+        Hubo un error al momento de registrar el cliente, intente de nuevo.
+        Si el problema persiste por favor comuniquese con el área de sistemas.`,
+      icon: "error",
+      confirmButtonText: "Aceptar"});
+    })
   };
 
   const refreshForm = () => {
@@ -371,14 +440,15 @@ export default function ContadoPersonaJuridica(){
                     id="cedula"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={10000000}
+                    max={9999999999}
                     required
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
                   >
                   </input>
+                  <span className="validity fw-bold"></span>
                 </div>
                 <div className="d-flex flex-row ms-2" >
                     <label>DV:</label>
@@ -386,13 +456,16 @@ export default function ContadoPersonaJuridica(){
                     id="DV"
                     type="number" 
                     placeholder="#"
-                    minLength={0}
-                    maxLength={1}
+                    min={0}
                     max={9}
+                    required
+                    value={search.DV}
+                    onChange={handlerChangeSearch}
                     aria-pressed='none'
                     className="form-control form-control-sm ms-1" 
                     style={{width:30}}>
                     </input>
+                    <span className="validity fw-bold"></span>
                 </div>
                 </div> 
               </div>
@@ -467,8 +540,8 @@ export default function ContadoPersonaJuridica(){
                     id="celular"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     value={search.celular}
                     onChange={handlerChangeSearch}
                     required
@@ -484,8 +557,8 @@ export default function ContadoPersonaJuridica(){
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     value={search.telefono}
                     onChange={handlerChangeSearch}
                     placeholder="(Campo Opcional)"
@@ -603,8 +676,8 @@ export default function ContadoPersonaJuridica(){
                     onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -620,8 +693,8 @@ export default function ContadoPersonaJuridica(){
                     onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -785,9 +858,9 @@ export default function ContadoPersonaJuridica(){
                     onChange={handlerChangeSearch}
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
+                    min={10000000}
                     required
-                    max='10000000000' 
+                    max={9999999999} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -804,7 +877,7 @@ export default function ContadoPersonaJuridica(){
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <input
                     id="DocRut"
-                    onChange={(e)=>setDocRut(1)}
+                    onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))}
                     type="file"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
@@ -815,7 +888,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="DocInfemp"
                     type="file"
-                    onChange={(e)=>setDocInfemp(1)}
+                    onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -826,7 +899,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="DocInfrl"
                     type="file"
-                    onChange={(e)=>setDocInfrl(1)}
+                    onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100 me-2"
                     accept=".pdf"                  />
@@ -836,7 +909,7 @@ export default function ContadoPersonaJuridica(){
                   <input
                     id="DocOtros"
                     type="file"
-                    onChange={(e)=>setDocOtros(1)}
+                    onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 

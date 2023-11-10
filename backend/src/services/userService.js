@@ -27,8 +27,8 @@ const findOne = async (id) => {
 
 const findByEmail = async (email) => {
   const user = await models.User.findOne({
-    where:{ email }
-  })
+   where: {email: email }
+})
 
   if(!user) throw boom.notFound('Usuario no encontrado')
 

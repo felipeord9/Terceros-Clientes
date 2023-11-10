@@ -10,12 +10,12 @@ const ClienteSchema={
         autoIncrement:true,
     },
     cedula:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull:false,
         field:'cedula'
     },
     numeroDocumento:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull:false,
         field:'no_Idenficacion'
     },
@@ -145,7 +145,7 @@ const ClienteSchema={
         field:'tipo_doc_replegal'
     },
     numeroDocRepLegal:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull:false,
         field:'numero_doc_replegal'
     },

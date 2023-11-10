@@ -9,5 +9,6 @@ router
     .get('/',ClienteController.findAllClientes)
     .post('/',ClienteController.createCliente)
     .get('/:id',ClienteController.findOneCliente)
+    .delete('/:id',ClienteController.deleteCliente)
     
 module.exports = router

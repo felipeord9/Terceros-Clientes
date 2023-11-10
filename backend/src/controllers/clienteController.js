@@ -98,8 +98,22 @@ const findOneCliente = async (req, res, next) => {
     }
   };
 
+const deleteCliente = async(req,res,next)=>{
+    try{
+        const {params:{id}}=req
+        const data = await ClienteService.remove(id)
+        res.status(200).json({
+            message:'Deleted',
+            data
+        })
+    } catch(error){
+        next(error)
+    }
+}
+
 module.exports = {
     findAllClientes,
     createCliente,
-    findOneCliente
+    findOneCliente,
+    deleteCliente
 }

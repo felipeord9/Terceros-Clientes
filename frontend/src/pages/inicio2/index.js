@@ -37,28 +37,6 @@ export default function Inicio2(){
       <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
       <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>¡Bienvenid@!</strong></label>
       </Fade>
-      {/*<div className='d-flex flex-row'>
-      <h3>Tipo de persona: </h3>
-       <end>
-        <Divider/>
-      <Box sx={{ minWidth: 120, marginLeft:2 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Persona</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={persona}
-          label="Age"
-          onChange={handlePersona}
-          placeholder="--Choose One"
-        >
-          <MenuItem value={10}>Natural</MenuItem>
-          <MenuItem value={20}>Juridica</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
-    </end> 
-    </div>*/}
     <hr style={{width:450, color:'black'}}/>
     <Fade cascade>
     <h3 style={{userSelect:'none'}}>Elíge el tipo de formato que desea diligenciar</h3>
@@ -90,26 +68,8 @@ export default function Inicio2(){
               </FormControl>
             </Box>
             </div>
-      {/* <end>
-      <Box sx={{ minWidth: 120,marginLeft:2, position:'static'  }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Pago</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={pago}
-          label="Age"
-          onChange={handlePago}
-        >
-          <MenuItem value={30}>Contado</MenuItem>
-          <MenuItem value={40}>Credito</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
-    </end> */}
     </div>
-{/*     <button onSubmit={handleSubmit} style={{backgroundColor:'red'}}>Diligenciar</button>
- */}    </div>
+    </div>
     </div>
     </div>
     )

@@ -27,7 +27,20 @@ const createCliente = (body) => {
       .then((res) => res);
 };
 
+const deleteCliente = (id) => {
+  return fetch(`${url}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => res);
+};
+
+
 export {
     findClientes,
-    createCliente
+    createCliente,
+    deleteCliente
 }

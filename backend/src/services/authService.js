@@ -43,7 +43,7 @@ const changePassword = async (id, currentPassword, newPassword) => {
 }
 
 const sendRecovery = async (email) => {
-  const user = await UserService.findByEmail(email)
+  const user =  UserService.findByEmail(email)
 
   if (!user) throw boom.unauthorized()
   const payload = { sub: user.id }

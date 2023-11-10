@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
-import { createCliente } from "../../services/clienteService";
+import { createCliente, deleteCliente } from "../../services/clienteService";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
+import { fileSend, deleteFile } from "../../services/fileService";
 
 export default function CreditoPersonaNatural(){
   /* instancias de contexto */
@@ -58,6 +59,19 @@ export default function CreditoPersonaNatural(){
   const [docOtros,setDocOtros]=useState(0);
   const [docCerBan, setDocCerBan] = useState(0);
   const [docValAnt,setDocValAnt] = useState(0);
+
+  //------------------------------------------
+  /* Variable de todos los pdf y el nombre de la carpeta*/
+  const [files, setFiles] = useState([]);
+/*   const [folderName, setFolderName] = useState('');
+ */
+  /* Variable para agregar los pdf */
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files];
+    newFiles[index] = event.target.files[0];
+    setFiles(newFiles);
+  };
+  //------------------------------------------
 
   const [search, setSearch] = useState({
     cedula:'',
@@ -152,7 +166,14 @@ export default function CreditoPersonaNatural(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        const f = new FormData();
+        //agregamos los pdf a un formdata dependiendo del index que les dimos
+        const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        });
+        //creamos el cuerpo de nuestra instancia
         const body={
           clasificacion: clasificacion.id,
           agencia: agencia.id,
@@ -181,7 +202,7 @@ export default function CreditoPersonaNatural(){
           correoNotificaciones: search.correoNotificaciones,
           nombreSucursal:search.primerNombre.toUpperCase(),
           direccionSucursal:search.direccion.toUpperCase(),
-          celularSucursal:search.celular,
+          celularSucursal: search.celular,
           telefonoSucursal:search.telefono,
           correoSucursal:search.correoNotificaciones,
           correoFacturaElectronica:search.correoFacturaElectronica,
@@ -208,34 +229,80 @@ export default function CreditoPersonaNatural(){
           docCerBan:docCerBan,
           docOtros:docOtros,
         };
+        //creamos una constante la cual llevará el nombre de nuestra carpeta
+        const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
+        //agregamos la carpeta donde alojaremos los archivos
+        formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
-        .then(({data})=>{
-          setLoading(false)
-          Swal.fire({
-            title: 'Creación exitosa!',
-          text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
-          icon: 'success',
-          position:'center',
-          showConfirmButton: true,
-          confirmButtonColor:'#198754',
-          confirmButtonText:'Aceptar',
-          }).then(()=>{
-            window.location.reload();
-          })
+        .then(({data}) => {
+          fileSend(formData)
+          .then(()=>{
+            setLoading(false)
+            setFiles([])
+            Swal.fire({
+              title: 'Creación exitosa!',
+              text: `El Cliente "${data.razonSocial}" con Número 
+              de documento "${data.cedula}" se ha registrado de manera exitosa`,
+              icon: 'success',
+              position:'center',
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          }) 
+          .catch((err)=>{
+            setLoading(false);
+            if(!data){
+              deleteFile(folderName);
+            }else{
+              deleteCliente(data.id);
+            }
+            Swal.fire({
+              title: "¡Ha ocurrido un error!",
+              text: `
+              Ha ocurrido un error al momento de guardar los pdf, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+              icon: "error",
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',       
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          });
       })
       .catch((err)=>{
         setLoading(false);
+        deleteFile(folderName);
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
-        });
+        })
+        .then(()=>{
+          window.location.reload();
+        })
       });
     };
-  });
+  })
+  .catch((err)=>{
+    setLoading(false);
+    Swal.fire({
+      title: "¡Ha ocurrido un error!",
+      text: `
+        Hubo un error al momento de registrar el cliente, intente de nuevo.
+        Si el problema persiste por favor comuniquese con el área de sistemas.`,
+      icon: "error",
+      confirmButtonText: "Aceptar"});
+    })
   };
 
   const refreshForm = () => {
@@ -421,8 +488,8 @@ export default function CreditoPersonaNatural(){
                     id="cedula"
                     type="number"
                     className="form-control form-control-sm w-100"
-                    min={0}
-                    max={10000000000}
+                    min={10000000}
+                    max={9999999999}
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
@@ -506,8 +573,8 @@ export default function CreditoPersonaNatural(){
                     id="celular"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -523,7 +590,8 @@ export default function CreditoPersonaNatural(){
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm"
-                    min={0}
+                    min={1000000}
+                    max={9999999999}
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -639,7 +707,7 @@ export default function CreditoPersonaNatural(){
                     type="file"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"        
-                    onChange={(e)=>setDocVinculacion(1)}          
+                    onChange={(e)=>(handleFileChange(e,0),setDocVinculacion(1))}          
                     />
                 </div>
                 <div className="ms-2 w-100">
@@ -647,7 +715,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocComprAntc"
                     type="file"
-                    onChange={(e)=>setDocComprAntc(1)}
+                    onChange={(e)=>(handleFileChange(e,1),setDocComprAntc(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div>
@@ -658,7 +726,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocCtaInst"
                     type="file"
-                    onChange={(e)=>setDocCtaInst(1)}
+                    onChange={(e)=>(handleFileChange(e,2),setDocCtaInst(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -667,7 +735,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocPagare"
                     type="file"
-                    onChange={(e)=>setDocPagare(1)}
+                    onChange={(e)=>(handleFileChange(e,3),setDocPagare(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -678,7 +746,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocRut"
                     type="file"
-                    onChange={(e)=>setDocRut(1)}
+                    onChange={(e)=>(handleFileChange(e,4),setDocRut(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -687,7 +755,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocCcio"
                     type="file"
-                    onChange={(e)=>setDocCcio(1)}
+                    onChange={(e)=>(handleFileChange(e,5),setDocCcio(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -698,7 +766,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocCrepL"
                     type="file"
-                    onChange={(e)=>setDocCrepL(1)}
+                    onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
@@ -708,7 +776,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocEf"
                     type="file"
-                    onChange={(e)=>setDocEf(1)}
+                    onChange={(e)=>(handleFileChange(e,7),setDocEf(1))}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
@@ -720,7 +788,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocCerBan"
                     type="file"
-                    onChange={(e)=>setDocCerBan(1)}
+                    onChange={(e)=>(handleFileChange(e,8),setDocCerBan(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -729,7 +797,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocRefcom"
                     type="file"
-                    onChange={(e)=>setDocRefcom(1)}
+                    onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -740,7 +808,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocCvbo"
                     type="file"
-                    onChange={(e)=>setDocCvbo(1)}
+                    onChange={(e)=>(handleFileChange(e,10),setDocCvbo(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -749,7 +817,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocValAnt"
                     type="file"
-                    onChange={(e)=>setDocValAnt(1)}
+                    onChange={(e)=>(handleFileChange(e,11),setDocValAnt(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -760,7 +828,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocFirdoc"
                     type="file"
-                    onChange={(e)=>setDocFirdoc(1)}
+                    onChange={(e)=>(handleFileChange(e,12),setDocFirdoc(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 
@@ -769,7 +837,7 @@ export default function CreditoPersonaNatural(){
                   <input
                     id="DocOtros"
                     type="file"
-                    onChange={(e)=>setDocOtros(1)}
+                    onChange={(e)=>(handleFileChange(e,13),setDocOtros(1))}
                     className="form-control form-control-sm w-100"
                     accept=".pdf"                  />
                 </div> 

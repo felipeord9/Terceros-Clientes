@@ -12,12 +12,12 @@ export default function SendRecoveryPassword() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (isLogged) navigate('/inicio');
-  }, [isLogged, navigate]); */
+  }, [isLogged, navigate]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     sendRecovery(email)
       .then((data) => {
         Swal.fire({
@@ -28,21 +28,10 @@ export default function SendRecoveryPassword() {
         })
         navigate('/login')
       })
-      /* .catch((error) => {
+      .catch((error) => {
         setError(error)
         setTimeout(() => setError(''), 2500)
-      }) */
-      .catch((err)=>{
-        /* setLoading(false); */
-        Swal.fire({
-          title: "¡Algo salio mal!",
-            text: `
-              Hubo un error al momento de enviar el correo de recuperación, intente de nuevo.
-              Si el problema persiste por favor comuniquese con el área de sistemas.`,
-            icon: "error",
-            confirmButtonText: "Aceptar",
-        });
-      });
+      })
   }
 
   return (

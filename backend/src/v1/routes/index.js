@@ -4,6 +4,7 @@ const CiudadRoutes = require('./ciuidadRoutes')
 const ResponsabilidadRoutes = require('./responsabilidadRoutes')
 const MailRoutes = require('./mailRoutes')
 const AuthRoutes = require('./authRoutes')
+const FileRoutes = require('./fileRoutes')
 const ClienteRoutes = require('./clienteRoutes')
 const DetalleRoutes = require('./detalleRoutes')
 const RegimenRoutes = require('./regimenRoutes')
@@ -25,6 +26,9 @@ function routerApi(app) {
     router.use('/departamentos',DepartamentoRoutes )
     router.use('/documents',DocumentRoutes)
     router.use('/agencies', AgencyRoutes)
+
+    router.use('/uploadMultiple',FileRoutes)
+
     router.use('/regimen',RegimenRoutes)
     router.use('/clientes',ClienteRoutes)
     router.use('/detalles',DetalleRoutes)

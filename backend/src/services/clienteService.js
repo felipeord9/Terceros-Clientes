@@ -18,8 +18,22 @@ const findOne = async (id) => {
     return Cliente
 }
 
+const remove = async(id)=>{
+    const cliente = findOne(id)
+    ;(await cliente).destroy(id)
+
+    /* const cliente = findOne(id)
+    cliente.destroy(id)
+    return id */
+
+/*     models.Clientes.sequelize.query(`ALTER SEQUENCE clientes_id_seq RESTART WITH ${id};`)
+ */    /* models.Clientes.destroy(id)
+    models.Clientes.sequelize.query(`DELETE FROM clientes_id WHERE ${cliente.id}`) */
+}
+
 module.exports={
     find,
     create,
-    findOne
+    findOne,
+    remove
 }

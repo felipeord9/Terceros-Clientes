@@ -1,5 +1,4 @@
 /* validar campos de los input */
-  
   input:invalid + span:after {
     content: "X";
     /* content: "✖"; */

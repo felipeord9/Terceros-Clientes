@@ -5,7 +5,7 @@ import AuthContext from "../../context/authContext";
 import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
-import { createCliente } from '../../services/clienteService';
+import { createCliente, deleteCliente } from '../../services/clienteService';
 import { Navigate } from "react-router-dom";
 import { getAllResponsabilidad } from '../../services/responsabilidadService'
 import { getAllDetalles } from "../../services/detalleService";
@@ -15,10 +15,7 @@ import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
-
-function mayus(e){
-  e.value = e.value.toUpperCase();
-}
+import { fileSend, deleteFile } from "../../services/fileService";
 
 export default function ContadoPersonaNatural(){
   /* instancias de contexto */
@@ -52,6 +49,19 @@ export default function ContadoPersonaNatural(){
   const [docOtros,setDocOtros]=useState(0);
   const [docCerBan, setDocCerBan] = useState(0);
   const [docValAnt,setDocValAnt] = useState(0);
+
+  //------------------------------------------
+  /* Variable de todos los pdf y el nombre de la carpeta*/
+  const [files, setFiles] = useState([]);
+/*   const [folderName, setFolderName] = useState('');
+ */
+  /* Variable para agregar los pdf */
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files];
+    newFiles[index] = event.target.files[0];
+    setFiles(newFiles);
+  };
+  //------------------------------------------
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
@@ -169,7 +179,14 @@ export default function ContadoPersonaNatural(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        const f = new FormData();
+        //agregamos los pdf a un formdata dependiendo del index que les dimos
+        const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        });
+        //creamos el cuerpo de nuestra instancia
         const body={
           clasificacion: clasificacion.id,
           agencia: agencia.id,
@@ -196,7 +213,7 @@ export default function ContadoPersonaNatural(){
           celular: search.celular,
           telefono:search.telefono,
           correoNotificaciones: search.correoNotificaciones,
-          nombreSucursal:search.primerNombre,
+          nombreSucursal:search.primerNombre.toUpperCase(),
           direccionSucursal:search.direccion.toUpperCase(),
           celularSucursal: search.celular,
           telefonoSucursal:search.telefono,
@@ -225,34 +242,80 @@ export default function ContadoPersonaNatural(){
           docCerBan:docCerBan,
           docOtros:docOtros,
         };
+        //creamos una constante la cual llevará el nombre de nuestra carpeta
+        const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
+        //agregamos la carpeta donde alojaremos los archivos
+        formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
-          .then(({data}) => {
+        .then(({data}) => {
+          fileSend(formData)
+          .then(()=>{
             setLoading(false)
-          /* reloadInfo(); */
-          Swal.fire({
-            title: 'Creación exitosa!',
-            text: `El Cliente "${data.razonSocial}" con Número de documento ${data.cedula} se ha registrado de manera satisfactoria`,
-            icon: 'success',
-            position:'center',
-            showConfirmButton: true,
-            confirmButtonColor:'#198754',
-            confirmButtonText:'Aceptar',
-          }).then(()=>{
-            window.location.reload();
+            setFiles([])
+            Swal.fire({
+              title: 'Creación exitosa!',
+              text: `El Cliente "${data.razonSocial}" con Número 
+              de documento "${data.cedula}" se ha registrado de manera exitosa`,
+              icon: 'success',
+              position:'center',
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',
+            })
+            .then(()=>{
+              window.location.reload();
+            })
+          }) 
+          .catch((err)=>{
+            setLoading(false);
+            if(!data){
+              deleteFile(folderName);
+            }else{
+              deleteCliente(data.id);
+            }
+            Swal.fire({
+              title: "¡Ha ocurrido un error!",
+              text: `
+              Ha ocurrido un error al momento de guardar los pdf, intente de nuevo.
+              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+              icon: "error",
+              showConfirmButton: true,
+              confirmButtonColor:'#198754',
+              confirmButtonText:'Aceptar',       
+            })
+            .then(()=>{
+              window.location.reload();
+            })
           });
-      }).catch((err)=>{
+      })
+      .catch((err)=>{
         setLoading(false);
+        deleteFile(folderName);
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de registrar el tercero, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
-        });
+        })
+        .then(()=>{
+          window.location.reload();
+        })
       });
     };
-  });
+  })
+  .catch((err)=>{
+    setLoading(false);
+    Swal.fire({
+      title: "¡Ha ocurrido un error!",
+        text: `
+          Hubo un error al momento de registrar el cliente, intente de nuevo.
+          Si el problema persiste por favor comuniquese con el área de sistemas.`,
+       icon: "error",
+       confirmButtonText: "Aceptar"});
+    })
   };
 
   const refreshForm = () => {
@@ -441,12 +504,12 @@ export default function ContadoPersonaNatural(){
                     id="cedula"
                     type="number" 
                     className="form-control form-control-sm w-100"
-                    min={0}
+                    min={10000000}
                     name="cedula"
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     required
-                    max={10000000000}
+                    max={9999999999}
                     minLength={0}
                     maxLength={10}
                     size={10}
@@ -529,8 +592,8 @@ export default function ContadoPersonaNatural(){
                     id="celular"
                     type="number"
                     className="form-control form-control-sm "
-                    min={0}
-                    max={10000000000}
+                    min={1000000}
+                    max={9999999999}
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -546,8 +609,8 @@ export default function ContadoPersonaNatural(){
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm mb-2"
-                    min={0}
-                    max={10000000000}
+                    min={100000}
+                    max={9999999999}
                     
                     placeholder="(Campo Opcional)"
                   >
@@ -612,7 +675,7 @@ export default function ContadoPersonaNatural(){
                 <div className=" pe-3" style={{width:255}}>
                 <label className="fw-bold" style={{fontSize:18}}>Responsabilidad fiscal:</label>
                 <select
-                ref={selectBranchRef}
+                ref={selectResponsabilidadRef}
                 className="form-select form-select-sm w-100"
                 required
                 onChange={(e)=>setResponsabilidad(JSON.parse(e.target.value))}
@@ -663,7 +726,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="RUT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
-                    onChange={(e)=>setDocRut(1)}
+                    onChange={(e) => (handleFileChange(e, 0),setDocRut(1))}
                   />
                 </div>
                 <div className="ps-2 w-50">
@@ -674,7 +737,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="INFOLAFT"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
-                    onChange={(e)=>setDocInfemp(1)}
+                    onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))}
                   />
                 </div>
               </div>
@@ -686,7 +749,7 @@ export default function ContadoPersonaNatural(){
                     placeholder="OTROS"
                     className="form-control form-control-sm w-100"
                     accept=".pdf"
-                    onChange={(e)=>setDocOtros(1)}
+                    onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))}
                   />
                 </div> 
             </div>
