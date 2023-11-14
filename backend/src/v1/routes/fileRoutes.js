@@ -56,7 +56,9 @@ router.post('/', upload.fields([
   const folderName = req.body.folderName; 
 
   const folderPath = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);
-  if (!fs.existsSync(folderPath)) {
+ 
+/* const folderPath = path.join(`smb${folderName}`);
+ */if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
   }
   for (const fileInputName in req.files){

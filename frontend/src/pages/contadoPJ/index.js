@@ -248,7 +248,7 @@ export default function ContadoPersonaJuridica(){
           tipoFormulario: search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
-        const folderName = search.cedula+'-'+search.DV+' '+ search.razonSocial.toUpperCase();
+        const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
         //ejecutamos nuestra funcion que creara el cliente
@@ -336,6 +336,53 @@ export default function ContadoPersonaJuridica(){
       if (isConfirmed) window.location.reload();
     });
   };
+
+/* validar correo de la sucursal*/
+const [mensajeValidacion, setMensajeValidacion] = useState('');
+const [colorSpan,setColorSpan]=useState('red')
+const manejarCambioCorreo = (event) => {
+  const nuevoValor = event.target.value;
+  
+  // Verificar si el nuevo valor cumple con la expresión regular
+/*     if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(nuevoValor)) {
+*/    if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+ /* setCorreo(nuevoValor); */
+    setMensajeValidacion('✓');
+    setColorSpan('green') // Limpiar mensaje de validación si es válido
+  } else {
+    setMensajeValidacion('X');
+    setColorSpan('red')
+  }
+}
+
+/* validar correo Notificaciones*/
+const [Validacion, setValidacion] = useState('');
+const [Span,setSpan]=useState('red')
+const manejarCambio = (event) => {
+  const nuevoValor = event.target.value;
+  if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+    setValidacion('✓');
+    setSpan('green') // Limpiar mensaje de validación si es válido
+  } else {
+    setValidacion('X');
+    setSpan('red')
+  }
+}
+
+/* validar correo de la factura Electronica*/
+const [mensaje, setMensaje] = useState('');
+const [color,setColor]=useState('red')
+const Cambio = (event) => {
+  const nuevoValor = event.target.value;
+  if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+    setMensaje('✓');
+    setColor('green') // Limpiar mensaje de validación si es válido
+  } else {
+    setMensaje('X');
+    setColor('red')
+  }
+}
+
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
@@ -574,14 +621,15 @@ export default function ContadoPersonaJuridica(){
                     className="form-control form-control-sm "
                     min={0}
                     value={search.correoNotificaciones}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{width:580}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
-              </div>
+{/*                   <validarCorreo correo={search.correoNotificaciones}/>
+ */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
+{/*                   <span className="validity fw-bold"></span>
+ */}              </div>
               
             </div>            
             <hr className="my-1" />
@@ -704,35 +752,37 @@ export default function ContadoPersonaJuridica(){
                   <label className="me-1">CorreoSucursal:</label>
                   <input
                     id="correoSucursal"
-                    value={search.correoSucursal}
-                    onChange={handlerChangeSearch}
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
-                    required                   
+                    required
+                    value={search.correoSucursal}
+                    onChange={(e)=>(handlerChangeSearch(e),manejarCambioCorreo(e))}
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
-              </div>
+                  <p  className="ps-3" style={{color:colorSpan}}><strong>{mensajeValidacion}</strong></p>
+{/*                   <span className="validity fw-bold"></span>
+ */}              </div>
               <hr className="my-1" />
               <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
               <div className="d-flex flex-row align-items-start mt-2 mb-2  ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
                     value={search.correoFacturaElectronica}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),Cambio(e))}
                     id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:495}} 
+                    style={{width:530}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
-              </div>
+                  <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
+{/*                   <span className="validity fw-bold"></span>
+ */}              </div>
               <div className="d-flex flex-row mb-4">
                 <div className="pe-3" style={{width:255}}>
                 <label className="fw-bold" style={{fontSize:18}}>Régimen fiscal:</label>

@@ -332,6 +332,32 @@ export default function ContadoPersonaNatural(){
     });
   };
 
+/* validar correo Notificaciones*/
+const [Validacion, setValidacion] = useState('');
+const [Span,setSpan]=useState('red')
+const manejarCambio = (event) => {
+  const nuevoValor = event.target.value;
+  if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+    setValidacion('✓');
+    setSpan('green') // Limpiar mensaje de validación si es válido
+  } else {
+    setValidacion('X');
+    setSpan('red')
+  }
+}
+/* validar correo de la factura Electronica*/
+const [mensaje, setMensaje] = useState('');
+const [color,setColor]=useState('red')
+const Cambio = (event) => {
+  const nuevoValor = event.target.value;
+  if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+    setMensaje('✓');
+    setColor('green') // Limpiar mensaje de validación si es válido
+  } else {
+    setMensaje('X');
+    setColor('red')
+  }
+}
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
@@ -609,7 +635,7 @@ export default function ContadoPersonaNatural(){
                     id="telefono"
                     type="number"
                     className="form-control form-control-sm mb-2"
-                    min={100000}
+                    min={1000000}
                     max={9999999999}
                     
                     placeholder="(Campo Opcional)"
@@ -621,35 +647,38 @@ export default function ContadoPersonaNatural(){
               <div className="d-flex flex-row align-items-start ">
                   <label className="me-1 mb-3">CorreoNotificaciones:</label>
                   <input
-                    value={search.correoNotificaciones}
-                    onChange={handlerChangeSearch}
                     id="correoNotificaciones"
                     type="email"
-                    className="form-control form-control-sm"
+                    className="form-control form-control-sm "
                     min={0}
+                    value={search.correoNotificaciones}
+                    onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
-              </div>
+{/*                   <validarCorreo correo={search.correoNotificaciones}/>
+ */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
+{/*                   <span className="validity fw-bold"></span>
+ */}              </div>
               <hr className="my-1" />
               <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
               <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
                     value={search.correoFacturaElectronica}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),Cambio(e))}
                     id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:535}} 
+                    style={{width:530}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
+                  <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
+                  {/* <span className="validity fw-bold"></span> */}
               </div>
               <div className="d-flex flex-row mb-3">
                 <div className="pe-3" style={{width:255}}>

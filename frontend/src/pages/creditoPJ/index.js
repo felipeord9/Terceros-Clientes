@@ -243,7 +243,7 @@ export default function CreditoPersonaJuridica(){
           tipoFormulario: search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
-        const folderName = search.cedula+'-'+search.DV+' '+ search.razonSocial.toUpperCase();
+        const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
         //ejecutamos nuestra funcion que creara el cliente
@@ -331,6 +331,70 @@ export default function CreditoPersonaJuridica(){
       if (isConfirmed) window.location.reload();
     });
   };
+  
+  /* validar correo de la sucursal*/
+  const [mensajeValidacion, setMensajeValidacion] = useState('');
+  const [colorSpan,setColorSpan]=useState('red')
+  const manejarCambioCorreo = (event) => {
+    const nuevoValor = event.target.value;
+    
+    // Verificar si el nuevo valor cumple con la expresión regular
+/*     if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(nuevoValor)) {
+ */    if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+   /* setCorreo(nuevoValor); */
+      setMensajeValidacion('✓');
+      setColorSpan('green') // Limpiar mensaje de validación si es válido
+    } else {
+      setMensajeValidacion('X');
+      setColorSpan('red')
+    }
+  }
+
+  /* validar correo Notificaciones*/
+  const [Validacion, setValidacion] = useState('');
+  const [Span,setSpan]=useState('red')
+  const manejarCambio = (event) => {
+    const nuevoValor = event.target.value;
+    if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+      setValidacion('✓');
+      setSpan('green') // Limpiar mensaje de validación si es válido
+    } else {
+      setValidacion('X');
+      setSpan('red')
+    }
+  }
+
+  /* validar correo de la factura Electronica*/
+  const [mensaje, setMensaje] = useState('');
+  const [color,setColor]=useState('red')
+  const Cambio = (event) => {
+    const nuevoValor = event.target.value;
+    if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
+      setMensaje('✓');
+      setColor('green') // Limpiar mensaje de validación si es válido
+    } else {
+      setMensaje('X');
+      setColor('red')
+    }
+  }
+  /* const ValidadorCorreo = ({ correo }) => {
+    const [mensajeValidacion, setMensajeValidacion] = useState('');
+    
+    const validarCorreo = () => {
+      if (correo.includes('@') && correo.split('@')[1].includes('.')) {
+        setMensajeValidacion('Correo válido');
+      } else {
+        setMensajeValidacion('Falta un punto después del @');
+      }
+    }
+    validarCorreo();
+    return (
+      <div>
+        <p>{mensajeValidacion}</p>
+      </div>
+    );
+  } */
+
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
@@ -563,20 +627,21 @@ export default function CreditoPersonaJuridica(){
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start mb-3 w-100">
-                  <label className="me-1">Correo de notificación:</label>
+                  <label className="me-1">CorreoNotificación:</label>
                   <input
                     id="correoNotificaciones"
                     type="email"
                     className="form-control form-control-sm "
                     min={0}
                     value={search.correoNotificaciones}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{width:595}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
+{/*                   <validarCorreo correo={search.correoNotificaciones}/>
+ */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
+                  {/* <span className="validity fw-bold"></span> */}
               </div>
               
             </div>            
@@ -705,11 +770,13 @@ export default function CreditoPersonaJuridica(){
                     min={0}
                     required
                     value={search.correoSucursal}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),manejarCambioCorreo(e))}
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
+                  <p  className="ps-3" style={{color:colorSpan}}><strong>{mensajeValidacion}</strong></p>
+                  {/* <p>{mensajeValidacion}</p> */}
+                  {/* <span className="validity fw-bold"></span> */}
               </div>
               <hr className="my-1" />
               <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
@@ -717,7 +784,7 @@ export default function CreditoPersonaJuridica(){
                   <label className="me-1 mb-3">Correo para la factura electrónica:</label>
                   <input
                     value={search.correoFacturaElectronica}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),Cambio(e))}
                     id="correoFacturaElectronica"
                     type="email"
                     className="form-control form-control-sm"
@@ -727,7 +794,8 @@ export default function CreditoPersonaJuridica(){
                     placeholder="Campo obligatorio"
                   >
                   </input>
-                  <span className="validity fw-bold"></span>
+                  <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
+                  {/* <span className="validity fw-bold"></span> */}
               </div>
               <div className="d-flex flex-row mb-4">
                 <div className="pe-3" style={{width:265}}>
