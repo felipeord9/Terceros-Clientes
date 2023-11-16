@@ -52,14 +52,25 @@ export default function ContadoPersonaNatural(){
 
   //------------------------------------------
   /* Variable de todos los pdf y el nombre de la carpeta*/
-  const [files, setFiles] = useState([]);
+  /* const [files, setFiles] = useState([]); */
+  const [files, setFiles] = useState({
+    input1: null,
+    input2: null,
+    input3: null,
+  });
 /*   const [folderName, setFolderName] = useState('');
  */
   /* Variable para agregar los pdf */
-  const handleFileChange = (event, index) => {
+  /* const handleFileChange = (event, index) => {
     const newFiles = [...files];
     newFiles[index] = event.target.files[0];
     setFiles(newFiles);
+  }; */
+
+  /* Second form */
+  const handleFileChange = (fieldName, e) => {
+    const selectedFile = e.target.files[0];
+    setFiles(prevFiles => ({ ...prevFiles, [fieldName]: selectedFile }));
   };
   //------------------------------------------
 
@@ -180,12 +191,21 @@ export default function ContadoPersonaNatural(){
       if(isConfirmed){
         setLoading(true);
         //agregamos los pdf a un formdata dependiendo del index que les dimos
-        const formData = new FormData();
+        /* const formData = new FormData();
         files.forEach((file, index) => {
           if (file) {
             formData.append(`pdfFile${index}`, file);
           }
-        });
+        }); */
+
+        /* second form */
+        const formData = new FormData();
+
+        for (const fieldName in files) {
+          if (files[fieldName]) {
+            formData.append(fieldName, files[fieldName]);
+          }
+        }
         //creamos el cuerpo de nuestra instancia
         const body={
           clasificacion: clasificacion.id,
@@ -684,7 +704,7 @@ const [colorVality,setColorVality]=useState('red');
                     value={search.correoNotificaciones}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{width:600, textTransform:'lowercase'}}
+                    style={{width:585, textTransform:'lowercase'}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -704,7 +724,7 @@ const [colorVality,setColorVality]=useState('red');
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:512,textTransform:'lowercase'}} 
+                    style={{width:502,textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -788,7 +808,9 @@ const [colorVality,setColorVality]=useState('red');
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e) => (handleFileChange(e, 0),setDocRut(1))}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1))}
                   />
                   </div>
                 </div>
@@ -802,7 +824,8 @@ const [colorVality,setColorVality]=useState('red');
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1))}
                   />
                   </div>
                 </div>
@@ -817,7 +840,8 @@ const [colorVality,setColorVality]=useState('red');
                     style={{backgroundColor:'#f5f5f5'}}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
-                    onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))}
+                    /* onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))} */
+                    onChange={(e) => (handleFileChange('Otros',e),setDocOtros(1))}
                   />
                   </div>
                 </div> 

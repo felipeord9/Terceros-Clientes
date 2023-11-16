@@ -657,7 +657,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:510, textTransform:'lowercase'}} 
+                    style={{width:515, textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>

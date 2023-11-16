@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ dest: 'uploads/' });
 router.post('/', upload.fields([
-  { name: 'pdfFile0' },
+  /* { name: 'pdfFile0' },
   { name: 'pdfFile1' },
   { name: 'pdfFile2' },
   { name: 'pdfFile3' },
@@ -50,8 +50,25 @@ router.post('/', upload.fields([
   { name: 'pdfFile10' },
   { name: 'pdfFile11' },
   { name: 'pdfFile12' },
-  { name: 'pdfFile13' }
+  { name: 'pdfFile13' } */
   // Add more fields if necessary
+
+  /* second form */
+  { name: 'Vinculacion' },
+  { name: 'ComprAntc' },
+  { name: 'ComprAntc' },
+  { name: 'Pagare' },
+  { name: 'Rut' },
+  { name: 'Ccio' },
+  { name: 'CrepL' },
+  { name: 'Ef' },
+  { name: 'Certban' },
+  { name: 'Refcom' },
+  { name: 'Cvbo' },
+  { name: 'Firdoc' },
+  { name: 'Infemp' },
+  { name: 'Infrl' },
+  { name: 'Otros'}
 ]), (req, res) => {
   const folderName = req.body.folderName; 
 
@@ -65,7 +82,7 @@ router.post('/', upload.fields([
     req.files[fileInputName].forEach((file)=>{
       const clientName = req.body.clientName;
       const extension = path.extname(file.originalname);
-      const newFilePath = path.join(folderPath,file.fieldname+`${clientName}`+extension);
+      const newFilePath = path.join(folderPath,file.fieldname+`-${clientName}`+extension);
       fs.rename(file.path,newFilePath,(err)=>{
         if(err){
           res.status(500).send('error al guardar los archivos');

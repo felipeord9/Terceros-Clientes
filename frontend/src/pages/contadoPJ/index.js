@@ -64,16 +64,27 @@ export default function ContadoPersonaJuridica(){
 
 //------------------------------------------
   /* Variable de todos los pdf y el nombre de la carpeta*/
-  const [files, setFiles] = useState([]);
-/*   const [folderName, setFolderName] = useState('');
+  /* const [files, setFiles] = useState([]); */
+  /* second form */
+  const [files, setFiles] = useState({
+    input1: null,
+    input2: null,
+    input3: null,
+    input4: null,
+  });/*   const [folderName, setFolderName] = useState('');
  */
   /* Variable para agregar los pdf */
-  const handleFileChange = (event, index) => {
+  /* const handleFileChange = (event, index) => {
     const newFiles = [...files];
     newFiles[index] = event.target.files[0];
     setFiles(newFiles);
-  };
+  }; */
   //------------------------------------------
+  /* second form */
+  const handleFileChange = (fieldName, e) => {
+    const selectedFile = e.target.files[0];
+    setFiles(prevFiles => ({ ...prevFiles, [fieldName]: selectedFile }));
+  };
 
   /* Inicializar los input */
   const [search, setSearch] = useState({
@@ -184,12 +195,20 @@ export default function ContadoPersonaJuridica(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        const formData = new FormData();
+        /* const formData = new FormData();
         files.forEach((file, index) => {
           if (file) {
             formData.append(`pdfFile${index}`, file);
           }
-        })
+        }) */
+        /* second form */
+        const formData = new FormData();
+
+        for (const fieldName in files) {
+          if (files[fieldName]) {
+            formData.append(fieldName, files[fieldName]);
+          }
+        }
         const body={
           cedula:search.cedula,
           numeroDocumento: search.cedula,
@@ -251,6 +270,8 @@ export default function ContadoPersonaJuridica(){
         const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const clientName = search.razonSocial.toUpperCase();
+        formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
         .then(({data}) => {
@@ -936,11 +957,12 @@ const Cambio = (event) => {
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <input
                     id="DocRut"
-                    onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))} */
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
+                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1))}
                   />
                 </div>
                 <div className="ms-2 w-100">
@@ -949,7 +971,8 @@ const Cambio = (event) => {
                     id="DocInfemp"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))} */
+                    onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
@@ -960,7 +983,8 @@ const Cambio = (event) => {
                   <input
                     id="DocInfrl"
                     type="file"
-                    onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))} */
+                    onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1))}
                     placeholder="RUT"
                     style={{backgroundColor:'#f5f5f5'}}
                     className="form-control form-control-sm w-100 me-2 border border-5 rounded-3"
@@ -972,7 +996,8 @@ const Cambio = (event) => {
                     id="DocOtros"
                     style={{backgroundColor:'#f5f5f5'}}
                     type="file"
-                    onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))} */
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
