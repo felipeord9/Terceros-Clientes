@@ -212,13 +212,13 @@ export default function ContadoPersonaNatural(){
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono:search.telefono,
-          correoNotificaciones: search.correoNotificaciones,
+          correoNotificaciones: search.correoNotificaciones.toLowerCase(),
           nombreSucursal:search.primerNombre.toUpperCase(),
           direccionSucursal:search.direccion.toUpperCase(),
           celularSucursal: search.celular,
           telefonoSucursal:search.telefono,
-          correoSucursal:search.correoNotificaciones,
-          correoFacturaElectronica:search.correoFacturaElectronica,
+          correoSucursal:search.correoNotificaciones.toLowerCase(),
+          correoFacturaElectronica:search.correoFacturaElectronica.toLowerCase(),
           numeroDocRepLegal: search.cedula,
           nameRepLegal:search.primerNombre.toUpperCase(),
           apellidoRepLegal:search.primerApellido.toUpperCase(),
@@ -246,6 +246,9 @@ export default function ContadoPersonaNatural(){
         const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //creamos una constante con el nombre del cliente
+        const clientName = search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
+        formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
         .then(({data}) => {
@@ -358,9 +361,31 @@ const Cambio = (event) => {
     setColor('red')
   }
 }
+
+const [vality,setVality]=useState('');
+const [colorVality,setColorVality]=useState('red');
+  const handleInputChange = (event) => {
+    // Obtén el valor actual del input
+    let value = event.target.value;
+
+    // Remueve cualquier carácter que no sea un número
+    value = value.replace(/[^0-9]/g, '');
+    if (value.replace(/[^0-9]/g, '')){
+      setVality('✓');
+      setColorVality('green')
+    }else if(value.includes('e') || value.includes('E') || value.includes(',')){
+      setVality('X');
+      setColorVality('red')
+    }
+    else{
+      setVality('X');
+      setColorVality('red')
+    }
+  };
+/* validar numero sin puntos, comas y guiones */
+
     return(
-    <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
-    <div className='rounder-4'>
+    <div className=" wrapper d-flex justify-content-center w-100 m-auto " style={{userSelect:'none'}}>
     <div
       className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
@@ -487,7 +512,7 @@ const Cambio = (event) => {
                   />
                 </div>
                 <div className="d-flex flex-column w-25">
-                <label className="me-1 ">OtrosNombres:</label>
+                <label className="me-1 ">Otros nombres:</label>
                   <input
                     id="otrosNombres"
                     type="text"
@@ -503,9 +528,10 @@ const Cambio = (event) => {
 
               <div className="d-flex flex-row mt-2">
                 <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">TipoDocumento:</label>
+                  <label className="me-1">Tipo documento:</label>
                   <select
                     ref={selectDocumentoRef}
+                    style={{width:245}}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
                     required
@@ -532,8 +558,9 @@ const Cambio = (event) => {
                     className="form-control form-control-sm w-100"
                     min={10000000}
                     name="cedula"
+                    pattern="[0-9]"
                     value={search.cedula}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>(handlerChangeSearch(e),handleInputChange(e))}
                     required
                     max={9999999999}
                     minLength={0}
@@ -543,7 +570,8 @@ const Cambio = (event) => {
                   >
                   </input>
                   <span className="validity fw-bold"></span>
-                </div>
+{/*                   <p className="ps-3" style={{color:colorVality}}><strong>{vality}</strong></p>
+ */}                </div>
               </div>
               <div className="d-flex flex-row mt-2 w-100">
                 <label className="me-1">Dirección:</label>
@@ -619,6 +647,7 @@ const Cambio = (event) => {
                     type="number"
                     className="form-control form-control-sm "
                     min={1000000}
+                    pattern="[0-9]"
                     max={9999999999}
                     required
                     placeholder="Campo obligatorio"
@@ -634,6 +663,7 @@ const Cambio = (event) => {
                     onChange={handlerChangeSearch}
                     id="telefono"
                     type="number"
+                    pattern="[0-9]"
                     className="form-control form-control-sm mb-2"
                     min={1000000}
                     max={9999999999}
@@ -645,7 +675,7 @@ const Cambio = (event) => {
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start ">
-                  <label className="me-1 mb-3">CorreoNotificaciones:</label>
+                  <label className="me-1 mb-3">Correo notificaciones:</label>
                   <input
                     id="correoNotificaciones"
                     type="email"
@@ -654,6 +684,7 @@ const Cambio = (event) => {
                     value={search.correoNotificaciones}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
+                    style={{width:600, textTransform:'lowercase'}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -673,7 +704,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:530}} 
+                    style={{width:512,textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -749,37 +780,46 @@ const Cambio = (event) => {
               <div className="d-flex flex-row m-1">
                 <div className="pe-2 w-50">
                   <label className="fw-bold mt-1 ">RUT: </label>
+                  <div className="p-1 rounded-2" >
                   <input
                     id="RUT"
                     type="file"
                     placeholder="RUT"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e) => (handleFileChange(e, 0),setDocRut(1))}
                   />
+                  </div>
                 </div>
                 <div className="ps-2 w-50">
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
+                  <div className="p-1 rounded-2" >
                   <input
                     id="INFOLAFT"
                     type="file"
                     placeholder="INFOLAFT"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))}
                   />
+                  </div>
                 </div>
               </div>
-              <div className="d-flex flex-row mt-2">
+              <div className="d-flex flex-column mt-2 ">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
+                  <div className="p-1 rounded-2"/*  style={{backgroundColor:'#9B9B9B'}} */>
                   <input
                     id="otros"
                     type="file"
                     placeholder="OTROS"
-                    className="form-control form-control-sm w-100"
+                    style={{backgroundColor:'#f5f5f5'}}
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
                     onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))}
                   />
+                  </div>
                 </div> 
             </div>
           </div>
@@ -790,7 +830,7 @@ const Cambio = (event) => {
             value={search.observations}
             onChange={handlerChangeSearch}
             id="observations"
-            className="form-control"
+            className="form-control border border-4"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>
@@ -830,6 +870,6 @@ const Cambio = (event) => {
       </form>
     </div>
     </div>
-    </div>
+    
   );
 }

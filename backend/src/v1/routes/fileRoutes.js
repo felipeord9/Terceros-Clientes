@@ -63,7 +63,9 @@ router.post('/', upload.fields([
   }
   for (const fileInputName in req.files){
     req.files[fileInputName].forEach((file)=>{
-      const newFilePath = path.join(folderPath,file.originalname);
+      const clientName = req.body.clientName;
+      const extension = path.extname(file.originalname);
+      const newFilePath = path.join(folderPath,file.fieldname+`${clientName}`+extension);
       fs.rename(file.path,newFilePath,(err)=>{
         if(err){
           res.status(500).send('error al guardar los archivos');

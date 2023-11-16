@@ -191,8 +191,8 @@ export default function ContadoPersonaJuridica(){
           }
         })
         const body={
-          cedula:search.cedula+'-'+search.DV,
-          numeroDocumento: search.cedula+'-'+search.DV,
+          cedula:search.cedula,
+          numeroDocumento: search.cedula,
           /* cedula:search.cedula+search.DV,
           numeroDocumento: search.cedula+search.DV, */
           tipoDocumento:search.tipoDocumento,
@@ -207,15 +207,15 @@ export default function ContadoPersonaJuridica(){
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono: search.telefono,
-          correoNotificaciones: search.correoNotificaciones,
+          correoNotificaciones: search.correoNotificaciones.toLowerCase(),
           nombreSucursal:search.nombreSucursal.toUpperCase(),
           direccionSucursal: search.direccionSucursal.toUpperCase(),
           departamentoSucursal: depart.codigo,
           ciudadSucursal: city.codigo,
           celularSucursal: search.celularSucursal,
           telefonoSucursal: search.telefonoSucursal,
-          correoSucursal: search.correoSucursal,
-          correoFacturaElectronica: search.correoFacturaElectronica,
+          correoSucursal: search.correoSucursal.toLowerCase(),
+          correoFacturaElectronica: search.correoFacturaElectronica.toLowerCase(),
           regimenFiscal: regimen.id,
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
@@ -467,11 +467,11 @@ const Cambio = (event) => {
               <label className="fw-bold mb-1" style={{fontSize:22}}>OFICINA PRINCIPAL</label>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">RazónSocial:</label>
+                  <label className="me-1">Razón Social:</label>
                   <input
                     id="razonSocial"
                     type="text"
-                    style={{textTransform:"uppercase"}}
+                    style={{textTransform:"uppercase",width:280}}
                     className="form-control form-control-sm me-3"
                     value={search.razonSocial}
                     onChange={handlerChangeSearch}
@@ -488,8 +488,9 @@ const Cambio = (event) => {
                     type="number"
                     className="form-control form-control-sm"
                     min={10000000}
-                    max={9999999999}
+                    max={999999999}
                     required
+                    pattern="[0-9]"
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
@@ -497,7 +498,7 @@ const Cambio = (event) => {
                   </input>
                   <span className="validity fw-bold"></span>
                 </div>
-                <div className="d-flex flex-row ms-2" >
+                {/* <div className="d-flex flex-row ms-2" >
                     <label>DV:</label>
                     <input 
                     id="DV"
@@ -513,7 +514,7 @@ const Cambio = (event) => {
                     style={{width:30}}>
                     </input>
                     <span className="validity fw-bold"></span>
-                </div>
+                </div> */}
                 </div> 
               </div>
               <div className="d-flex flex-row mt-2">
@@ -522,10 +523,10 @@ const Cambio = (event) => {
                   placeholder="campo obligatorio"
                   type="text"
                   id="direccion"
-                  style={{textTransform:"uppercase"}}
+                  style={{textTransform:"uppercase",width:596}}
                   value={search.direccion}
                   onChange={handlerChangeSearch}
-                  className="form-control form-control-sm w-75"
+                  className="form-control form-control-sm"
                   min={0}
                   required
                 >
@@ -589,6 +590,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={1000000}
                     max={9999999999}
+                    pattern="[0-9]"
                     value={search.celular}
                     onChange={handlerChangeSearch}
                     required
@@ -605,6 +607,7 @@ const Cambio = (event) => {
                     type="number"
                     className="form-control form-control-sm"
                     min={1000000}
+                    pattern="[0-9]"
                     max={9999999999}
                     value={search.telefono}
                     onChange={handlerChangeSearch}
@@ -623,6 +626,7 @@ const Cambio = (event) => {
                     value={search.correoNotificaciones}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
+                    style={{textTransform:'lowercase',width:590}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -636,31 +640,31 @@ const Cambio = (event) => {
             <div>
               <label className="fw-bold" style={{fontSize:22}}>SUCURSAL</label>                  
               <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">NombreSucursal:</label>
+                  <label className="me-1">Nombre sucursal:</label>
                   <input
                     id="nombreSucursal"
                     type="text"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm"
                     min={0}
                     value={search.nombreSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{textTransform:"uppercase"}} 
+                    style={{textTransform:"uppercase",width:660}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
               </div>
               <div className="d-flex flex-row align-items-start w-100 mt-2">
-                  <label className="me-1">DirecciónSucursal:</label>
+                  <label className="me-1">Dirección sucursal:</label>
                   <input
                     id="direccionSucursal"
                     value={search.direccionSucursal}
                     onChange={handlerChangeSearch}
                     type="text"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm "
                     min={0}
                     required
-                    style={{ textTransform:"uppercase"}} 
+                    style={{ textTransform:"uppercase",width:652}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -725,6 +729,7 @@ const Cambio = (event) => {
                     type="number"
                     className="form-control form-control-sm"
                     min={1000000}
+                    pattern="[0-9]"
                     max={9999999999}
                     required
                     placeholder="Campo obligatorio"
@@ -742,6 +747,7 @@ const Cambio = (event) => {
                     type="number"
                     className="form-control form-control-sm"
                     min={1000000}
+                    pattern="[0-9]"
                     max={9999999999}
                     placeholder="(Campo Opcional)"
                   >
@@ -749,13 +755,14 @@ const Cambio = (event) => {
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start mb-3">
-                  <label className="me-1">CorreoSucursal:</label>
+                  <label className="me-1">Correo sucursal:</label>
                   <input
                     id="correoSucursal"
                     type="email"
                     className="form-control form-control-sm"
                     min={0}
                     required
+                    style={{width:638,textTransform:'lowercase'}}
                     value={search.correoSucursal}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambioCorreo(e))}
                     placeholder="Campo obligatorio"
@@ -776,7 +783,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:530}} 
+                    style={{width:510,textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -881,8 +888,9 @@ const Cambio = (event) => {
               </div>
               <div className="d-flex flex-row mt-2 mb-4">
               <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">TipoDocumento:</label>
+                  <label className="me-1">Tipo documento:</label>
                   <select
+                  style={{width:252}}
                     ref={selectDocumentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
@@ -910,6 +918,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={10000000}
                     required
+                    pattern="[0-9]"
                     max={9999999999} 
                     placeholder="Campo obligatorio"
                   >
@@ -929,7 +938,8 @@ const Cambio = (event) => {
                     id="DocRut"
                     onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))}
                     type="file"
-                    className="form-control form-control-sm w-100"
+                    style={{backgroundColor:'#f5f5f5'}}
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
                   />
                 </div>
@@ -938,8 +948,9 @@ const Cambio = (event) => {
                   <input
                     id="DocInfemp"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
               </div>
@@ -951,16 +962,18 @@ const Cambio = (event) => {
                     type="file"
                     onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))}
                     placeholder="RUT"
-                    className="form-control form-control-sm w-100 me-2"
+                    style={{backgroundColor:'#f5f5f5'}}
+                    className="form-control form-control-sm w-100 me-2 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <input
                     id="DocOtros"
+                    style={{backgroundColor:'#f5f5f5'}}
                     type="file"
                     onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 </div>
@@ -971,7 +984,7 @@ const Cambio = (event) => {
           <label className="fw-bold" style={{fontSize:22}}>OBSERVACIONES</label>
           <textarea
             id="observations"
-            className="form-control"
+            className="form-control border border-2"
             value={search.observations}
             onChange={handlerChangeSearch}
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}

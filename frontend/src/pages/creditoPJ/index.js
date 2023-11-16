@@ -186,8 +186,8 @@ export default function CreditoPersonaJuridica(){
           }
         })
         const body={
-          cedula:search.cedula+'-'+search.DV,
-          numeroDocumento: search.cedula+'-'+search.DV,
+          cedula:search.cedula,
+          numeroDocumento: search.cedula,
           /* cedula:search.cedula+search.DV,
           numeroDocumento: search.cedula+search.DV, */
           tipoDocumento:search.tipoDocumento,
@@ -202,15 +202,15 @@ export default function CreditoPersonaJuridica(){
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono: search.telefono,
-          correoNotificaciones: search.correoNotificaciones,
+          correoNotificaciones: search.correoNotificaciones.toLowerCase(),
           nombreSucursal:search.nombreSucursal.toUpperCase(),
           direccionSucursal: search.direccionSucursal.toUpperCase(),
           departamentoSucursal: depart.codigo,
           ciudadSucursal: city.codigo,
           celularSucursal: search.celularSucursal,
           telefonoSucursal: search.telefonoSucursal,
-          correoSucursal: search.correoSucursal,
-          correoFacturaElectronica: search.correoFacturaElectronica,
+          correoSucursal: search.correoSucursal.toLowerCase(),
+          correoFacturaElectronica: search.correoFacturaElectronica.toLowerCase(),
           regimenFiscal: regimen.id,
           responsabilidadFiscal: responsabilidad.id,
           detalleTributario: detalle.id,
@@ -397,7 +397,6 @@ export default function CreditoPersonaJuridica(){
 
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
-    <div className='rounder-4'>
     <div
       className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
@@ -480,11 +479,11 @@ export default function CreditoPersonaJuridica(){
               <label className="fw-bold mb-1" style={{fontSize:22}}>OFICINA PRINCIPAL</label>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">RazónSocial:</label>
+                  <label className="me-1">Razón social:</label>
                   <input
                     id="razonSocial"
                     type="text"
-                    style={{textTransform:"uppercase"}}
+                    style={{textTransform:"uppercase", width:286}}
                     className="form-control form-control-sm me-3"
                     value={search.razonSocial}
                     onChange={handlerChangeSearch}              
@@ -510,7 +509,7 @@ export default function CreditoPersonaJuridica(){
                   </input>
                   <span className="validity fw-bold"></span>
                 </div>
-                <div className="d-flex flex-row ms-2" >
+                {/* <div className="d-flex flex-row ms-2" >
                 <label>DV:</label>
                     <input 
                     id="DV"
@@ -526,7 +525,7 @@ export default function CreditoPersonaJuridica(){
                     style={{width:30}}>
                     </input>
                     <span className="validity fw-bold"></span>
-                </div>
+                </div> */}
                 </div>
               </div>
               <div className="d-flex flex-row mt-2">
@@ -627,7 +626,7 @@ export default function CreditoPersonaJuridica(){
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start mb-3 w-100">
-                  <label className="me-1">CorreoNotificación:</label>
+                  <label className="me-1">Correo notificación:</label>
                   <input
                     id="correoNotificaciones"
                     type="email"
@@ -636,6 +635,7 @@ export default function CreditoPersonaJuridica(){
                     value={search.correoNotificaciones}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
+                    style={{width:625,textTransform:'lowercase'}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -649,31 +649,31 @@ export default function CreditoPersonaJuridica(){
             <div>
               <label className="fw-bold" style={{fontSize:22}}>SUCURSAL</label>                  
               <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">NombreSucursal:</label>
+                  <label className="me-1">Nombre sucursal:</label>
                   <input
                     id="nombreSucursal"
                     type="text"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm"
                     min={0}
                     value={search.nombreSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635, textTransform:"uppercase"}} 
+                    style={{width:668, textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
               </div>
               <div className="d-flex flex-row align-items-start w-100 mt-2">
-                  <label className="me-1">DirecciónSucursal:</label>
+                  <label className="me-1">Dirección sucursal:</label>
                   <input
                     id="direccionSucursal"
                     type="text"
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm"
                     min={0}
                     value={search.direccionSucursal}
                     onChange={handlerChangeSearch}
                     required
-                    style={{width:635, textTransform:"uppercase"}} 
+                    style={{width:660, textTransform:"uppercase"}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -762,7 +762,7 @@ export default function CreditoPersonaJuridica(){
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start mb-3">
-                  <label className="me-1">CorreoSucursal:</label>
+                  <label className="me-1">Correo sucursal:</label>
                   <input
                     id="correoSucursal"
                     type="email"
@@ -770,6 +770,7 @@ export default function CreditoPersonaJuridica(){
                     min={0}
                     required
                     value={search.correoSucursal}
+                    style={{width:650,textTransform:'lowercase'}}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambioCorreo(e))}
                     placeholder="Campo obligatorio"
                   >
@@ -790,7 +791,7 @@ export default function CreditoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:530}} 
+                    style={{width:525,textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -895,8 +896,9 @@ export default function CreditoPersonaJuridica(){
               </div>
               <div className="d-flex flex-row mt-2 mb-4">
               <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">TipoDocumento:</label>
+                  <label className="me-1">Tipo documento:</label>
                   <select
+                  style={{width:257}}
                     ref={selectDocumentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
@@ -945,17 +947,19 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocVinculacion"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
                 <div className="ms-2 w-100">
-                  <label className="fw-bold mt-1 me-2">COMPROMISO ANTICORRUPCIÓN: </label>
+                  <label className="fw-bold mt-1">COMPROMISO ANTICORRUPCIÓN: </label>
                   <input
                     id="DocComprAntc"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
               </div>
@@ -965,8 +969,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCtaInst"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 2),setDocCtaInst(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
@@ -974,8 +979,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocPagare"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 3),setDocPagare(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               </div>
@@ -985,8 +991,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocRut"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 4),setDocRut(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
@@ -994,8 +1001,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCcio"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 5),setDocCcio(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               </div>
@@ -1005,8 +1013,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCrepL"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
@@ -1014,8 +1023,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocEf"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 7),setDocEf(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               </div>
@@ -1025,8 +1035,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocCvbo"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 8),setDocCvbo(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
@@ -1034,8 +1045,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocRefcom"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 9),setDocRefcom(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               </div>
@@ -1045,8 +1057,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocInfemp"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 10),setDocInfemp(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
@@ -1054,8 +1067,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocInfrl"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 11),setDocInfrl(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
               </div>
@@ -1065,8 +1079,9 @@ export default function CreditoPersonaJuridica(){
                   <input
                     id="DocOtros"
                     type="file"
+                    style={{backgroundColor:'#f5f5f5'}}
                     onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))}
-                    className="form-control form-control-sm w-100"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
                 
@@ -1082,7 +1097,7 @@ export default function CreditoPersonaJuridica(){
             value={search.observations}
             onChange={handlerChangeSearch}
               id="observations"
-            className="form-control"
+            className="form-control border border-2"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>
@@ -1122,6 +1137,6 @@ export default function CreditoPersonaJuridica(){
       </form>
     </div>
     </div>
-    </div>
+    
   );
 }
