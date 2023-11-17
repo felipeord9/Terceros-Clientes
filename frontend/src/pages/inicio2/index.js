@@ -39,7 +39,7 @@ export default function Inicio2(){
       </Fade>
     <hr style={{width:450, color:'black'}}/>
     <Fade cascade>
-    <h3 style={{userSelect:'none'}}>Elíge el tipo de formato que desea diligenciar</h3>
+    <h3 style={{userSelect:'none'}}>Elíge el tipo de formato que deseas diligenciar</h3>
     </Fade>
     <div className='d-flex flex-row '>
       {/* <h3>Tipo de pago: </h3> */}
@@ -62,8 +62,8 @@ export default function Inicio2(){
                 <MenuItem value={20} onClick={(e)=>navigate('/credito/persona/natural')}>persona <strong className="ps-2 pe-1"> NATURAL</strong> - pago a<strong className="ps-2 text-danger">CRÉDITO</strong></MenuItem>
                 <center>
                 <hr style={{width:300, color:'black'}}/></center>
-                <MenuItem value={30} onClick={(e)=>navigate('/contado/persona/juridica')}>persona <strong className="ps-2 text-success pe-1"> JURÍDICA</strong> - pago a<strong className="ps-2 ">CONTADO</strong></MenuItem>
-                <MenuItem value={40} onClick={(e)=>navigate('/credito/persona/juridica')}>persona <strong className="ps-2 text-success pe-1"> JURÍDICA</strong> - pago a<strong className="ps-2 text-danger">CRÉDITO</strong></MenuItem>
+                <MenuItem value={30} onClick={(e)=>navigate('/contado/persona/juridica')}>persona <strong className="ps-2 pe-1" style={{color:'blue'}}> JURÍDICA</strong> - pago a<strong className="ps-2 ">CONTADO</strong></MenuItem>
+                <MenuItem value={40} onClick={(e)=>navigate('/credito/persona/juridica')}>persona <strong className="ps-2 pe-1" style={{color:'blue'}}> JURÍDICA</strong> - pago a<strong className="ps-2 text-danger">CRÉDITO</strong></MenuItem>
                 </Select>
               </FormControl>
             </Box>

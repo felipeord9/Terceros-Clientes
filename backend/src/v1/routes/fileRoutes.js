@@ -56,7 +56,7 @@ router.post('/', upload.fields([
   /* second form */
   { name: 'Vinculacion' },
   { name: 'ComprAntc' },
-  { name: 'ComprAntc' },
+  { name: 'CtaInst' },
   { name: 'Pagare' },
   { name: 'Rut' },
   { name: 'Ccio' },
@@ -68,7 +68,8 @@ router.post('/', upload.fields([
   { name: 'Firdoc' },
   { name: 'Infemp' },
   { name: 'Infrl' },
-  { name: 'Otros'}
+  { name: 'Otros'},
+  { name: 'ValAnt'},
 ]), (req, res) => {
   const folderName = req.body.folderName; 
 

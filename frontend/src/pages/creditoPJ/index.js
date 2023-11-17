@@ -61,15 +61,34 @@ export default function CreditoPersonaJuridica(){
 
 //------------------------------------------
   /* Variable de todos los pdf y el nombre de la carpeta*/
-  const [files, setFiles] = useState([]);
+ /*  const [files, setFiles] = useState([]); */
+  const [files, setFiles] = useState({
+    input1: null,
+    input2: null,
+    input3: null,
+    input4: null,
+    input5: null,
+    input6: null,
+    input7: null,
+    input8: null,
+    input9: null,
+    input10: null,
+    input11: null,
+    input12: null,
+    input13: null,
+  });
 /*   const [folderName, setFolderName] = useState('');
  */
+  const handleFileChange = (fieldName, e) => {
+    const selectedFile = e.target.files[0];
+    setFiles(prevFiles => ({ ...prevFiles, [fieldName]: selectedFile }));
+  };
   /* Variable para agregar los pdf */
-  const handleFileChange = (event, index) => {
+  /* const handleFileChange = (event, index) => {
     const newFiles = [...files];
     newFiles[index] = event.target.files[0];
     setFiles(newFiles);
-  };
+  }; */
   //------------------------------------------
 
   const [search, setSearch] = useState({
@@ -180,11 +199,18 @@ export default function CreditoPersonaJuridica(){
       if(isConfirmed){
         setLoading(true);
         const formData = new FormData();
+
+        for (const fieldName in files) {
+          if (files[fieldName]) {
+            formData.append(fieldName, files[fieldName]);
+          }
+        }
+        /* const formData = new FormData();
         files.forEach((file, index) => {
           if (file) {
             formData.append(`pdfFile${index}`, file);
           }
-        })
+        }) */
         const body={
           cedula:search.cedula,
           numeroDocumento: search.cedula,
@@ -246,6 +272,8 @@ export default function CreditoPersonaJuridica(){
         const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const clientName = search.razonSocial.toUpperCase();
+        formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
         .then(({data}) => {
@@ -502,6 +530,7 @@ export default function CreditoPersonaJuridica(){
                     min={10000000}
                     max={999999999}
                     required
+                    pattern="[0-9]"
                     value={search.cedula}
                     onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
@@ -602,6 +631,7 @@ export default function CreditoPersonaJuridica(){
                     min={1000000}
                     max={9999999999}
                     required
+                    pattern="[0-9]"
                     value={search.celular}
                     onChange={handlerChangeSearch}
                     placeholder="Campo obligatorio"
@@ -618,6 +648,7 @@ export default function CreditoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={1000000}
                     max={9999999999}
+                    pattern="[0-9]"
                     value={search.telefono}
                     onChange={handlerChangeSearch}
                     placeholder="(Campo Opcional)"
@@ -740,6 +771,7 @@ export default function CreditoPersonaJuridica(){
                     value={search.celularSucursal}
                     onChange={handlerChangeSearch}
                     required
+                    pattern="[0-9]"
                     placeholder="Campo obligatorio"
                   />
                   <span className="validity fw-bold me-3"></span>
@@ -753,6 +785,7 @@ export default function CreditoPersonaJuridica(){
                     type="number"
                     className="form-control form-control-sm"
                     min={1000000}
+                    pattern="[0-9]"
                     max={9999999999}
                     value={search.telefonoSucursal}
                     onChange={handlerChangeSearch}
@@ -924,6 +957,7 @@ export default function CreditoPersonaJuridica(){
                     className="form-control form-control-sm"
                     min={10000000}
                     max={9999999999}
+                    pattern="[0-9]"
                     value={search.numeroDocRepLegal}
                     onChange={handlerChangeSearch}
                     required
@@ -948,7 +982,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocVinculacion"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))} */
+                    onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
@@ -958,7 +993,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocComprAntc"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))} */
+                    onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
@@ -970,7 +1006,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocCtaInst"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 2),setDocCtaInst(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 2),setDocCtaInst(1))} */
+                    onChange={(e)=>(handleFileChange('CtaInst',e),setDocCtaInst(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -980,7 +1017,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocPagare"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 3),setDocPagare(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 3),setDocPagare(1))} */
+                    onChange={(e)=>(handleFileChange('Pagare',e),setDocPagare(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -992,7 +1030,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocRut"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 4),setDocRut(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 4),setDocRut(1))} */
+                    onChange={(e)=>(handleFileChange('Rut',e),setDocRut(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1002,7 +1041,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocCcio"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 5),setDocCcio(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 5),setDocCcio(1))} */
+                    onChange={(e)=>(handleFileChange('Ccio',e),setDocCcio(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1014,7 +1054,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocCrepL"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))}
+                    /* onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))} */
+                    onChange={(e)=>(handleFileChange('CrepL',e),setDocCrepL(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1024,7 +1065,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocEf"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 7),setDocEf(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 7),setDocEf(1))} */
+                    onChange={(e)=>(handleFileChange('Ef',e),setDocEf(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1036,7 +1078,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocCvbo"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 8),setDocCvbo(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 8),setDocCvbo(1))} */
+                    onChange={(e)=>(handleFileChange('Cvbo',e),setDocCvbo(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1046,7 +1089,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocRefcom"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 9),setDocRefcom(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 9),setDocRefcom(1))} */
+                    onChange={(e)=>(handleFileChange('Refcom',e),setDocRefcom(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1058,7 +1102,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocInfemp"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 10),setDocInfemp(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 10),setDocInfemp(1))} */
+                    onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1068,7 +1113,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocInfrl"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 11),setDocInfrl(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 11),setDocInfrl(1))} */
+                    onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1080,7 +1126,8 @@ export default function CreditoPersonaJuridica(){
                     id="DocOtros"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))}
+                    /* onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))} */
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -1097,7 +1144,7 @@ export default function CreditoPersonaJuridica(){
             value={search.observations}
             onChange={handlerChangeSearch}
               id="observations"
-            className="form-control border border-2"
+            className="form-control border border-3"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>

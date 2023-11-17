@@ -12,7 +12,7 @@ const ClienteSchema={
     cedula:{
         type:DataTypes.STRING,
         allowNull:false,
-        field:'cedula'
+        field:'codigo_siesa'
     },
     numeroDocumento:{
         type:DataTypes.STRING,

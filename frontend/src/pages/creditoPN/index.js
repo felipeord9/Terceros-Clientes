@@ -62,15 +62,35 @@ export default function CreditoPersonaNatural(){
 
   //------------------------------------------
   /* Variable de todos los pdf y el nombre de la carpeta*/
-  const [files, setFiles] = useState([]);
+  /* const [files, setFiles] = useState([]); */
+  const [files, setFiles] = useState({
+    input1: null,
+    input2: null,
+    input3: null,
+    input4: null,
+    input5: null,
+    input6: null,
+    input7: null,
+    input8: null,
+    input9: null,
+    input10: null,
+    input11: null,
+    input12: null,
+    input13: null,
+    input14: null,
+  });
 /*   const [folderName, setFolderName] = useState('');
  */
   /* Variable para agregar los pdf */
-  const handleFileChange = (event, index) => {
+  const handleFileChange = (fieldName, e) => {
+    const selectedFile = e.target.files[0];
+    setFiles(prevFiles => ({ ...prevFiles, [fieldName]: selectedFile }));
+  };
+  /* const handleFileChange = (event, index) => {
     const newFiles = [...files];
     newFiles[index] = event.target.files[0];
     setFiles(newFiles);
-  };
+  }; */
   //------------------------------------------
 
   const [search, setSearch] = useState({
@@ -167,12 +187,19 @@ export default function CreditoPersonaNatural(){
       if(isConfirmed){
         setLoading(true);
         //agregamos los pdf a un formdata dependiendo del index que les dimos
-        const formData = new FormData();
+        /* const formData = new FormData();
         files.forEach((file, index) => {
           if (file) {
             formData.append(`pdfFile${index}`, file);
           }
-        });
+        }); */
+        const formData = new FormData();
+
+        for (const fieldName in files) {
+          if (files[fieldName]) {
+            formData.append(fieldName, files[fieldName]);
+          }
+        }
         //creamos el cuerpo de nuestra instancia
         const body={
           clasificacion: clasificacion.id,
@@ -233,6 +260,9 @@ export default function CreditoPersonaNatural(){
         const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //creamos una constante con el nombre del cliente para darselo a todos los documentos
+        const clientName = search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
+        formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
         .then(({data}) => {
@@ -490,7 +520,7 @@ const Cambio = (event) => {
                 <div className="d-flex flex-row align-items-start w-100">
                   <label className="me-1">Tipo documento:</label>
                   <select
-                  style={{width:251}}
+                  style={{width:250}}
                     ref={selectDocumentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
@@ -519,6 +549,7 @@ const Cambio = (event) => {
                     min={10000000}
                     max={9999999999}
                     value={search.cedula}
+                    pattern="[0-9]"
                     onChange={handlerChangeSearch}
                     required
                     placeholder="Campo obligatorio"
@@ -603,6 +634,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={1000000}
                     max={9999999999}
+                    pattern="[0-9]"
                     required
                     placeholder="Campo obligatorio"
                   />
@@ -620,6 +652,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={1000000}
                     max={9999999999}
+                    pattern="[0-9]"
                     placeholder="(Campo Opcional)"
                   >
                   </input>
@@ -657,7 +690,7 @@ const Cambio = (event) => {
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:515, textTransform:'lowercase'}} 
+                    style={{width:513, textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -740,7 +773,8 @@ const Cambio = (event) => {
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"  
                     style={{backgroundColor:'#f5f5f5'}}      
-                    onChange={(e)=>(handleFileChange(e,0),setDocVinculacion(1))}          
+                    /* onChange={(e)=>(handleFileChange(e,0),setDocVinculacion(1))} */
+                    onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1))}          
                     />
                 </div>
                 <div className="ms-2 w-100">
@@ -749,7 +783,8 @@ const Cambio = (event) => {
                     id="DocComprAntc"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,1),setDocComprAntc(1))}
+                    /* onChange={(e)=>(handleFileChange(e,1),setDocComprAntc(1))} */
+                    onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div>
@@ -761,7 +796,8 @@ const Cambio = (event) => {
                     id="DocCtaInst"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,2),setDocCtaInst(1))}
+                    /* onChange={(e)=>(handleFileChange(e,2),setDocCtaInst(1))} */
+                    onChange={(e)=>(handleFileChange('CtaInst',e),setDocCtaInst(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -771,9 +807,11 @@ const Cambio = (event) => {
                     id="DocPagare"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,3),setDocPagare(1))}
+                    /* onChange={(e)=>(handleFileChange(e,3),setDocPagare(1))} */
+                    onChange={(e)=>(handleFileChange('Pagare',e),setDocPagare(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                  
+                    />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -783,9 +821,11 @@ const Cambio = (event) => {
                     id="DocRut"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,4),setDocRut(1))}
+                    /* onChange={(e)=>(handleFileChange(e,4),setDocRut(1))} */
+                    onChange={(e)=>(handleFileChange('Rut',e),setDocRut(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                 
+                    />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
@@ -793,7 +833,8 @@ const Cambio = (event) => {
                     id="DocCcio"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,5),setDocCcio(1))}
+                    /* onChange={(e)=>(handleFileChange(e,5),setDocCcio(1))} */
+                    onChange={(e)=>(handleFileChange('Ccio',e),setDocCcio(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -805,10 +846,12 @@ const Cambio = (event) => {
                     id="DocCrepL"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))}
+                    /* onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))} */
+                    onChange={(e)=>(handleFileChange('CrepL',e),setDocCrepL(1))}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                  
+                    />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">ESTADOS FINANCIEROS O CERTIFICADO DE CONTADOR: </label>
@@ -816,10 +859,12 @@ const Cambio = (event) => {
                     id="DocEf"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,7),setDocEf(1))}
+                    /* onChange={(e)=>(handleFileChange(e,7),setDocEf(1))} */
+                    onChange={(e)=>(handleFileChange('Ef',e),setDocEf(1))}
                     placeholder="RUT"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                 
+                    />
                 </div> 
               </div>
               <div className="d-flex flex-row">
@@ -829,9 +874,11 @@ const Cambio = (event) => {
                     id="DocCerBan"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,8),setDocCerBan(1))}
+                    /* onChange={(e)=>(handleFileChange(e,8),setDocCerBan(1))} */
+                    onChange={(e)=>(handleFileChange('Certban',e),setDocCerBan(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                  
+                    />
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
@@ -839,7 +886,8 @@ const Cambio = (event) => {
                     id="DocRefcom"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))}
+                    /* onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))} */
+                    onChange={(e)=>(handleFileChange('Refcom',e),setDocRefcom(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -851,7 +899,8 @@ const Cambio = (event) => {
                     id="DocCvbo"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,10),setDocCvbo(1))}
+                    /* onChange={(e)=>(handleFileChange(e,10),setDocCvbo(1))} */
+                    onChange={(e)=>(handleFileChange('Cvbo',e),setDocCvbo(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -861,7 +910,8 @@ const Cambio = (event) => {
                     id="DocValAnt"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,11),setDocValAnt(1))}
+                    /* onChange={(e)=>(handleFileChange(e,11),setDocValAnt(1))} */
+                    onChange={(e)=>(handleFileChange('ValAnt',e),setDocValAnt(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -873,7 +923,8 @@ const Cambio = (event) => {
                     id="DocFirdoc"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,12),setDocFirdoc(1))}
+                    /* onChange={(e)=>(handleFileChange(e,12),setDocFirdoc(1))} */
+                    onChange={(e)=>(handleFileChange('Firdoc',e),setDocFirdoc(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -883,9 +934,11 @@ const Cambio = (event) => {
                     id="DocOtros"
                     type="file"
                     style={{backgroundColor:'#f5f5f5'}}
-                    onChange={(e)=>(handleFileChange(e,13),setDocOtros(1))}
+                    /* onChange={(e)=>(handleFileChange(e,13),setDocOtros(1))} */
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"                  
+                    />
                 </div> 
               </div>
               
@@ -898,7 +951,7 @@ const Cambio = (event) => {
           value={search.observations}
           onChange={handlerChangeSearch}
             id="observations"
-            className="form-control border border-2"
+            className="form-control border border-3"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>

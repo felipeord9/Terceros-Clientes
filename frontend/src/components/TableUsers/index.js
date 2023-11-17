@@ -78,8 +78,8 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
         dense
         striped
         fixedHeader
-        
-        
+        noDataComponent={
+          <div style={{padding: 24}}>Ningún resultado encontrado...</div>}  
       />
     </div>
     </div>

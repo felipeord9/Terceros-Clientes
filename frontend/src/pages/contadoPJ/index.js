@@ -1009,7 +1009,7 @@ const Cambio = (event) => {
           <label className="fw-bold" style={{fontSize:22}}>OBSERVACIONES</label>
           <textarea
             id="observations"
-            className="form-control border border-2"
+            className="form-control border border-3"
             value={search.observations}
             onChange={handlerChangeSearch}
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}

@@ -266,7 +266,7 @@ export default function ContadoPersonaNatural(){
         const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
-        //creamos una constante con el nombre del cliente
+        //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
         formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
@@ -551,7 +551,7 @@ const [colorVality,setColorVality]=useState('red');
                   <label className="me-1">Tipo documento:</label>
                   <select
                     ref={selectDocumentoRef}
-                    style={{width:245}}
+                    style={{width:240}}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
                     required
@@ -724,7 +724,7 @@ const [colorVality,setColorVality]=useState('red');
                     className="form-control form-control-sm"
                     min={0}
                     required
-                    style={{width:502,textTransform:'lowercase'}} 
+                    style={{width:498,textTransform:'lowercase'}} 
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -854,7 +854,7 @@ const [colorVality,setColorVality]=useState('red');
             value={search.observations}
             onChange={handlerChangeSearch}
             id="observations"
-            className="form-control border border-4"
+            className="form-control border border-3"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>
