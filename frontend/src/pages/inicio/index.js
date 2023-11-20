@@ -1,19 +1,16 @@
-import React, { useState, useContext } from "react"
+import React, { useState } from "react"
 import Logo from '../../assest/logo-gran-langostino.png'
 import useUser from '../../hooks/useUser';
 import { Navigate, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { FaHandshakeSimple } from "react-icons/fa6";
 import FormControl from '@mui/material/FormControl';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import { Divider } from "@mui/material";
 import { Fade } from "react-awesome-reveal";
-import AuthContext from "../../context/authContext";
 
 export default function Inicio2(){
-    const { user, setUser } = useContext(AuthContext);
     const [pago,setPago]=useState();
     const [persona,setPersona]=useState();
     const [tipo,setTipo]=useState();
@@ -61,9 +58,12 @@ export default function Inicio2(){
                   variant="standard"
                   
                 >
-                <MenuItem value={10} onClick={(e)=>navigate('/tipo/persona')} className="d-flex justify-content-center"><strong>Proveedor Mcia y Convenios</strong></MenuItem>
-                <MenuItem value={20} onClick={(e)=>navigate('/credito/persona/natural')} className="d-flex justify-content-center" style={{color:'blue'}}><strong>Prestador de servicios</strong></MenuItem>
-                <MenuItem value={30} onClick={(e)=>navigate('/tipopersona')} className="d-flex justify-content-center" style={{color:'red'}}><strong>Proveedores varios (Agencias)</strong></MenuItem>
+                <MenuItem value={10} onClick={(e)=>navigate('/contado/persona/natural')}>persona <strong className="ps-2 pe-1 text-accept"> NATURAL</strong> - pago a<strong className="ps-2">CONTADO</strong></MenuItem>
+                <MenuItem value={20} onClick={(e)=>navigate('/credito/persona/natural')}>persona <strong className="ps-2 pe-1"> NATURAL</strong> - pago a<strong className="ps-2 text-danger">CRÉDITO</strong></MenuItem>
+                <center>
+                <hr style={{width:300, color:'black'}}/></center>
+                <MenuItem value={30} onClick={(e)=>navigate('/contado/persona/juridica')}>persona <strong className="ps-2 pe-1" style={{color:'blue'}}> JURÍDICA</strong> - pago a<strong className="ps-2 ">CONTADO</strong></MenuItem>
+                <MenuItem value={40} onClick={(e)=>navigate('/credito/persona/juridica')}>persona <strong className="ps-2 pe-1" style={{color:'blue'}}> JURÍDICA</strong> - pago a<strong className="ps-2 text-danger">CRÉDITO</strong></MenuItem>
                 </Select>
               </FormControl>
             </Box>

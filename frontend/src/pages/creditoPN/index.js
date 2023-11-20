@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
+import { getAllPrecios } from "../../services/precioService";
 import { createCliente, deleteCliente } from "../../services/clienteService";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
@@ -31,7 +32,8 @@ export default function CreditoPersonaNatural(){
   const [ciudad, setCiudad] = useState(null);
   const [responsabilidad,setResponsabilidad ] = useState(null);
   const [departamento,setDepartamento]= useState('');
-  
+  const [precio, setPrecio] = useState(null);
+
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
@@ -41,6 +43,7 @@ export default function CreditoPersonaNatural(){
   const [ciudades,setCiudades] = useState([]);
   const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
+  const [precios, setPrecios] = useState([]);
 
   /* Inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
@@ -107,7 +110,8 @@ export default function CreditoPersonaNatural(){
     correoFacturaElectronica:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'PNCR'
+    tipoFormulario:'PNCR',
+    valorEstimado:'',
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -118,12 +122,14 @@ export default function CreditoPersonaNatural(){
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
   const selectRegimenRef=useRef();
+  const selectPrecioRef=useRef();
   const selectResponsabilidadRef=useRef();
 
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
   useEffect(()=>{
+    getAllPrecios().then((data)=>setPrecios(data));
     getAllDetalles().then((data)=>setDetalles(data));
     getAllResponsabilidad().then((data)=>setResponsabilidades(data));
     getAllRegimen().then((data)=>setRegimenes(data));
@@ -236,6 +242,8 @@ export default function CreditoPersonaNatural(){
           numeroDocRepLegal: search.cedula,
           nameRepLegal:search.primerNombre.toUpperCase(),
           apellidoRepLegal:search.primerApellido.toUpperCase(),
+          valorEstimado: search.valorEstimado,
+          precioSugerido: precio.description,
           observations:search.observations,
           solicitante:search.solicitante.toUpperCase(),
           tipoFormulario:search.tipoFormulario,
@@ -760,11 +768,53 @@ const Cambio = (event) => {
                 </div>
               </div>           
             <hr className="my-1" />
+            <label className="fw-bold mb-1 mt-1" style={{fontSize:22}}>PROMEDIO DE COMPRA MENSUAL ESTIMADO</label>
+            <div className="d-flex flex-row w-100 mt-2 mb-4">
+              <div className="d-flex flex-row align-items-start w-100">
+                  <label className="">Promedio Compra:</label>
+                  <label className="ps-2">$</label>
+                  <input
+                    id="valorEstimado"
+                    style={{width:225}}
+                    value={search.valorEstimado}
+                    onChange={handlerChangeSearch}
+                    type="number"
+                    className="form-control form-control-sm "
+                    min={0}
+                    required
+                    pattern="[0-9]"
+                    placeholder="Campo obligatorio"
+                  >
+                  </input>
+                </div>
+                  <div className="w-100 d-flex flex-row">
+                  <label className="me-1">Precio sugerido:</label>
+                  <select
+                    style={{width:255}}
+                    ref={selectPrecioRef}
+                    className="form-select form-select-sm m-100 me-3"
+                    onChange={(e)=>setPrecio(JSON.parse(e.target.value))}
+                    required
+                  >
+                    <option selected value='' disabled>
+                  -- Seleccione el tipo de precios sugerido --
+                </option>
+                  {precios
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.description}
+                    </option>
+                  ))}
+              </select>
+                  </div>
+              </div>
+              <hr className="my-1" />
             <div className="w-100 mt-1">
                
               <label className="fw-bold" style={{fontSize:24}}>DOCUMENTOS OBLIGATORIOS</label>
               
-              <div className="d-flex flex-row m-1">
+              <div className="d-flex flex-row">
                 <div className="me-2 w-100">
                   <label className="fw-bold mt-1 ">FORMATO DE VINCULACIÓN: </label>
                   <input
@@ -772,7 +822,7 @@ const Cambio = (event) => {
                     type="file"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"  
-                    style={{backgroundColor:'#f5f5f5'}}      
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,0),setDocVinculacion(1))} */
                     onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1))}          
                     />
@@ -782,7 +832,7 @@ const Cambio = (event) => {
                   <input
                     id="DocComprAntc"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,1),setDocComprAntc(1))} */
                     onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -795,7 +845,7 @@ const Cambio = (event) => {
                   <input
                     id="DocCtaInst"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,2),setDocCtaInst(1))} */
                     onChange={(e)=>(handleFileChange('CtaInst',e),setDocCtaInst(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -806,7 +856,7 @@ const Cambio = (event) => {
                   <input
                     id="DocPagare"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,3),setDocPagare(1))} */
                     onChange={(e)=>(handleFileChange('Pagare',e),setDocPagare(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -820,7 +870,7 @@ const Cambio = (event) => {
                   <input
                     id="DocRut"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,4),setDocRut(1))} */
                     onChange={(e)=>(handleFileChange('Rut',e),setDocRut(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -832,7 +882,7 @@ const Cambio = (event) => {
                   <input
                     id="DocCcio"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,5),setDocCcio(1))} */
                     onChange={(e)=>(handleFileChange('Ccio',e),setDocCcio(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -845,7 +895,7 @@ const Cambio = (event) => {
                   <input
                     id="DocCrepL"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,6),setDocCrepL(1))} */
                     onChange={(e)=>(handleFileChange('CrepL',e),setDocCrepL(1))}
                     placeholder="RUT"
@@ -858,7 +908,7 @@ const Cambio = (event) => {
                   <input
                     id="DocEf"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,7),setDocEf(1))} */
                     onChange={(e)=>(handleFileChange('Ef',e),setDocEf(1))}
                     placeholder="RUT"
@@ -873,7 +923,7 @@ const Cambio = (event) => {
                   <input
                     id="DocCerBan"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,8),setDocCerBan(1))} */
                     onChange={(e)=>(handleFileChange('Certban',e),setDocCerBan(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -885,7 +935,7 @@ const Cambio = (event) => {
                   <input
                     id="DocRefcom"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))} */
                     onChange={(e)=>(handleFileChange('Refcom',e),setDocRefcom(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -898,7 +948,7 @@ const Cambio = (event) => {
                   <input
                     id="DocCvbo"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,10),setDocCvbo(1))} */
                     onChange={(e)=>(handleFileChange('Cvbo',e),setDocCvbo(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -909,7 +959,7 @@ const Cambio = (event) => {
                   <input
                     id="DocValAnt"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,11),setDocValAnt(1))} */
                     onChange={(e)=>(handleFileChange('ValAnt',e),setDocValAnt(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -922,7 +972,7 @@ const Cambio = (event) => {
                   <input
                     id="DocFirdoc"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,12),setDocFirdoc(1))} */
                     onChange={(e)=>(handleFileChange('Firdoc',e),setDocFirdoc(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -933,7 +983,7 @@ const Cambio = (event) => {
                   <input
                     id="DocOtros"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e,13),setDocOtros(1))} */
                     onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"

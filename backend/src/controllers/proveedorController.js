@@ -1,8 +1,8 @@
-const ClienteService = require('../services/clienteService')
+const ProveedorService = require('../services/proveedorService')
 
-const findAllClientes = async(req,res,next)=>{
+const findAllProveedores = async(req,res,next)=>{
     try{
-        const data=await ClienteService.find()
+        const data=await ProveedorService.find()
 
         res.status(200).json({
             message:'OK',
@@ -14,11 +14,11 @@ const findAllClientes = async(req,res,next)=>{
     }
 }
 
-const createCliente = async (req,res,next)=>{
+const createProveedor = async (req,res,next)=>{
     try{
         const {body}=req
         console.log(body)
-        const data = await ClienteService.create({
+        const data = await ProveedorService.create({
             cedula: body.cedula,
             numeroDocumento: body.numeroDocumento,
             tipoDocumento: body.tipoDocumento,
@@ -33,45 +33,28 @@ const createCliente = async (req,res,next)=>{
             direccion: body.direccion,
             celular: body.celular,
             telefono: body.telefono,
-            correoNotificaciones: body.correoNotificaciones,
-            nombreSucursal: body.nombreSucursal,
-            direccionSucursal:body.direccionSucursal,
-            departamentoSucursal:body.departamentoSucursal,
-            ciudadSucursal: body.ciudadSucursal,
-            celularSucursal: body.celularSucursal,
-            telefonoSucursal: body.telefonoSucursal,
-            correoSucursal: body.correoSucursal,
-            correoFacturaElectronica:body.correoFacturaElectronica,
-            regimenFiscal: body.regimenFiscal,
-            responsabilidadFiscal: body.responsabilidadFiscal,
-            detalleTributario: body.detalleTributario,
+            correoElectronico: body.correoElectronico,
+            actividadEconomica: body.actividadEconomica,
             tipoDocRepLegal: body.tipoDocRepLegal,
             numeroDocRepLegal: body.numeroDocRepLegal,
             nameRepLegal:body.nameRepLegal,
             apellidoRepLegal:body.apellidoRepLegal,
-            valorEstimado: body.valorEstimado,
-            precioSugerido: body.precioSugerido,
             observations:body.observations,
             createdAt:body.createdAt,
             userName:body.createdBy,
             solicitante:body.solicitante,
             docVinculacion:body.docVinculacion,
             docComprAntc:body.docComprAntc,
-            docCtalnst:body.docCtalnst,
-            docPagare:body.docPagare,
             docRut:body.docRut,
             docCcio:body.docCcio,
             docCrepL:body.docCrepL,
             docEf:body.docEf,
             docRefcom:body.docRefcom,
-            docCvbo:body.docCvbo,
-            docFirdoc:body.docFirdoc,
             docInfemp:body.docInfemp,
             docInfrl:body.docInfrl,
             docCerBan: body.docCerBan,
             docValAnt:body.docValAnt,
             docOtros:body.docOtros,
-            clasificacion:body.clasificacion,
             agencia:body.agencia,
             tipoFormulario:body.tipoFormulario,  
         })
@@ -86,10 +69,10 @@ const createCliente = async (req,res,next)=>{
     }
 }
 
-const findOneCliente = async (req, res, next) => {
+const findOneProveedor = async (req, res, next) => {
     try {
       const { params: { id } } = req;
-      const data = await ClienteService.findOne(id);
+      const data = await ProveedorService.findOne(id);
   
       res.status(200).json({
         message: 'OK',
@@ -100,10 +83,10 @@ const findOneCliente = async (req, res, next) => {
     }
   };
 
-const deleteCliente = async(req,res,next)=>{
+const deleteProveedor = async(req,res,next)=>{
     try{
         const {params:{id}}=req
-        const data = await ClienteService.remove(id)
+        const data = await ProveedorService.remove(id)
         res.status(200).json({
             message:'Deleted',
             data
@@ -114,8 +97,8 @@ const deleteCliente = async(req,res,next)=>{
 }
 
 module.exports = {
-    findAllClientes,
-    createCliente,
-    findOneCliente,
-    deleteCliente
+    findAllProveedores,
+    createProveedor,
+    findOneProveedor,
+    deleteProveedor
 }

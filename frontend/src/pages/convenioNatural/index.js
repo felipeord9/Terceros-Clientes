@@ -7,7 +7,6 @@ import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { createCliente, deleteCliente } from '../../services/clienteService';
 import { Navigate } from "react-router-dom";
-import { getAllPrecios } from "../../services/precioService";
 import { getAllResponsabilidad } from '../../services/responsabilidadService'
 import { getAllDetalles } from "../../services/detalleService";
 import { getAllRegimen } from "../../services/regimenService";
@@ -18,34 +17,25 @@ import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
 
-export default function ContadoPersonaNatural(){
+export default function ConvenioNatural(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
   const {department,setDepartment}=useContext(DepartmentContext)
 
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
-  const [regimen,setRegimen]= useState(null);
-  const [detalle,setDetalle]=useState(null);
-  const [clasificacion,setClasificacion] = useState(null);
   const [document,setDocument] = useState(null);
   const [ciudad, setCiudad] = useState(null);
-  const [responsabilidad,setResponsabilidad ] = useState(null);
   const [departamento,setDepartamento]= useState('');
-  const [precio, setPrecio] = useState(null);
 
   /* inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
   const [docComprAntc,setDocComprAntc]=useState(0);
-  const [docCtaInst,setDocCtaInst]=useState(0);
-  const [docPagare,setDocPagare]=useState(0);
   const [docRut,setDocRut]=useState(0);
   const [docCcio,setDocCcio]=useState(0);
   const [docCrepL,setDocCrepL]=useState(0);
   const [docEf,setDocEf]=useState(0);
   const [docRefcom,setDocRefcom]=useState(0);
-  const [docCvbo,setDocCvbo]=useState(0);
-  const [docFirdoc,setDocFirdoc]=useState(0);
   const [docInfemp,setDocInfemp]=useState(0);
   const [docInfrl,setDocInfrl]=useState(0);
   const [docOtros,setDocOtros]=useState(0);
@@ -59,6 +49,13 @@ export default function ContadoPersonaNatural(){
     input1: null,
     input2: null,
     input3: null,
+    input4: null,
+    input5: null,
+    input6: null,
+    input7: null,
+    input8: null,
+    input9: null,
+    input10: null
   });
 /*   const [folderName, setFolderName] = useState('');
  */
@@ -77,15 +74,10 @@ export default function ContadoPersonaNatural(){
   //------------------------------------------
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
-  const [clasificaciones, setClasificaciones]= useState([]);
   const [agencias, setAgencias] = useState([]);
   const [documentos,setDocumentos] = useState([]);
   const [ciudades,setCiudades] = useState([]);
-  const [detalles,setDetalles]=useState([]);
-  const [regimenes,setRegimenes] = useState([]);
-  const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
-  const [precios, setPrecios] = useState([]);
 
   const [search, setSearch] = useState({
     cedula:'',
@@ -97,12 +89,10 @@ export default function ContadoPersonaNatural(){
     direccion:'',
     celular:'',
     telefono:'',
-    correoNotificaciones:'',
-    correoFacturaElectronica:'',
+    correoElectronico:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'PNC',
-    valorEstimado:'',
+    tipoFormulario:'PMN'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -114,7 +104,6 @@ export default function ContadoPersonaNatural(){
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
   const selectRegimenRef=useRef();
-  const selectPrecioRef = useRef();
   const selectResponsabilidadRef=useRef();
 
   const limitDeliveryDateField = new Date()
@@ -122,12 +111,7 @@ export default function ContadoPersonaNatural(){
 
   /* asignacion de valores a las variables */
   useEffect(()=>{
-      getAllPrecios().then((data)=>setPrecios(data));
-      getAllDetalles().then((data)=>setDetalles(data));
-      getAllResponsabilidad().then((data)=>setResponsabilidades(data));
-      getAllRegimen().then((data)=>setRegimenes(data));
       getAllAgencies().then((data) => setAgencias(data));
-      getAllClasificaciones().then((data) => setClasificaciones(data));
       getAllDocuments().then((data)=>setDocumentos(data));
       getAllDepartamentos().then((data) => setDepartamentos(data));
       getAllCiudades().then((data) => setCiudades(data));
@@ -196,13 +180,6 @@ export default function ContadoPersonaNatural(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        const formData = new FormData();
-
-        for (const fieldName in files) {
-          if (files[fieldName]) {
-            formData.append(fieldName, files[fieldName]);
-          }
-        }
         //agregamos los pdf a un formdata dependiendo del index que les dimos
         /* const formData = new FormData();
         files.forEach((file, index) => {
@@ -212,63 +189,54 @@ export default function ContadoPersonaNatural(){
         }); */
 
         /* second form */
+        const formData = new FormData();
+
+        for (const fieldName in files) {
+          if (files[fieldName]) {
+            formData.append(fieldName, files[fieldName]);
+          }
+        }
         //creamos el cuerpo de nuestra instancia
         const body={
-          clasificacion: clasificacion.id,
-          agencia: agencia.id,
-          tipoDocumento: document.codigo,
-          departamento: departamento.codigo,
-          ciudad: ciudad.codigo,
-          createdAt: new Date(),
-          createdBy: user.name.toUpperCase(),
-          regimenFiscal: regimen.id,
-          responsabilidadFiscal: responsabilidad.id,
-          detalleTributario: detalle.id,
-          tipoDocRepLegal: document.codigo,
-          departamentoSucursal:departamento.codigo,
-          ciudadSucursal:ciudad.codigo,
           cedula: search.cedula,
           numeroDocumento: search.cedula,
+          tipoDocumento: document.codigo,
           tipoPersona: search.tipoPersona,
           razonSocial: search.primerApellido.toUpperCase() +' '+ search.segundoApellido.toUpperCase() +' '+ search.primerNombre.toUpperCase() +' '+ search.otrosNombres.toUpperCase(),
           primerApellido:search.primerApellido.toUpperCase(),
           segundoApellido:search.segundoApellido.toUpperCase(),
           primerNombre:search.primerNombre.toUpperCase(),
           otrosNombres:search.otrosNombres.toUpperCase(),
+          departamento: departamento.codigo,
+          ciudad: ciudad.codigo,
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono:search.telefono,
-          correoNotificaciones: search.correoNotificaciones.toLowerCase(),
-          nombreSucursal:search.primerNombre.toUpperCase(),
-          direccionSucursal:search.direccion.toUpperCase(),
-          celularSucursal: search.celular,
-          telefonoSucursal:search.telefono,
-          correoSucursal:search.correoNotificaciones.toLowerCase(),
-          correoFacturaElectronica:search.correoFacturaElectronica.toLowerCase(),
+          correoElectronico: search.correoElectronico.toLowerCase(),
+/*           actividadEconomica: actividad.id,
+*/          
+          tipoDocRepLegal: document.codigo,
           numeroDocRepLegal: search.cedula,
           nameRepLegal:search.primerNombre.toUpperCase(),
           apellidoRepLegal:search.primerApellido.toUpperCase(),
-          valorEstimado: search.valorEstimado,
-          precioSugerido: precio.description,
           observations:search.observations,
+          createdAt: new Date(),
+          createdBy: user.name.toUpperCase(),
           solicitante:search.solicitante.toUpperCase(),
-          tipoFormulario:search.tipoFormulario,
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
-          docCtalnst:docCtaInst,
-          docPagare:docPagare,
           docRut:docRut,
           docCcio:docCcio,
           docCrepL:docCrepL,
           docEf:docEf,
           docRefcom:docRefcom,
-          docCvbo:docCvbo,
-          docFirdoc:docFirdoc,
           docInfemp:docInfemp,
           docInfrl:docInfrl,
           docValAnt:docValAnt,
           docCerBan:docCerBan,
           docOtros:docOtros,
+          agencia: agencia.id,
+          tipoFormulario:search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
         const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
@@ -422,7 +390,7 @@ const [colorVality,setColorVality]=useState('red');
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>persona NATURAL - pago a CONTADO</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PROVEEDOR MCIA Y CONVENIOS - PERSONA NATURAL</strong></label>
           </Fade>
           </center>
           <hr className="my-1" />
@@ -434,36 +402,13 @@ const [colorVality,setColorVality]=useState('red');
           <div className="d-flex flex-column gap-1">
             <div>
               <div className="d-flex flex-row">
-                <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
-              <select
-                ref={selectClasificacionRef}
-                className="form-select form-select-sm"
-                onChange={(e)=>setClasificacion(JSON.parse(e.target.value))}
-                required
-              >
-                <option selected value="" disabled>
-                  -- Seleccione la Clasificación --
-                </option>
-                {clasificaciones
-                  .sort((a,b)=>a.id - b.id)
-                  .map((elem)=>(                    
-                    elem.id != 1 ?
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + ' - ' + elem.description} 
-                    </option>
-                    :
-                    null
-                  ))
-                }
-              </select>
-              </div>
-              <div className="d-flex flex-column w-100 ">
+              <div className="d-flex flex-column me-4 " style={{width:450}}>
               <label className="fw-bold" style={{fontSize:18}}>AGENCIA</label>
               <select
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
+                
                 onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
               >
                 <option selected value='' disabled>
@@ -478,8 +423,7 @@ const [colorVality,setColorVality]=useState('red');
                   ))}
               </select>
               </div>
-              </div>
-              <div className="d-flex flex-row mt-3 mb-2  w-100">
+              <div className="d-flex flex-column mb-2  w-100">
               <label className="fw-bold me-1" style={{fontSize:18}}>SOLICITANTE:</label>
               <input
                   id="solicitante"
@@ -492,6 +436,7 @@ const [colorVality,setColorVality]=useState('red');
                   required
               />
               </div>        
+              </div>
             </div>
             <hr className="my-1" />
             <div>
@@ -703,7 +648,7 @@ const [colorVality,setColorVality]=useState('red');
                 </div>
               </div>
               <div className="d-flex flex-row align-items-start ">
-                  <label className="me-1 mb-3">Correo notificaciones:</label>
+                  <label className="me-1 mb-3">Correo electrónico:</label>
                   <input
                     id="correoNotificaciones"
                     type="email"
@@ -720,131 +665,30 @@ const [colorVality,setColorVality]=useState('red');
  */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
 {/*                   <span className="validity fw-bold"></span>
  */}              </div>
-              <hr className="my-1" />
-              <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
-              <div className="d-flex flex-row align-items-start mt-2 ">
-                  <label className="me-1 mb-3">Correo para la factura electrónica:</label>
-                  <input
-                    value={search.correoFacturaElectronica}
-                    onChange={(e)=>(handlerChangeSearch(e),Cambio(e))}
-                    id="correoFacturaElectronica"
-                    type="email"
-                    className="form-control form-control-sm"
-                    min={0}
-                    required
-                    style={{width:498,textTransform:'lowercase'}} 
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                  <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
-                  {/* <span className="validity fw-bold"></span> */}
-              </div>
-              <div className="d-flex flex-row mb-3">
-                <div className="pe-3" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Regimen fiscal:</label>
-                <select
-                ref={selectRegimenRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setRegimen(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione el regimen --
-                </option>
-                {regimenes
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-                <div className=" pe-3" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Responsabilidad fiscal:</label>
-                <select
-                ref={selectResponsabilidadRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setResponsabilidad(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione la responsabilidad --
-                </option>
-                {responsabilidades
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-                <div className="" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Detalle tributario:</label>
-                <select
-                ref={selectBranchRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setDetalle(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione el detalle --
-                </option>
-                {detalles
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-              </div>
-            </div>            
-            <hr className="my-1" />
-            <label className="fw-bold mb-1 mt-1" style={{fontSize:22}}>PROMEDIO DE COMPRA MENSUAL ESTIMADO</label>
-            <div className="d-flex flex-row w-100 mt-2 mb-4">
-              <div className="d-flex flex-row align-items-start w-100">
-                  <label className="">Promedio Compra:</label>
-                  <label className="ps-2">$</label>
-                  <input
-                    id="valorEstimado"
-                    style={{width:225}}
-                    value={search.valorEstimado}
-                    onChange={handlerChangeSearch}
-                    type="number"
-                    className="form-control form-control-sm "
-                    min={0}
-                    required
-                    pattern="[0-9]"
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                </div>
-                  <div className="w-100 d-flex flex-row">
-                  <label className="me-1">Precio sugerido:</label>
-                  <select
-                    style={{width:245}}
-                    ref={selectPrecioRef}
+                <div className="d-flex flex-row mb-3">
+                <label className="me-1">Actividad Económica:</label>
+                <select                    
+                    onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
+                    ref={selectDepartamentoRef}
+                    style={{width:600}}
                     className="form-select form-select-sm m-100 me-3"
-                    onChange={(e)=>setPrecio(JSON.parse(e.target.value))}
-                    required
-                  >
-                    <option selected value='' disabled>
-                  -- Seleccione el tipo de precios sugerido --
-                </option>
-                  {precios
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.description}
-                    </option>
-                  ))}
-              </select>
-                  </div>
-              </div>
-              <hr className="my-1" />
+                    required   
+                 >
+                   <option selected value='' disabled>
+                    -- Seleccione el Departamento --
+                  </option>
+                      {departamentos
+                      .sort((a,b)=>a.id - b.id)
+                      .map((elem)=>(
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
+                          {elem.description} 
+                        </option>
+                      ))
+                    }
+                    </select>
+                </div>
+              <hr className="my-1" />              
+            </div>            
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row ">

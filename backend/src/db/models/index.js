@@ -8,8 +8,13 @@ const { ResponsabilidadFiscal, ResponsabilidadFiscalSchema} = require('./respons
 const { Cliente, ClienteSchema } =require('./clienteModel')
 const { Departamento,DepartamentoSchema } = require('./departamentoModel')
 const { Detalle,DetalleSchema } = require('./detalleModel')
+const { Precio, PrecioSchema} = require('./preciosModel')
+const { Proveedor, ProveedorSchema} = require('./proveedoresModel')
+const { ActividadEconomica,ActividadEconomicaSchema } = require('./actividadModel')
 
 function setupModels(sequelize) {
+  Precio.init(PrecioSchema,Precio.config(sequelize))
+  Proveedor.init(ProveedorSchema,Proveedor.config(sequelize))
   Detalle.init(DetalleSchema,Detalle.config(sequelize))
   RegimenFiscal.init(RegimenFiscalSchema,RegimenFiscal.config(sequelize))
   Departamento.init(DepartamentoSchema, Departamento.config(sequelize))
@@ -20,9 +25,13 @@ function setupModels(sequelize) {
   Ciudad.init(CiudadSchema,Ciudad.config(sequelize))
   ResponsabilidadFiscal.init(ResponsabilidadFiscalSchema,ResponsabilidadFiscal.config(sequelize))
   Cliente.init(ClienteSchema,Cliente.config(sequelize))
+  ActividadEconomica.init(ActividadEconomicaSchema,ActividadEconomica.config(sequelize))
 
 
   User.associate(sequelize.models)
+  Precio.associate(sequelize.models)
+  Proveedor.associate(sequelize.models)
+  ActividadEconomica.associate(sequelize.models)
   Detalle.associate(sequelize.models)
   RegimenFiscal.associate(sequelize.models)
   Departamento.associate(sequelize.models)

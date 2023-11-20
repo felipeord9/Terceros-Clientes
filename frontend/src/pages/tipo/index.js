@@ -38,11 +38,11 @@ export default function Inicio2(){
       <div className='rounder-4'>
       <div className='login-wrapper p-2 mb-5 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
       <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
-      <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>¡Bienvenid@!</strong></label>
+      <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>Estimad@ {user.name}</strong></label>
       </Fade>
     <hr style={{width:450, color:'black'}}/>
     <Fade cascade>
-    <h3 style={{userSelect:'none'}}>Elíge el tipo de formato que deseas diligenciar</h3>
+    <h3 style={{userSelect:'none'}}>Elíge el tipo de persona la cual registrarás</h3>
     </Fade>
     <div className='d-flex flex-row '>
       {/* <h3>Tipo de pago: </h3> */}
@@ -57,13 +57,13 @@ export default function Inicio2(){
                   id="demo-simple-select"
                   value={tipo}
                   label="tipo"
+                  style={{width:400}}
                   onChange={handleTipo}
                   variant="standard"
                   
                 >
-                <MenuItem value={10} onClick={(e)=>navigate('/tipo/persona')} className="d-flex justify-content-center"><strong>Proveedor Mcia y Convenios</strong></MenuItem>
-                <MenuItem value={20} onClick={(e)=>navigate('/credito/persona/natural')} className="d-flex justify-content-center" style={{color:'blue'}}><strong>Prestador de servicios</strong></MenuItem>
-                <MenuItem value={30} onClick={(e)=>navigate('/tipopersona')} className="d-flex justify-content-center" style={{color:'red'}}><strong>Proveedores varios (Agencias)</strong></MenuItem>
+                <MenuItem value={10} onClick={(e)=>navigate('/contado/persona/natural')} className="d-flex justify-content-center"><strong>Persona Natural</strong></MenuItem>
+                <MenuItem value={20} onClick={(e)=>navigate('/credito/persona/natural')} className="d-flex justify-content-center" style={{color:'blue'}}><strong>Persona Jurídica</strong></MenuItem>
                 </Select>
               </FormControl>
             </Box>

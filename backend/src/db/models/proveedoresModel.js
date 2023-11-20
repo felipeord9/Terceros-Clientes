@@ -1,9 +1,9 @@
 const { Model, DataTypes, Sequelize } = require("sequelize");
 const { USER_TABLE } = require("./userModel")
 
-const CLIENTE_TABLE = 'clientes';
+const PROVEEDOR_TABLE = 'proveedores';
 
-const ClienteSchema={
+const ProveedorSchema={
     id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -79,65 +79,15 @@ const ClienteSchema={
         allowNull:true,
         field:'telefono'
     },
-    correoNotificaciones:{
+    correoElectronico:{
         type:DataTypes.STRING,
         allowNull:false,
-        field:'correo_Notificacion'
+        field:'correo_electronico'
     },
-    nombreSucursal:{
+    actividadEconomica:{
         type:DataTypes.STRING,
         allowNull:false,
-        field:'nombre_sucursal'
-    },
-    direccionSucursal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'direccion_sucursal'
-    },
-    departamentoSucursal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'cod_depart_sucursal'
-    },
-    ciudadSucursal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'cod_city_sucursal'
-    },
-    celularSucursal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'no_sucursal'
-    },
-    telefonoSucursal:{
-        type:DataTypes.STRING,
-        allowNull:true,
-        field:'telefono_sucursal'
-    },
-    correoSucursal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'correo_sucursal'
-    },
-    correoFacturaElectronica:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'correo_fe'
-    },
-    regimenFiscal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'regimen_fiscal'
-    },
-    responsabilidadFiscal:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'responsability_fiscal'
-    },
-    detalleTributario:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'detalle_tributario'
+        field:'actividad_economica'
     },
     tipoDocRepLegal:{
         type:DataTypes.STRING,
@@ -158,16 +108,6 @@ const ClienteSchema={
         type:DataTypes.STRING,
         allowNull:false,
         field:'apellido_replegal'
-    },
-    valorEstimado:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'valor_estimado'
-    },
-    precioSugerido:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        field:'precio_sugerido'
     },
     observations: {
         type: DataTypes.TEXT,
@@ -204,16 +144,6 @@ const ClienteSchema={
         allowNull: false,
         field: "doc_comprAntc",
     },
-    docCtalnst:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: "doc_ctalnst",
-    },
-    docPagare:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: "doc_pagare",
-    },
     docRut:{
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -238,16 +168,6 @@ const ClienteSchema={
         type: DataTypes.INTEGER,
         allowNull: false,
         field: "doc_refcom",
-    },
-    docCvbo:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: "doc_cvbo",
-    },
-    docFirdoc:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: "doc_firdoc",
     },
     docInfemp:{
         type: DataTypes.INTEGER,
@@ -274,11 +194,6 @@ const ClienteSchema={
         allowNull: false,
         field: "doc_otros",
     },
-    clasificacion:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        field: "clasificacion",
-    },
     agencia:{
         type:DataTypes.STRING,
         allowNull:false,
@@ -292,21 +207,21 @@ const ClienteSchema={
     
 };
 
-class Cliente extends Model{
+class Proveedor extends Model{
     static associate(models){
         /* this.belongsTo(models.User,{as:'user'}) */
     }
     static config(sequelize){
         return{
             sequelize,
-            tableName:CLIENTE_TABLE,
-            modelName:'Clientes',
+            tableName:PROVEEDOR_TABLE,
+            modelName:'Proveedores',
             timestamps:false,
         };
     }
 }
 module.exports = {
-    CLIENTE_TABLE,
-    ClienteSchema,
-    Cliente,
+    PROVEEDOR_TABLE,
+    ProveedorSchema,
+    Proveedor,
   };

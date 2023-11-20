@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const routerApi = require("./v1/routes");
 const { errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/errorHandler')
 const { config } = require("./config/config");
+const fileUpload = require("express-fileupload");
 
 const { port, host } = config;
 
@@ -20,6 +21,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors())
+/* app.use(fileUpload()) */
 app.use(morgan("dev"))
 //app.use(cors(corsOptions));
 

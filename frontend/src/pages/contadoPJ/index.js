@@ -6,6 +6,7 @@ import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { Navigate } from "react-router-dom";
+import { getAllPrecios } from "../../services/precioService";
 import { getAllResponsabilidad } from '../../services/responsabilidadService'
 import { getAllDetalles } from "../../services/detalleService";
 import { getAllRegimen } from "../../services/regimenService";
@@ -33,6 +34,7 @@ export default function ContadoPersonaJuridica(){
   const [city,setCity]=useState(null);
   const [responsabilidad,setResponsabilidad ] = useState(null);
   const [depart, setDepart]=useState('');
+  const [precio, setPrecio] = useState(null);
 
   /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
   const [clasificaciones, setClasificaciones]= useState([]);
@@ -43,6 +45,7 @@ export default function ContadoPersonaJuridica(){
   const [regimenes,setRegimenes] = useState([]);
   const [responsabilidades,setResponsabilidades]= useState([]);
   const [departamentos,setDepartamentos]=useState([]);
+  const [precios, setPrecios] = useState([]);
 
   /* Inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
@@ -113,8 +116,8 @@ export default function ContadoPersonaJuridica(){
     observations:'',
     solicitante:'',
     tipoFormulario:'PJC',
-    tipo
-    :'N'
+    tipo:'N',
+    valorEstimado:'',
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -126,6 +129,7 @@ export default function ContadoPersonaJuridica(){
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
   const selectRegimenRef=useRef();
+  const selectPrecioRef=useRef();
   const selectResponsabilidadRef=useRef();
 
   const limitDeliveryDateField = new Date()
@@ -140,6 +144,7 @@ export default function ContadoPersonaJuridica(){
     getAllDocuments().then((data)=>setDocumentos(data));
     getAllDepartamentos().then((data) => setDepartamentos(data));
     getAllCiudades().then((data) => setCiudades(data));
+    getAllPrecios().then((data)=>setPrecios(data));
 },[]);
 
   const findById = (id, array, setItem) => {
@@ -242,6 +247,8 @@ export default function ContadoPersonaJuridica(){
           nameRepLegal: search.nameRepLegal.toUpperCase(),
           tipoDocRepLegal: document.codigo,
           apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
+          valorEstimado: search.valorEstimado,
+          precioSugerido: precio.description,
           observations: search.observations,
           createdAt: new Date(),
           createdBy: user.name.toUpperCase(),
@@ -949,17 +956,59 @@ const Cambio = (event) => {
               </div>
               </div>
               <hr className="my-1" />
+              <label className="fw-bold mb-1 mt-1" style={{fontSize:22}}>PROMEDIO DE COMPRA MENSUAL ESTIMADO</label>
+              <div className="d-flex flex-row w-100 mt-2 mb-4">
+              <div className="d-flex flex-row align-items-start w-100">
+                  <label className="">Promedio Compra:</label>
+                  <label className="ps-2">$</label>
+                  <input
+                    id="valorEstimado"
+                    style={{width:225}}
+                    value={search.valorEstimado}
+                    onChange={handlerChangeSearch}
+                    type="number"
+                    className="form-control form-control-sm "
+                    min={0}
+                    required
+                    pattern="[0-9]"
+                    placeholder="Campo obligatorio"
+                  >
+                  </input>
+                </div>
+                  <div className="w-100 d-flex flex-row">
+                  <label className="me-1">Precio sugerido:</label>
+                  <select
+                    style={{width:260}}
+                    ref={selectPrecioRef}
+                    className="form-select form-select-sm m-100 me-3"
+                    onChange={(e)=>setPrecio(JSON.parse(e.target.value))}
+                    required
+                  >
+                    <option selected value='' disabled>
+                  -- Seleccione el tipo de precios sugerido --
+                </option>
+                  {precios
+                  .sort((a, b) => a.id - b.id)
+                  .map((elem) => (
+                    <option id={elem.id} value={JSON.stringify(elem)}>
+                      {elem.description}
+                    </option>
+                  ))}
+              </select>
+                  </div>
+              </div>
+              <hr className="my-1" />
             </div> 
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:22}}>DOCUMENTOS OBLIGATORIOS</label>
-              <div className="d-flex flex-row m-1">
+              <div className="d-flex flex-row ">
                 <div className="me-2 w-100">
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <input
                     id="DocRut"
                     /* onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))} */
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
                     onChange={(e) => (handleFileChange('Rut', e),setDocRut(1))}
@@ -970,7 +1019,7 @@ const Cambio = (event) => {
                   <input
                     id="DocInfemp"
                     type="file"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))} */
                     onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
@@ -986,7 +1035,7 @@ const Cambio = (event) => {
                     /* onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))} */
                     onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1))}
                     placeholder="RUT"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     className="form-control form-control-sm w-100 me-2 border border-5 rounded-3"
                     accept=".pdf"                  />
                 </div> 
@@ -994,7 +1043,7 @@ const Cambio = (event) => {
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <input
                     id="DocOtros"
-                    style={{backgroundColor:'#f5f5f5'}}
+                    style={{backgroundColor:'#f3f3f3'}}
                     type="file"
                     /* onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))} */
                     onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}

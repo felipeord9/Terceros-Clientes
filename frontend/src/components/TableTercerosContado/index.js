@@ -176,6 +176,20 @@ export default function TableTerceros({ terceros, loading }) {
         width: '120px',
       },
       {
+        id: "valorEstimado",
+        name: "Valor estimado",
+        selector: (row) => row.valorEstimado,
+        sortable: true,
+        width: '150px',
+      },
+      {
+        id: "precioSugerido",
+        name: "Precio Sugerido",
+        selector: (row) => row.precioSugerido,
+        sortable: true,
+        width: '150px',
+      },
+      {
         id: "solicitante",
         name: "Solicitante",
         selector: (row) => row.solicitante,

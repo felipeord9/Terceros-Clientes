@@ -218,10 +218,12 @@ export default function Navbar() {
           </div>
           <nav
             className={showSideBar ? "bg-light nav-menu active" : "nav-menu"}
+            style={{overflow:"auto",width:240}}
           >
             <ul
               className="nav-menu-items"
               onClick={(e) => setShowSidebar(!showSideBar)}
+              style={{width:240}}
             >
               {NavBarData.map((item, index) => {
                 if (item.access.includes(user.role)) {

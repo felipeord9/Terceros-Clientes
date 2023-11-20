@@ -7,10 +7,10 @@ export default function TableUsers({ users, loading, setSelectedUser, setShowMod
   const columns = [
     {
       id: "id",
-      name: "Identificación",
+      name: "#Identificación",
       selector: (row) => row.rowId,
       sortable: true,
-      width: '120px',
+      width: '145px',
     },
     {
       id: "name",

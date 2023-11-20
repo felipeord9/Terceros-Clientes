@@ -14,32 +14,67 @@ export const NavBarData = [
     path:'/inicio',
     icon:<GoHomeFill/>,
     cName:'nav-text',
-    access:['admin','usuario']   
+    access:['admin','cartera','agencias']   
   }
   ,
   {title:'Persona natural - contado',
     path:'/contado/persona/natural',
     icon:<RiContactsBook2Fill/>,
     cName:'nav-text',
-    access:['admin','usuario']
+    access:['admin','cartera','agencias']
   },{
     title:'Persona natural - Crédito',
     path:'/credito/persona/natural',
     icon:<RiContactsBook2Line/>,
     cName:'nav-text',
-    access:['admin','usuario']
+    access:['admin','agencias','cartera']
   },
   {title:'Persona Jurídica - contado',
     path:'/contado/persona/juridica',
     icon: <RiContactsBookFill/>,
     cName:'nav-text',
-    access:['admin','usuario']
+    access:['admin','agencias','cartera']
   },{
     title:'Persona Jurídica - Crédito',
     path:'/credito/persona/juridica',
     icon:<RiContactsBookLine/>,
     cName:'nav-text',
-    access:['admin','usuario']
+    access:['admin','cartera','agencias']
+  },
+  {
+    title: "Proveedor Mcia/ Convenio - Natural",
+    path: "/proveedor/convenio/natural",
+    icon: <BsFillPeopleFill />,
+    cName: "nav-text",
+    access: ['admin','compras']
+  },
+  {
+    title: "Proveedor Mcia/ Convenio - Jurídico",
+    path: "/proveedor/convenio/natural",
+    icon: <BsFillPeopleFill />,
+    cName: "nav-text",
+    access: ['admin','compras']
+  },
+  {
+    title: "Prestador de servicios",
+    path: "/proveedor/convenio/natural",
+    icon: <BsFillPeopleFill />,
+    cName: "nav-text",
+    access: ['admin','compras']
+  },
+  {
+    title: "Proveedor vario - Natural",
+    path: "/proveedor/convenio/natural",
+    icon: <BsFillPeopleFill />,
+    cName: "nav-text",
+    access: ['admin','compras']
+  },
+  {
+    title: "Proveedor vario - Jurídico",
+    path: "/proveedor/convenio/natural",
+    icon: <BsFillPeopleFill />,
+    cName: "nav-text",
+    access: ['admin','compras']
   },
   {
     title: "Usuarios",
@@ -55,4 +90,5 @@ export const NavBarData = [
     cName: "nav-text",
     access: ['admin']
   }
+  
 ];

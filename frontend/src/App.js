@@ -8,7 +8,11 @@ import RecoveryPassword from './pages/RecoveryPassword';
 import SendRecovery from './pages/SendRecoveryPassword'
 import Page404 from './pages/Page404'
 import ChangePassword from './pages/ChangePassword'
+import Inicio from './pages/inicio';
 import Inicio2 from './pages/inicio2';
+import TipoPersona from './pages/tipoPersona';
+import Tipo from './pages/tipo';
+import ConvenioNatural from './pages/convenioNatural';
 import ContadoPersonaNatural from './pages/contadoPN';
 import React, { Component } from "react";
 import PrivateRoute from '../src/components/PrivateRoute';
@@ -32,7 +36,17 @@ function App() {
  */}        <Route path='/send/recovery' element={<SendRecovery/>}/>
         <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
 
-        <Route path='/inicio' element={<PrivateRoute component={Inicio2}/>}/>
+        {/* Inicios dependiendo del usuario */}
+        <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>
+        <Route path='/compras' element={<PrivateRoute component={Inicio2}/>}/>
+
+        {/* ruta 1 */}
+        <Route path='/tipo/persona' element={<PrivateRoute component={TipoPersona}/>}/>
+        <Route path='/proveedor/convenio/natural' element={<PrivateRoute component={ConvenioNatural}/>}/>
+
+        {/* ruta 2 */}
+        <Route path='/tipopersona' element={<PrivateRoute component={Tipo}/>}/>
+
         <Route path='/contado/persona/natural' element={<PrivateRoute component={ContadoPersonaNatural}/>}/>
         <Route path='/contado/persona/juridica' element={<PrivateRoute component={ContadoPersonaJuridica}/>}/>
         <Route path='/credito/persona/natural' element={<PrivateRoute component={CreditoPersonaNatural}/>}/>

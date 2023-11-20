@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs')
+const fileUpload = require('express-fileupload');
+const { Client } = require('smb2');
 const rimraf = require('rimraf');
 const fsExtra = require('fs-extra');
 
@@ -70,7 +72,7 @@ router.post('/', upload.fields([
   { name: 'Infrl' },
   { name: 'Otros'},
   { name: 'ValAnt'},
-]), (req, res) => {
+]), async (req, res) => {
   const folderName = req.body.folderName; 
 
   const folderPath = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);
@@ -91,6 +93,15 @@ router.post('/', upload.fields([
       })
     })
   } res.status(200).send('archivos guardados');
+
+  /* try to conecto to samba */
+  /* const client = new Client({
+    share: 'smb://appterceros:L4ng0K3nsh1@192.168.4.237/aplicativoterceros',
+    domain: null, // Puede ser null o omitido si no se requiere autenticación
+    username: appterceros,
+    password: L4ng0K3nsh1,
+  });
+  await client.up */
 });
 
 router.delete('/:folderName', (req,res)=>{
