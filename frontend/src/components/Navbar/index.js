@@ -79,6 +79,16 @@ export default function Navbar() {
       setOpenModal(false);
       
     }
+    const handleClickInicio=(e)=>{
+      e = e.target.value
+      if(user.role==='agencias' || user.role==='cartera'){
+        return navigate('/inicio')
+      }else if(user.role==='compras'){
+        return navigate('/compras')
+      }else{
+        return navigate('/inicio/admin')
+      }
+    }
   return (
     <>
       {isLogged && (
@@ -104,7 +114,8 @@ export default function Navbar() {
                 src={Logo}
                 width={100}
                 className="navbar-img"
-                onClick={(e) => navigate("/inicio")}
+                /* onClick={(e) => navigate("/inicio")} */
+                onClick={(e)=>handleClickInicio(e)}
                 unselectable="false"
                 aria-invalid
                 

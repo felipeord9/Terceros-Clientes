@@ -272,7 +272,7 @@ export default function CreditoPersonaJuridica(){
           docValAnt: docValAnt,
           docCerBan: docCerBan,
           docOtros:docOtros,
-          clasificacion: clasificacion.id,
+          clasificacion: clasificacion.description,
           agencia: agencia.id,
           tipoFormulario: search.tipoFormulario,
         };

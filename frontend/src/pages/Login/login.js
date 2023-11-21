@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Logo from '../../assest/logo-gran-langostino.png'
 import './login.css';
+import AuthContext from "../../context/authContext";
 import useUser from '../../hooks/useUser';
 import * as Bs from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +10,15 @@ import { Fade } from "react-awesome-reveal";
 
 export default function Login() {
   const {login,isLoginLoading,hasLoginError,isLogged}=useUser()
+  const { user, setUser } = useContext(AuthContext);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate =useNavigate()
 
   useEffect(()=>{
-    if(isLogged)navigate('/inicio');
+    if(isLogged && user.role==='agencias' || isLogged && user.role==='cartera')navigate('/inicio');
+    if(isLogged && user.role==='compras')navigate('/compras');
+    if(isLogged && user.role==='admin')navigate('/inicio/admin');
   },[isLogged,navigate]);
 
   const handleLogin=async(e)=>{

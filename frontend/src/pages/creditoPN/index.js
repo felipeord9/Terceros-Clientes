@@ -208,7 +208,7 @@ export default function CreditoPersonaNatural(){
         }
         //creamos el cuerpo de nuestra instancia
         const body={
-          clasificacion: clasificacion.id,
+          clasificacion: clasificacion.description,
           agencia: agencia.id,
           tipoDocumento: document.codigo,
           departamento: departamento.codigo,

@@ -5,15 +5,11 @@ import AuthContext from "../../context/authContext";
 import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
-import { createCliente, deleteCliente } from '../../services/clienteService';
-import { Navigate } from "react-router-dom";
-import { getAllResponsabilidad } from '../../services/responsabilidadService'
-import { getAllDetalles } from "../../services/detalleService";
-import { getAllRegimen } from "../../services/regimenService";
+import { createProveedor, deleteProveedor } from '../../services/proveedorService';
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
+import { getAllActividad} from '../../services/actividadService';
 import { getAllAgencies } from "../../services/agencyService";
-import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
 
@@ -27,6 +23,7 @@ export default function ConvenioNatural(){
   const [document,setDocument] = useState(null);
   const [ciudad, setCiudad] = useState(null);
   const [departamento,setDepartamento]= useState('');
+  const [actividad, setActividad] = useState(null);
 
   /* inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
@@ -78,6 +75,7 @@ export default function ConvenioNatural(){
   const [documentos,setDocumentos] = useState([]);
   const [ciudades,setCiudades] = useState([]);
   const [departamentos,setDepartamentos]=useState([]);
+  const [actividades, setActividades] = useState([]);
 
   const [search, setSearch] = useState({
     cedula:'',
@@ -99,12 +97,10 @@ export default function ConvenioNatural(){
   
   /* rama seleccionada de cada variable */
   const selectBranchRef = useRef();
-  const selectClasificacionRef =useRef();
   const selectDocumentoRef=useRef();
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
-  const selectRegimenRef=useRef();
-  const selectResponsabilidadRef=useRef();
+  const selectActividadRef=useRef();
 
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
@@ -115,6 +111,7 @@ export default function ConvenioNatural(){
       getAllDocuments().then((data)=>setDocumentos(data));
       getAllDepartamentos().then((data) => setDepartamentos(data));
       getAllCiudades().then((data) => setCiudades(data));
+      getAllActividad().then((data)=>setActividades(data));
   },[]);
 
   const findById = (id, array, setItem) => {
@@ -171,7 +168,7 @@ export default function ConvenioNatural(){
     e.preventDefault();
     Swal.fire({
       title: "¿Está segur@?",
-        text: "Se realizará el registro del Cliente",
+        text: "Se realizará el registro del Proveedor",
         icon:'question',
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
@@ -180,15 +177,6 @@ export default function ConvenioNatural(){
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        //agregamos los pdf a un formdata dependiendo del index que les dimos
-        /* const formData = new FormData();
-        files.forEach((file, index) => {
-          if (file) {
-            formData.append(`pdfFile${index}`, file);
-          }
-        }); */
-
-        /* second form */
         const formData = new FormData();
 
         for (const fieldName in files) {
@@ -196,6 +184,13 @@ export default function ConvenioNatural(){
             formData.append(fieldName, files[fieldName]);
           }
         }
+        //agregamos los pdf a un formdata dependiendo del index que les dimos
+        /* const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        }); */
         //creamos el cuerpo de nuestra instancia
         const body={
           cedula: search.cedula,
@@ -213,8 +208,7 @@ export default function ConvenioNatural(){
           celular: search.celular,
           telefono:search.telefono,
           correoElectronico: search.correoElectronico.toLowerCase(),
-/*           actividadEconomica: actividad.id,
-*/          
+          actividadEconomica: actividad.id,         
           tipoDocRepLegal: document.codigo,
           numeroDocRepLegal: search.cedula,
           nameRepLegal:search.primerNombre.toUpperCase(),
@@ -246,7 +240,7 @@ export default function ConvenioNatural(){
         const clientName = search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
         formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
-        createCliente(body)
+        createProveedor(body)
         .then(({data}) => {
           fileSend(formData)
           .then(()=>{
@@ -254,7 +248,7 @@ export default function ConvenioNatural(){
             setFiles([])
             Swal.fire({
               title: 'Creación exitosa!',
-              text: `El Cliente "${data.razonSocial}" con Número 
+              text: `El Proveedor "${data.razonSocial}" con Número 
               de documento "${data.cedula}" se ha registrado de manera exitosa`,
               icon: 'success',
               position:'center',
@@ -271,7 +265,7 @@ export default function ConvenioNatural(){
             if(!data){
               deleteFile(folderName);
             }else{
-              deleteCliente(data.id);
+              deleteProveedor(data.id);
             }
             Swal.fire({
               title: "¡Ha ocurrido un error!",
@@ -294,7 +288,7 @@ export default function ConvenioNatural(){
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del proveedor, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -310,7 +304,7 @@ export default function ConvenioNatural(){
     Swal.fire({
       title: "¡Ha ocurrido un error!",
         text: `
-          Hubo un error al momento de registrar el cliente, intente de nuevo.
+          Hubo un error al momento de registrar el proveedor, intente de nuevo.
           Si el problema persiste por favor comuniquese con el área de sistemas.`,
        icon: "error",
        confirmButtonText: "Aceptar"});
@@ -390,7 +384,7 @@ const [colorVality,setColorVality]=useState('red');
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PROVEEDOR MCIA Y CONVENIOS - PERSONA NATURAL</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PROVEEDOR MCIA Y CONVENIOS - persona NATURAL</strong></label>
           </Fade>
           </center>
           <hr className="my-1" />
@@ -650,14 +644,14 @@ const [colorVality,setColorVality]=useState('red');
               <div className="d-flex flex-row align-items-start ">
                   <label className="me-1 mb-3">Correo electrónico:</label>
                   <input
-                    id="correoNotificaciones"
+                    id="correoElectronico"
                     type="email"
                     className="form-control form-control-sm "
                     min={0}
-                    value={search.correoNotificaciones}
+                    value={search.correoElectronico}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{width:585, textTransform:'lowercase'}}
+                    style={{width:595, textTransform:'lowercase'}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -665,23 +659,23 @@ const [colorVality,setColorVality]=useState('red');
  */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
 {/*                   <span className="validity fw-bold"></span>
  */}              </div>
-                <div className="d-flex flex-row mb-3">
+                <div className="d-flex flex-column mb-3 w-100">
                 <label className="me-1">Actividad Económica:</label>
                 <select                    
-                    onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
-                    ref={selectDepartamentoRef}
-                    style={{width:600}}
+                    onChange={(e)=>setActividad(JSON.parse(e.target.value))}
+                    ref={selectActividadRef}
+                    style={{width:760}}
                     className="form-select form-select-sm m-100 me-3"
                     required   
                  >
                    <option selected value='' disabled>
                     -- Seleccione el Departamento --
                   </option>
-                      {departamentos
+                      {actividades
                       .sort((a,b)=>a.id - b.id)
                       .map((elem)=>(
                         <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
-                          {elem.description} 
+                          {elem.id + '-' + elem.description} 
                         </option>
                       ))
                     }
@@ -693,7 +687,7 @@ const [colorVality,setColorVality]=useState('red');
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row ">
                 <div className="pe-2 w-50">
-                  <label className="fw-bold mt-1 ">RUT: </label>
+                  <label className="fw-bold mt-2 ">FORMATO DE VINCULACIÓN PROVEEDORES: </label>
                   <div className="p-1 rounded-2" >
                   <input
                     id="RUT"
@@ -704,12 +698,12 @@ const [colorVality,setColorVality]=useState('red');
                     style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1))}
+                    onChange={(e) => (handleFileChange('Vinculacion', e),setDocVinculacion(1))}
                   />
                   </div>
                 </div>
                 <div className="ps-2 w-50">
-                  <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
+                  <label className="fw-bold mt-1 me-2">COMPROMISO ANTICORRUPCIÓN: </label>
                   <div className="p-1 rounded-2" >
                   <input
                     id="INFOLAFT"
@@ -719,26 +713,143 @@ const [colorVality,setColorVality]=useState('red');
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3'}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1))}
+                    onChange={(e) => (handleFileChange('ComprAntc',e),setDocComprAntc(1))}
                   />
                   </div>
                 </div>
               </div>
-              <div className="d-flex flex-column mt-2 ">
-                  <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <div className="p-1 rounded-2"/*  style={{backgroundColor:'#9B9B9B'}} */>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">CERTIFICADO CAMARA Y COMERCIO: </label>
+                  <div className="p-1 rounded-2" >
                   <input
-                    id="otros"
+                    id="RUT"
                     type="file"
-                    placeholder="OTROS"
-                    style={{backgroundColor:'#f3f3f3'}}
+                    placeholder="RUT"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
-                    /* onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))} */
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Ccio', e),setDocCcio(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">RUT: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1))}
+                  />
+                  </div>
+                </div>
+              </div> 
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">CERTIFICACION BANCARIA: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Certban', e),setDocCerBan(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Refcom',e),setDocRefcom(1))}
+                  />
+                  </div>
+                </div>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">ESTADOS FINANCIEROS O CERTIFICACIÓN DE CONTADOR: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Ef', e),setDocEf(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">CÉDULA: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('CrepL',e),setDocCrepL(1))}
+                  />
+                  </div>
+                </div>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">VALIDACIÓN DE ANTECEDENTES: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Infrl', e),setDocInfrl(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">OTROS: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
                     onChange={(e) => (handleFileChange('Otros',e),setDocOtros(1))}
                   />
                   </div>
-                </div> 
+                </div>
             </div>
           </div>
         </div>

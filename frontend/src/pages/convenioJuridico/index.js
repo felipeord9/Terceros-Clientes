@@ -1,80 +1,61 @@
-import { useEffect, useState, useContext, useRef, Suspense } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
-import { Navigate } from "react-router-dom";
-import { getAllPrecios } from "../../services/precioService";
-import { getAllResponsabilidad } from '../../services/responsabilidadService'
-import { getAllDetalles } from "../../services/detalleService";
-import { getAllRegimen } from "../../services/regimenService";
+import { createProveedor, deleteProveedor } from '../../services/proveedorService';
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
+import { getAllActividad} from '../../services/actividadService';
 import { getAllAgencies } from "../../services/agencyService";
-import { getAllClasificaciones } from "../../services/clasificacionService";
-import { getAllDocuments } from '../../services/documentService';
-import { createCliente, deleteCliente } from "../../services/clienteService";
+import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
 
-export default function ContadoPersonaJuridica(){
+export default function ConvenioJuridico(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
   const {department,setDepartment}=useContext(DepartmentContext)
 
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
-  const [clasificacion,setClasificacion] = useState(null);
-  const [document,setDocument]=useState(null);
+  const [document,setDocument] = useState(null);
   const [ciudad, setCiudad] = useState(null);
-  const [regimen,setRegimen]= useState(null);
-  const [detalle,setDetalle]=useState(null);
   const [departamento,setDepartamento]= useState('');
-  const [city,setCity]=useState(null);
-  const [responsabilidad,setResponsabilidad ] = useState(null);
-  const [depart, setDepart]=useState('');
-  const [precio, setPrecio] = useState(null);
+  const [actividad, setActividad] = useState(null);
 
-  /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
-  const [clasificaciones, setClasificaciones]= useState([]);
-  const [agencias, setAgencias] = useState([]);
-  const [documentos,setDocumentos] = useState([]);
-  const [ciudades,setCiudades] = useState([]);
-  const [detalles,setDetalles]=useState([]);
-  const [regimenes,setRegimenes] = useState([]);
-  const [responsabilidades,setResponsabilidades]= useState([]);
-  const [departamentos,setDepartamentos]=useState([]);
-  const [precios, setPrecios] = useState([]);
-
-  /* Inicializar los documentos adjuntos */
+  /* inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
   const [docComprAntc,setDocComprAntc]=useState(0);
-  const [docCtaInst,setDocCtaInst]=useState(0);
-  const [docPagare,setDocPagare]=useState(0);
   const [docRut,setDocRut]=useState(0);
   const [docCcio,setDocCcio]=useState(0);
   const [docCrepL,setDocCrepL]=useState(0);
   const [docEf,setDocEf]=useState(0);
   const [docRefcom,setDocRefcom]=useState(0);
-  const [docCvbo,setDocCvbo]=useState(0);
-  const [docFirdoc,setDocFirdoc]=useState(0);
   const [docInfemp,setDocInfemp]=useState(0);
   const [docInfrl,setDocInfrl]=useState(0);
   const [docOtros,setDocOtros]=useState(0);
   const [docCerBan, setDocCerBan] = useState(0);
   const [docValAnt,setDocValAnt] = useState(0);
 
-//------------------------------------------
+  //------------------------------------------
   /* Variable de todos los pdf y el nombre de la carpeta*/
   /* const [files, setFiles] = useState([]); */
-  /* second form */
   const [files, setFiles] = useState({
     input1: null,
     input2: null,
     input3: null,
     input4: null,
-  });/*   const [folderName, setFolderName] = useState('');
+    input5: null,
+    input6: null,
+    input7: null,
+    input8: null,
+    input9: null,
+    input10: null,
+    input11: null,
+  });
+/*   const [folderName, setFolderName] = useState('');
  */
   /* Variable para agregar los pdf */
   /* const handleFileChange = (event, index) => {
@@ -82,19 +63,25 @@ export default function ContadoPersonaJuridica(){
     newFiles[index] = event.target.files[0];
     setFiles(newFiles);
   }; */
-  //------------------------------------------
-  /* second form */
+
+  /* Second form */
   const handleFileChange = (fieldName, e) => {
     const selectedFile = e.target.files[0];
     setFiles(prevFiles => ({ ...prevFiles, [fieldName]: selectedFile }));
   };
+  //------------------------------------------
 
-  /* Inicializar los input */
+  /* inicializar para hacer la busqueda (es necesario inicializar en array vacio)*/
+  const [agencias, setAgencias] = useState([]);
+  const [documentos,setDocumentos] = useState([]);
+  const [ciudades,setCiudades] = useState([]);
+  const [departamentos,setDepartamentos]=useState([]);
+  const [actividades, setActividades] = useState([]);
+
   const [search, setSearch] = useState({
     cedula:'',
-    DV:'',
-    tipoDocumento:'N',
     tipoPersona:'2',
+    tipoDocumento:'N',
     razonSocial:'',
     primerApellido:'',
     segundoApellido:'',
@@ -103,64 +90,50 @@ export default function ContadoPersonaJuridica(){
     direccion:'',
     celular:'',
     telefono:'',
-    correoNotificaciones:'',
-    nombreSucursal:'',
-    direccionSucursal:'',
-    celularSucursal:'',
-    telefonoSucursal:'',
-    correoSucursal:'',
-    correoFacturaElectronica:'',
+    correoElectronico:'',
+    tipoDocRepLegal:'',
     numeroDocRepLegal:'',
     nameRepLegal:'',
     apellidoRepLegal:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'PJC',
-    tipo:'N',
-    valorEstimado:'',
+    tipoFormulario:'PMJ'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
-
+  
   /* rama seleccionada de cada variable */
   const selectBranchRef = useRef();
-  const selectClasificacionRef =useRef();
   const selectDocumentoRef=useRef();
   const selectDepartamentoRef=useRef();
   const selectCiudadRef=useRef();
-  const selectRegimenRef=useRef();
-  const selectPrecioRef=useRef();
-  const selectResponsabilidadRef=useRef();
+  const selectActividadRef=useRef();
 
   const limitDeliveryDateField = new Date()
   limitDeliveryDateField.setHours(2)
 
+  /* asignacion de valores a las variables */
   useEffect(()=>{
-    getAllDetalles().then((data)=>setDetalles(data));
-    getAllResponsabilidad().then((data)=>setResponsabilidades(data));
-    getAllRegimen().then((data)=>setRegimenes(data));
-    getAllAgencies().then((data) => setAgencias(data));
-    getAllClasificaciones().then((data) => setClasificaciones(data));
-    getAllDocuments().then((data)=>setDocumentos(data));
-    getAllDepartamentos().then((data) => setDepartamentos(data));
-    getAllCiudades().then((data) => setCiudades(data));
-    getAllPrecios().then((data)=>setPrecios(data));
-},[]);
+      getAllAgencies().then((data) => setAgencias(data));
+      getAllDocuments().then((data)=>setDocumentos(data));
+      getAllDepartamentos().then((data) => setDepartamentos(data));
+      getAllCiudades().then((data) => setCiudades(data));
+      getAllActividad().then((data)=>setActividades(data));
+  },[]);
 
   const findById = (id, array, setItem) => {
-    const item = array.find((elem) => elem.nit === id);
+    const item = array.find((elem) => elem.departament_id === id);
     if (item) {
       setItem(item);
     } else {
       setItem(null);
-      /* setSucursal(null); */
-      selectBranchRef.current.selectedIndex = 0;
+      setCiudad(null);
+      selectCiudadRef.current.selectedIndex = 0;
     }
   };
 
   const handlerChangeSearch = (e) => {
     const { id, value } = e.target;
-    console.log(value);
     setSearch({
       ...search,
       [id]: value,
@@ -187,26 +160,30 @@ export default function ContadoPersonaJuridica(){
     }
   };
 
+  const changeType = (e) => {
+    setSearch({
+      ...search,
+      idDepartment: "",
+    });
+    setInvoiceType(!invoiceType);
+    /* setClient(null); */
+    setCiudad(null);
+    selectCiudadRef.current.selectedIndex = 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     Swal.fire({
-      title:'¿Está segur@?',
-      text:'Se realizará el registro del Cliente',
-      icon:'question',
-      confirmButtonText:'Aceptar',
-      confirmButtonColor:'#198754',
-      showCancelButton:true,
-      cancelButtonText:'Cancelar',
+      title: "¿Está segur@?",
+        text: "Se realizará el registro del Proveedor",
+        icon:'question',
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#198754",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
     }) .then(({isConfirmed})=>{
       if(isConfirmed){
         setLoading(true);
-        /* const formData = new FormData();
-        files.forEach((file, index) => {
-          if (file) {
-            formData.append(`pdfFile${index}`, file);
-          }
-        }) */
-        /* second form */
         const formData = new FormData();
 
         for (const fieldName in files) {
@@ -214,73 +191,63 @@ export default function ContadoPersonaJuridica(){
             formData.append(fieldName, files[fieldName]);
           }
         }
+        //agregamos los pdf a un formdata dependiendo del index que les dimos
+        /* const formData = new FormData();
+        files.forEach((file, index) => {
+          if (file) {
+            formData.append(`pdfFile${index}`, file);
+          }
+        }); */
+        //creamos el cuerpo de nuestra instancia
         const body={
-          cedula:search.cedula,
+          cedula: search.cedula,
           numeroDocumento: search.cedula,
-          /* cedula:search.cedula+search.DV,
-          numeroDocumento: search.cedula+search.DV, */
-          tipoDocumento:search.tipoDocumento,
-          tipoPersona:search.tipoPersona,
-          razonSocial:search.razonSocial.toUpperCase(),
-          primerApellido:search.primerApellido.toUpperCase(),
-          segundoApellido:search.segundoApellido.toUpperCase(),
-          primerNombre:search.primerNombre.toUpperCase(),
-          otrosNombres:search.otrosNombres.toUpperCase(),
-          departamento:departamento.codigo,
+          tipoDocumento: search.tipoDocumento,
+          tipoPersona: search.tipoPersona,
+          razonSocial: search.razonSocial.toUpperCase() ,
+          primerApellido:search.primerApellido,
+          segundoApellido:search.segundoApellido,
+          primerNombre:search.primerNombre,
+          otrosNombres:search.otrosNombres,
+          departamento: departamento.codigo,
           ciudad: ciudad.codigo,
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
-          telefono: search.telefono,
-          correoNotificaciones: search.correoNotificaciones.toLowerCase(),
-          nombreSucursal:search.nombreSucursal.toUpperCase(),
-          direccionSucursal: search.direccionSucursal.toUpperCase(),
-          departamentoSucursal: depart.codigo,
-          ciudadSucursal: city.codigo,
-          celularSucursal: search.celularSucursal,
-          telefonoSucursal: search.telefonoSucursal,
-          correoSucursal: search.correoSucursal.toLowerCase(),
-          correoFacturaElectronica: search.correoFacturaElectronica.toLowerCase(),
-          regimenFiscal: regimen.id,
-          responsabilidadFiscal: responsabilidad.id,
-          detalleTributario: detalle.id,
-          numeroDocRepLegal: search.numeroDocRepLegal,
-          nameRepLegal: search.nameRepLegal.toUpperCase(),
+          telefono:search.telefono,
+          correoElectronico: search.correoElectronico.toLowerCase(),
+          actividadEconomica: actividad.id,         
           tipoDocRepLegal: document.codigo,
-          apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
-          valorEstimado: search.valorEstimado,
-          precioSugerido: precio.description,
-          observations: search.observations,
+          numeroDocRepLegal: search.numeroDocRepLegal,
+          nameRepLegal:search.nameRepLegal.toUpperCase(),
+          apellidoRepLegal:search.apellidoRepLegal.toUpperCase(),
+          observations:search.observations,
           createdAt: new Date(),
           createdBy: user.name.toUpperCase(),
-          solicitante: search.solicitante.toUpperCase(),
+          solicitante:search.solicitante.toUpperCase(),
           docVinculacion:docVinculacion,
           docComprAntc:docComprAntc,
-          docCtalnst:docCtaInst,
-          docPagare:docPagare,
           docRut:docRut,
           docCcio:docCcio,
           docCrepL:docCrepL,
           docEf:docEf,
           docRefcom:docRefcom,
-          docCvbo:docCvbo,
-          docFirdoc:docFirdoc,
           docInfemp:docInfemp,
           docInfrl:docInfrl,
-          docValAnt: docValAnt,
-          docCerBan: docCerBan,
+          docValAnt:docValAnt,
+          docCerBan:docCerBan,
           docOtros:docOtros,
-          clasificacion: clasificacion.description,
           agencia: agencia.id,
-          tipoFormulario: search.tipoFormulario,
+          tipoFormulario:search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
-        const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
+        const folderName = search.cedula+'-'+search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
-        createCliente(body)
+        createProveedor(body)
         .then(({data}) => {
           fileSend(formData)
           .then(()=>{
@@ -288,7 +255,7 @@ export default function ContadoPersonaJuridica(){
             setFiles([])
             Swal.fire({
               title: 'Creación exitosa!',
-              text: `El Cliente "${data.razonSocial}" con Número 
+              text: `El Proveedor "${data.razonSocial}" con Número 
               de documento "${data.cedula}" se ha registrado de manera exitosa`,
               icon: 'success',
               position:'center',
@@ -305,7 +272,7 @@ export default function ContadoPersonaJuridica(){
             if(!data){
               deleteFile(folderName);
             }else{
-              deleteCliente(data.id);
+              deleteProveedor(data.id);
             }
             Swal.fire({
               title: "¡Ha ocurrido un error!",
@@ -328,7 +295,7 @@ export default function ContadoPersonaJuridica(){
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de guardar la informacion del cliente, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del proveedor, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -343,11 +310,11 @@ export default function ContadoPersonaJuridica(){
     setLoading(false);
     Swal.fire({
       title: "¡Ha ocurrido un error!",
-      text: `
-        Hubo un error al momento de registrar el cliente, intente de nuevo.
-        Si el problema persiste por favor comuniquese con el área de sistemas.`,
-      icon: "error",
-      confirmButtonText: "Aceptar"});
+        text: `
+          Hubo un error al momento de registrar el proveedor, intente de nuevo.
+          Si el problema persiste por favor comuniquese con el área de sistemas.`,
+       icon: "error",
+       confirmButtonText: "Aceptar"});
     })
   };
 
@@ -365,24 +332,6 @@ export default function ContadoPersonaJuridica(){
     });
   };
 
-/* validar correo de la sucursal*/
-const [mensajeValidacion, setMensajeValidacion] = useState('');
-const [colorSpan,setColorSpan]=useState('red')
-const manejarCambioCorreo = (event) => {
-  const nuevoValor = event.target.value;
-  
-  // Verificar si el nuevo valor cumple con la expresión regular
-/*     if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(nuevoValor)) {
-*/    if (nuevoValor.includes('@') && nuevoValor.split('@')[1].includes('.')) {   
- /* setCorreo(nuevoValor); */
-    setMensajeValidacion('✓');
-    setColorSpan('green') // Limpiar mensaje de validación si es válido
-  } else {
-    setMensajeValidacion('X');
-    setColorSpan('red')
-  }
-}
-
 /* validar correo Notificaciones*/
 const [Validacion, setValidacion] = useState('');
 const [Span,setSpan]=useState('red')
@@ -396,7 +345,6 @@ const manejarCambio = (event) => {
     setSpan('red')
   }
 }
-
 /* validar correo de la factura Electronica*/
 const [mensaje, setMensaje] = useState('');
 const [color,setColor]=useState('red')
@@ -411,18 +359,39 @@ const Cambio = (event) => {
   }
 }
 
+const [vality,setVality]=useState('');
+const [colorVality,setColorVality]=useState('red');
+  const handleInputChange = (event) => {
+    // Obtén el valor actual del input
+    let value = event.target.value;
+
+    // Remueve cualquier carácter que no sea un número
+    value = value.replace(/[^0-9]/g, '');
+    if (value.replace(/[^0-9]/g, '')){
+      setVality('✓');
+      setColorVality('green')
+    }else if(value.includes('e') || value.includes('E') || value.includes(',')){
+      setVality('X');
+      setColorVality('red')
+    }
+    else{
+      setVality('X');
+      setColorVality('red')
+    }
+  };
+/* validar numero sin puntos, comas y guiones */
+
     return(
-    <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
-    <div className='rounder-4'>
+    <div className=" wrapper d-flex justify-content-center w-100 m-auto " style={{userSelect:'none'}}>
     <div
-      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white'}}
+      className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
     <center>
       <section className="d-flex flex-row justify-content-between align-items-center mb-2">
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <h1 className="fs-3 fw-bold m-1 ms-4 me-4 text-danger pb-2" style={{fontSize:150}}><strong>persona JURÍDICA - pago a CONTADO</strong></h1>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PROVEEDOR MCIA Y CONVENIOS - persona JURÍDICA</strong></label>
           </Fade>
           </center>
           <hr className="my-1" />
@@ -434,33 +403,13 @@ const Cambio = (event) => {
           <div className="d-flex flex-column gap-1">
             <div>
               <div className="d-flex flex-row">
-                <div className="d-flex flex-column me-4 w-100">
-              <label className="fw-bold" style={{fontSize:18}}>CLASIFICACIÓN</label>
-              <select
-                ref={selectClasificacionRef}
-                className="form-select form-select-sm"
-                onChange={(e)=>setClasificacion(JSON.parse(e.target.value))}
-                required
-              >
-                <option selected value="" disabled>
-                  -- Seleccione la Clasificación --
-                </option>
-                {clasificaciones
-                  .sort((a,b)=>a.id - b.id)
-                  .map((elem)=>(                    
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + ' - ' + elem.description} 
-                    </option>
-                  ))
-                }
-              </select>
-              </div>
-              <div className="d-flex flex-column w-100 ">
+              <div className="d-flex flex-column me-4 " style={{width:450}}>
               <label className="fw-bold" style={{fontSize:18}}>AGENCIA</label>
               <select
                 ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
+                
                 onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
               >
                 <option selected value='' disabled>
@@ -475,20 +424,20 @@ const Cambio = (event) => {
                   ))}
               </select>
               </div>
-              </div>
-              <div className="d-flex flex-row mt-3 mb-2  w-100">
+              <div className="d-flex flex-column mb-2  w-100">
               <label className="fw-bold me-1" style={{fontSize:18}}>SOLICITANTE:</label>
               <input
                   id="solicitante"
                   type="text"
-                  style={{textTransform:"uppercase"}}
                   placeholder="Nombre Solicitante"
                   value={search.solicitante}
                   onChange={handlerChangeSearch}
-                  className="form-control form-control-sm "
-                 required
+                  className="form-control form-control-sm"
+                  style={{textTransform:"uppercase"}}
+                  required
               />
               </div>        
+              </div>
             </div>
             <hr className="my-1" />
             <div>
@@ -526,23 +475,6 @@ const Cambio = (event) => {
                   </input>
                   <span className="validity fw-bold"></span>
                 </div>
-                {/* <div className="d-flex flex-row ms-2" >
-                    <label>DV:</label>
-                    <input 
-                    id="DV"
-                    type="number" 
-                    placeholder="#"
-                    min={0}
-                    max={9}
-                    required
-                    value={search.DV}
-                    onChange={handlerChangeSearch}
-                    aria-pressed='none'
-                    className="form-control form-control-sm ms-1" 
-                    style={{width:30}}>
-                    </input>
-                    <span className="validity fw-bold"></span>
-                </div> */}
                 </div> 
               </div>
               <div className="d-flex flex-row mt-2">
@@ -644,17 +576,17 @@ const Cambio = (event) => {
                   </input>
                 </div>
               </div>
-              <div className="d-flex flex-row align-items-start mb-3 w-100">
-                  <label className="me-1">Correo de notificación:</label>
+              <div className="d-flex flex-row align-items-start  w-100">
+                  <label className="me-1">Correo electrónico:</label>
                   <input
-                    id="correoNotificaciones"
+                    id="correoElectronico"
                     type="email"
                     className="form-control form-control-sm "
                     min={0}
-                    value={search.correoNotificaciones}
+                    value={search.correoElectronico}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{textTransform:'lowercase',width:590}}
+                    style={{textTransform:'lowercase',width:625}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -662,226 +594,31 @@ const Cambio = (event) => {
  */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
 {/*                   <span className="validity fw-bold"></span>
  */}              </div>
-              
-            </div>            
-            <hr className="my-1" />
-            <div>
-              <label className="fw-bold" style={{fontSize:22}}>SUCURSAL</label>                  
-              <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">Nombre sucursal:</label>
-                  <input
-                    id="nombreSucursal"
-                    type="text"
-                    className="form-control form-control-sm"
-                    min={0}
-                    value={search.nombreSucursal}
-                    onChange={handlerChangeSearch}
-                    required
-                    style={{textTransform:"uppercase",width:660}} 
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-              </div>
-              <div className="d-flex flex-row align-items-start w-100 mt-2">
-                  <label className="me-1">Dirección sucursal:</label>
-                  <input
-                    id="direccionSucursal"
-                    value={search.direccionSucursal}
-                    onChange={handlerChangeSearch}
-                    type="text"
-                    className="form-control form-control-sm "
-                    min={0}
-                    required
-                    style={{ textTransform:"uppercase",width:652}} 
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-              </div>
-
-              <div className="d-flex flex-row mt-2">
-                <div className="d-flex flex-row w-100">
-                <label className="me-1">Departamento:</label>
+              <div className="d-flex flex-column mb-4 w-100">
+                <label className="me-1">Actividad Económica:</label>
                 <select                    
-                    onChange={(e)=>setDepart(JSON.parse(e.target.value))}
-                    ref={selectDepartamentoRef}
+                    onChange={(e)=>setActividad(JSON.parse(e.target.value))}
+                    ref={selectActividadRef}
+                    style={{width:770}}
                     className="form-select form-select-sm m-100 me-3"
                     required   
                  >
                    <option selected value='' disabled>
                     -- Seleccione el Departamento --
                   </option>
-                      {departamentos
+                      {actividades
                       .sort((a,b)=>a.id - b.id)
                       .map((elem)=>(
                         <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
-                          {elem.description} 
+                          {elem.id + '-' + elem.description} 
                         </option>
                       ))
                     }
                     </select>
                 </div>
-                <div className="d-flex flex-row w-100">
-                <label className="me-1">Ciudad:</label>
-                <select
-                    ref={selectCiudadRef}
-                    className="form-select form-select-sm w-100"
-                    required
-                    disabled={departamento ? false : true}
-                    onChange={(e)=>setCity(JSON.parse(e.target.value))} 
-                  >
-                    
-                  <option selected value='' disabled>
-                    -- Seleccione la Ciudad --
-                  </option>  
-                  {ciudades
-                  .sort((a,b)=>a.id - b.id)
-                  .map((elem)=>(
-                    elem.id == depart.id ?
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                    {elem.description}
-                    </option>
-                    : 
-                    null
-                  ))
-                }
-                  </select>
-                </div>
-              </div>
-              <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">No.Celular:</label>
-                  <input
-                    id="celularSucursal"
-                    value={search.celularSucursal}
-                    onChange={handlerChangeSearch}
-                    type="number"
-                    className="form-control form-control-sm"
-                    min={1000000}
-                    pattern="[0-9]"
-                    max={9999999999}
-                    required
-                    placeholder="Campo obligatorio"
-                  />
-                  <span className="validity fw-bold me-3"></span>
-                </div>
-                <div>
-                </div>
-                <div className="d-flex flex-row align-items-start w-100">
-                  <label className="me-1">Teléfono:</label>
-                  <input
-                    id="telefonoSucursal"
-                    value={search.telefonoSucursal}
-                    onChange={handlerChangeSearch}
-                    type="number"
-                    className="form-control form-control-sm"
-                    min={1000000}
-                    pattern="[0-9]"
-                    max={9999999999}
-                    placeholder="(Campo Opcional)"
-                  >
-                  </input>
-                </div>
-              </div>
-              <div className="d-flex flex-row align-items-start mb-3">
-                  <label className="me-1">Correo sucursal:</label>
-                  <input
-                    id="correoSucursal"
-                    type="email"
-                    className="form-control form-control-sm"
-                    min={0}
-                    required
-                    style={{width:638,textTransform:'lowercase'}}
-                    value={search.correoSucursal}
-                    onChange={(e)=>(handlerChangeSearch(e),manejarCambioCorreo(e))}
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                  <p  className="ps-3" style={{color:colorSpan}}><strong>{mensajeValidacion}</strong></p>
-{/*                   <span className="validity fw-bold"></span>
- */}              </div>
-              <hr className="my-1" />
-              <label className="fw-bold mt-2" style={{fontSize:22}}>DATOS FACTURA ELECTRONICA</label>
-              <div className="d-flex flex-row align-items-start mt-2 mb-2  ">
-                  <label className="me-1 mb-3">Correo para la factura electrónica:</label>
-                  <input
-                    value={search.correoFacturaElectronica}
-                    onChange={(e)=>(handlerChangeSearch(e),Cambio(e))}
-                    id="correoFacturaElectronica"
-                    type="email"
-                    className="form-control form-control-sm"
-                    min={0}
-                    required
-                    style={{width:510,textTransform:'lowercase'}} 
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                  <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
-{/*                   <span className="validity fw-bold"></span>
- */}              </div>
-              <div className="d-flex flex-row mb-4">
-                <div className="pe-3" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Régimen fiscal:</label>
-                <select
-                ref={selectRegimenRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setRegimen(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione el regimen --
-                </option>
-                {regimenes
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-                <div className=" pe-3" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Responsabilidad fiscal:</label>
-                <select
-                ref={selectBranchRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setResponsabilidad(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione la responsabilidad --
-                </option>
-                {responsabilidades
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-                <div className="" style={{width:255}}>
-                <label className="fw-bold" style={{fontSize:18}}>Detalle tributario:</label>
-                <select
-                ref={selectBranchRef}
-                className="form-select form-select-sm w-100"
-                required
-                onChange={(e)=>setDetalle(JSON.parse(e.target.value))}
-              >
-                <option selected value='' disabled>
-                  -- Seleccione el detalle --
-                </option>
-                {detalles
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.id + " - " + elem.description}
-                    </option>
-                  ))}
-              </select>
-                </div>
-              </div>
-              <hr className="my-1" />
-              <div className="mt-3">
+              <hr className="my-1" />  
+            </div>   
+            <div className="mt-1">
               <label className="fw-bold mb-1" style={{fontSize:22}}>DATOS REPRESENTANTE LEGAL</label>
               <div className="d-flex flex-row">
                 <div className="d-flex flex-row align-items-start w-100">
@@ -954,113 +691,196 @@ const Cambio = (event) => {
                   <span className="validity fw-bold"></span>
                 </div>
               </div>
-              </div>
-              <hr className="my-1" />
-              <label className="fw-bold mb-1 mt-1" style={{fontSize:22}}>PROMEDIO DE COMPRA MENSUAL ESTIMADO</label>
-              <div className="d-flex flex-row w-100 mt-2 mb-4">
-              <div className="d-flex flex-row align-items-start w-100">
-                  <label className="">Promedio Compra:</label>
-                  <label className="ps-2">$</label>
-                  <input
-                    id="valorEstimado"
-                    style={{width:225}}
-                    value={search.valorEstimado}
-                    onChange={handlerChangeSearch}
-                    type="number"
-                    className="form-control form-control-sm "
-                    min={0}
-                    required
-                    pattern="[0-9]"
-                    placeholder="Campo obligatorio"
-                  >
-                  </input>
-                </div>
-                  <div className="w-100 d-flex flex-row">
-                  <label className="me-1">Precio sugerido:</label>
-                  <select
-                    style={{width:260}}
-                    ref={selectPrecioRef}
-                    className="form-select form-select-sm m-100 me-3"
-                    onChange={(e)=>setPrecio(JSON.parse(e.target.value))}
-                    required
-                  >
-                    <option selected value='' disabled>
-                  -- Seleccione el tipo de precios sugerido --
-                </option>
-                  {precios
-                  .sort((a, b) => a.id - b.id)
-                  .map((elem) => (
-                    <option id={elem.id} value={JSON.stringify(elem)}>
-                      {elem.description}
-                    </option>
-                  ))}
-              </select>
-                  </div>
-              </div>
-              <hr className="my-1" />
-            </div> 
+              </div>    
+              <hr className="my-1" />      
             <div className="w-100 mt-1">
-              <label className="fw-bold" style={{fontSize:22}}>DOCUMENTOS OBLIGATORIOS</label>
+              <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row ">
-                <div className="me-2 w-100">
-                  <label className="fw-bold mt-1 ">RUT: </label>
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-2 ">FORMATO DE VINCULACIÓN PROVEEDORES: </label>
+                  <div className="p-1 rounded-2" >
                   <input
-                    id="DocRut"
-                    /* onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))} */
+                    id="RUT"
                     type="file"
-                    style={{backgroundColor:'#f3f3f3'}}
+                    placeholder="RUT"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"
-                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1))}
-                  />
-                </div>
-                <div className="ms-2 w-100">
-                  <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
-                  <input
-                    id="DocInfemp"
-                    type="file"
                     style={{backgroundColor:'#f3f3f3'}}
-                    /* onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))} */
-                    onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1))}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Vinculacion', e),setDocVinculacion(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">COMPROMISO ANTICORRUPCIÓN: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  />
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('ComprAntc',e),setDocComprAntc(1))}
+                  />
+                  </div>
                 </div>
               </div>
-              <div className="d-flex flex-row">
-              <div className="d-flex flex-column mt-2 w-100 me-2">
-                  <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">CERTIFICADO CAMARA Y COMERCIO: </label>
+                  <div className="p-1 rounded-2" >
                   <input
-                    id="DocInfrl"
+                    id="RUT"
                     type="file"
-                    /* onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))} */
-                    onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1))}
                     placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
                     style={{backgroundColor:'#f3f3f3'}}
-                    className="form-control form-control-sm w-100 me-2 border border-5 rounded-3"
-                    accept=".pdf"                  />
-                </div> 
-              <div className="d-flex flex-column mt-2 w-100 ms-2">
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Ccio', e),setDocCcio(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">RUT: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1))}
+                  />
+                  </div>
+                </div>
+              </div> 
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">CERTIFICACION BANCARIA: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Certban', e),setDocCerBan(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Refcom',e),setDocRefcom(1))}
+                  />
+                  </div>
+                </div>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">ESTADOS FINANCIEROS O CERTIFICACIÓN DE CONTADOR: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Ef', e),setDocEf(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">CÉDULA: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('CrepL',e),setDocCrepL(1))}
+                  />
+                  </div>
+                </div>
+            </div>
+              <div className="d-flex flex-row ">
+                <div className="pe-2 w-50">
+                  <label className="fw-bold mt-1 ">INFOLAFT EMPRESA: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="RUT"
+                    type="file"
+                    placeholder="RUT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Infemp', e),setDocInfemp(1))}
+                  />
+                  </div>
+                </div>
+                <div className="ps-2 w-50">
+                  <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
+                  <div className="p-1 rounded-2" >
+                  <input
+                    id="INFOLAFT"
+                    type="file"
+                    placeholder="INFOLAFT"
+                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    accept=".pdf"
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
+                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1))}
+                  />
+                  </div>
+                </div>
+            </div>
+            <div className="d-flex flex-column mt-1 w-100">
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <input
                     id="DocOtros"
-                    style={{backgroundColor:'#f3f3f3'}}
                     type="file"
-                    /* onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))} */
+                    style={{backgroundColor:'#f3f3f3'}}
+                    /* onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))} */
                     onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1))}
                     className="form-control form-control-sm w-100 border border-5 rounded-3"
                     accept=".pdf"                  />
-                </div> 
                 </div>
-            </div>
           </div>
         </div>
         <div className="d-flex flex-column mb-3">
-          <label className="fw-bold" style={{fontSize:22}}>OBSERVACIONES</label>
+          <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
           <textarea
-            id="observations"
-            className="form-control border border-3"
             value={search.observations}
             onChange={handlerChangeSearch}
+            id="observations"
+            className="form-control border border-3"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
         </div>
@@ -1100,6 +920,6 @@ const Cambio = (event) => {
       </form>
     </div>
     </div>
-    </div>
+    
   );
 }

@@ -150,8 +150,10 @@ export default function ModalUsers({
                   <option selected disabled value="">
                     -- Seleccione un rol --
                   </option>
-                  <option value="usuario">Usuario</option>
-                  <option value="admin">Administrador</option>
+                  <option value="agencias">AGENCIAS</option>
+                  <option value='cartera'>CARTERA</option>
+                  <option value='compras'>COMPRAS</option>
+                  <option value="admin">ADMINISTRADOR</option>
                 </select>
               </div>
               <div>
