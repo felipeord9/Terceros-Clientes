@@ -31,7 +31,7 @@ export default function Inicio2(){
         }
     }
     return(
-        <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto ">
+        <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto "style={{userSelect:'none'}}>
       <div className='rounder-4'>
       <div className='login-wrapper p-2 mb-5 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
       <Fade cascade damping={0.1} direction="down" triggerOnce='true'>

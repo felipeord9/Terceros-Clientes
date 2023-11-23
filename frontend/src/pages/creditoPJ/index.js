@@ -15,6 +15,10 @@ import { getAllCiudades } from "../../services/ciudadService";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService';
+import { FaFileDownload } from "react-icons/fa";
+import VinculacionProveedor from '../../pdfs/FORMATO  VINCULACION DE PROVEEDORES.pdf'
+import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
+import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
 
 export default function CreditoPersonaJuridica(){
   /* instancias de contexto */
@@ -1026,7 +1030,12 @@ export default function CreditoPersonaJuridica(){
               
               <div className="d-flex flex-row ">
                 <div className="me-2 w-100">
-                  <label className="fw-bold mt-1 ">FORMATO DE VINCULACIÓN: </label>
+                  <div className="d-flex flex-row w-100">
+                  <label className="fw-bold mt-1 w-75" /* style={{width:200}} */>FORMATO DE VINCULACIÓN: </label>
+                  <a className="" style={{fontSize:18}} href={VinculacionCliente} download="FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf">
+                  <FaFileDownload />Descargar
+                  </a>
+                  </div>
                   <input
                     id="DocVinculacion"
                     type="file"
@@ -1037,7 +1046,12 @@ export default function CreditoPersonaJuridica(){
                     accept=".pdf"                  />
                 </div>
                 <div className="ms-2 w-100">
-                  <label className="fw-bold mt-1">COMPROMISO ANTICORRUPCIÓN: </label>
+                  <div className="d-flex flex-row w-100">
+                  <label className="fw-bold mt-1 w-75">COMPROMISO ANTICORRUPCIÓN: </label>
+                  <a className="" style={{fontSize:18}} href={Compromiso} download="COMPROMISO ANTICORRUPCION.pdf">
+                  <FaFileDownload />Descargar
+                  </a>
+                  </div>
                   <input
                     id="DocComprAntc"
                     type="file"

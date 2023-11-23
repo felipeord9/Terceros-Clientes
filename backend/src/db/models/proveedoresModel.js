@@ -89,6 +89,11 @@ const ProveedorSchema={
         allowNull:false,
         field:'actividad_economica'
     },
+    correoFacturaElectronica:{
+        type:DataTypes.STRING,
+        allowNull:false,
+        field:'correo_fe'
+    },
     tipoDocRepLegal:{
         type:DataTypes.STRING,
         allowNull:false,

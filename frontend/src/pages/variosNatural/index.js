@@ -3,24 +3,18 @@ import Swal from "sweetalert2";
 import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
+import { FaEye } from "react-icons/fa";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { createProveedor, deleteProveedor } from '../../services/proveedorService';
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllActividad} from '../../services/actividadService';
-import { FaEye } from "react-icons/fa";
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
-import VinculacionProveedor from '../../pdfs/FORMATO  VINCULACION DE PROVEEDORES.pdf'
-import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
-import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
-import { FaFileDownload } from "react-icons/fa";
-/* import { Worker, Viewer } from 'react-pdf-viewer';
- *//* import 'react-pdf-viewer/default-layout/lib/styles/index.css';
- */
-export default function PrestadorServicios(){
+
+export default function VariosNatural(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
   const {department,setDepartment}=useContext(DepartmentContext)
@@ -53,8 +47,6 @@ export default function PrestadorServicios(){
     input1: null,
     input2: null,
     input3: null,
-    input4: null,
-    input5: null,
   });
 /*   const [folderName, setFolderName] = useState('');
  */
@@ -93,7 +85,7 @@ export default function PrestadorServicios(){
     correoFacturaElectronica:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'PS'
+    tipoFormulario:'PVN'
   });
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
@@ -376,7 +368,6 @@ const [colorVality,setColorVality]=useState('red');
       setColorVality('red')
     }
   };
-
 /* dar vista previa a los pdf */
 const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -386,7 +377,6 @@ const [selectedFiles, setSelectedFiles] = useState([]);
     newFiles[index] = file;
     setSelectedFiles(newFiles);
   };
-
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto " style={{userSelect:'none'}}>
     <div
@@ -397,7 +387,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
         <div className="d-flex flex-column">
           <center>
           <Fade cascade='true'>
-          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PRESTADOR DE SERVICIOS</strong></label>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>PROVEEDORES VARIOS (AGENCIAS) - persona NATURAL</strong></label>
           </Fade>
           </center>
           <hr className="my-1" />
@@ -511,7 +501,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <label className="me-1">Tipo documento:</label>
                   <select
                     ref={selectDocumentoRef}
-                    style={{width:240}}
+                    style={{width:245}}
                     className="form-select form-select-sm m-100 me-3"
                     onChange={(e)=>setDocument(JSON.parse(e.target.value))}
                     required
@@ -664,7 +654,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                     value={search.correoElectronico}
                     onChange={(e)=>(handlerChangeSearch(e),manejarCambio(e))}
                     required
-                    style={{width:620, textTransform:'lowercase'}}
+                    style={{width:625, textTransform:'lowercase'}}
                     placeholder="Campo obligatorio"
                   >
                   </input>
@@ -695,7 +685,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                     </select>
                 </div>
               <hr className="my-1" />              
-            </div>
+            </div>   
             <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
             <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3"><strong>Correo para la factura electrónica:</strong></label>
@@ -714,130 +704,76 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
                   {/* <span className="validity fw-bold"></span> */}
               </div>
-              <hr className="my-1" />            
+              <hr className="my-1" />         
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
-              <div className="d-flex flex-row ">
-                <div className="me-2 w-100">
-                  <div className="d-flex flex-row w-100">
-                  <label className="fw-bold mt-1" style={{width:290}}>FORMATO DE VINCULACIÓN PROVEE: </label>
-                  <a className="" style={{fontSize:18}} href={VinculacionProveedor} download="VINCULACION DE PROVEEDORES.pdf">
-                  <FaFileDownload />Descargar
-                  </a>
-                  </div>
-                  <div className="d-flex flex row pt-1">
-                  <div className="" style={{width:340}}>
-                  <input
-                    id="DocVinculacion"
-                    type="file"
-                    style={{backgroundColor:'#f3f3f3'}}
-                    /* onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))} */
-                    onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1),FileChange(e,1))}
-                    className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  /></div>
-                  {selectedFiles[1] && (
-                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:70}}>
-                    <a href={URL.createObjectURL(selectedFiles[1])} target="_blank" rel="noopener noreferrer">
-                    <FaEye />Ver
-                    </a>
-                  </div>
-                  )}  
-                  </div>
-                </div>
-                <div className="ms-2 w-100">
-                  <div className="d-flex flex-row w-100">
-                  <label className="fw-bold mt-1" style={{width:290}}>COMPROMISO ANTICORRUPCIÓN: </label>
-                  <a className="" style={{fontSize:18}} href={Compromiso} download="COMPROMISO ANTICORRUPCION.pdf">
-                  <FaFileDownload />Descargar
-                  </a>
-                  </div>
-                  <div className="d-flex flex row pt-1">
-                    <div className="" style={{width:340}}>
-                  <input
-                    id="DocComprAntc"
-                    type="file"
-                    style={{backgroundColor:'#f3f3f3'}}
-                    /* onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))} */
-                    onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1),FileChange(e,2))}
-                    className="form-control form-control-sm w-100 border border-5 rounded-3"
-                    accept=".pdf"                  /></div>
-                  {selectedFiles[2] && (
-                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:70}}>
-                      <a href={URL.createObjectURL(selectedFiles[2])} target="_blank" rel="noopener noreferrer">
-                      <FaEye />Ver
-                      </a>
-                    </div>
-                  )} 
-                    </div>
-                </div>
-              </div>
-            </div>
               <div className="d-flex flex-row ">
               <div className="pe-2 w-50">
                   <label className="fw-bold mt-1 me-2">RUT: </label>
                   <div className=" rounded-2" >
-                  <div className="d-flex flex row pt-1">
-                    <div className="" style={{width:340}}>
+                  <div className="d-flex flex-row">
                   <input
                     id="Rut"
                     type="file"
                     placeholder="Rut"
-                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    className="form-control form-control-sm  border border-5 rounded-3"
                     accept=".pdf"
-                    style={{backgroundColor:'#f3f3f3'}}
+                    style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,3))}
+                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,1))}
                   />
-                    </div>
-                  {selectedFiles[3] && (
-                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:70}}>
-                    <a href={URL.createObjectURL(selectedFiles[3])} target="_blank" rel="noopener noreferrer">
+                  {selectedFiles[1] && (
+                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:50}}>
+                    <a href={URL.createObjectURL(selectedFiles[1])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
                   </div>
-                  )}
+                  )} 
                   </div>
                   </div>
                 </div>
-                <div className="ps-2 w-50">
-                  <label className="fw-bold mt-1 me-2">VALIDACIÓN DE ANTECEDENTES: </label>
+                <div className=" w-50">
+                  <label className="fw-bold mt-1 ">VALIDACIÓN DE ANTECEDENTES: </label>
                   <div className=" rounded-2" >
-                  <div className="d-flex flex row">
-                    <div className="" style={{width:340}}>
+                    <div className="d-flex flex-row">
                   <input
                     id="Infemp"
                     type="file"
                     placeholder="Infemp"
-                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
-                    style={{backgroundColor:'#f3f3f3'}}
-                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Infemp',e),setDocInfemp(1),FileChange(e,4))}
-                  /></div>
-                  {selectedFiles[4] && (
-                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:70}}>
-                    <a href={URL.createObjectURL(selectedFiles[4])} target="_blank" rel="noopener noreferrer">
+                    style={{backgroundColor:'#f3f3f3',width:338}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Infemp', e),setDocInfemp(1),FileChange(e,2))}
+                  />
+                  {selectedFiles[2] && (
+                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:50}}>
+                    <a href={URL.createObjectURL(selectedFiles[2])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
                   </div>
-                  )}
+                  )} 
                   </div>
                   </div>
                 </div>
-              </div> 
+              </div>
+            </div>
+              <div className="d-flex flex-row ">
+                
               <div className="d-flex flex-column mt-1 " >
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
                   <div className="d-flex flex-row">
                   <input
                     id="DocOtros"
                     type="file"
-                    style={{backgroundColor:'#f3f3f3',width:719}}
+                    style={{backgroundColor:'#f3f3f3',width:730}}
                     /* onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))} */
                     onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,5))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[5] && (
-                    <div className="d-flex justify-content-start ps-4 pt-1" style={{width:70}}>
+                    <div className="d-flex justify-content-start ps-2 pt-1" style={{width:60}}>
                     <a href={URL.createObjectURL(selectedFiles[5])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
@@ -845,6 +781,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   )}
                   </div>
                 </div>
+            </div>
           </div>
         </div>
         <div className="d-flex flex-column mb-3">

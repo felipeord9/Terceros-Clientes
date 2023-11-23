@@ -9,6 +9,7 @@ import SendRecovery from './pages/SendRecoveryPassword'
 import Page404 from './pages/Page404'
 import ChangePassword from './pages/ChangePassword'
 import Inicio from './pages/inicio';
+import VariosNatural from './pages/variosNatural';
 import Inicio2 from './pages/inicio2';
 import PrestadorServicios from './pages/pertadorServicios';
 import ConvenioJuridico from './pages/convenioJuridico';
@@ -18,6 +19,7 @@ import ConvenioNatural from './pages/convenioNatural';
 import ContadoPersonaNatural from './pages/contadoPN';
 import React, { Component } from "react";
 import Proveedores from './pages/proveedores';
+import VariosJuridico from './pages/variosJuridico';
 import InicioAdmin from './pages/inicioAdmin';
 import PrivateRoute from '../src/components/PrivateRoute';
 import ContadoPersonaJuridica from './pages/contadoPJ';
@@ -50,13 +52,17 @@ function App() {
         <Route path='/proveedor/convenio/natural' element={<PrivateRoute component={ConvenioNatural}/>}/>
         <Route path='/proveedor/convenio/juridica' element={<PrivateRoute component={ConvenioJuridico}/>}/>
 
+        {/* ruta prestador de servicios */}
+        <Route path='/prestador/servicios' element={<PrivateRoute component={PrestadorServicios}/>}/>
+
         {/* ruta proveedor varios  */}
         <Route path='/tipo/proveedor' element={<PrivateRoute component={Tipo}/>}/>
+        <Route path='/proveedor/varios/natural' element={<PrivateRoute component={VariosNatural}/>}/>
+        <Route path='/proveedor/varios/juridico' element={<PrivateRoute component={VariosJuridico}/>}/>
 
         {/* inicio admin */}
         <Route path='/inicio/admin' element={<PrivateRoute component={InicioAdmin}/>}/>
 
-        <Route path='/prestador/servicios' element={<PrivateRoute component={PrestadorServicios}/>}/>
         <Route path='/contado/persona/natural' element={<PrivateRoute component={ContadoPersonaNatural}/>}/>
         <Route path='/contado/persona/juridica' element={<PrivateRoute component={ContadoPersonaJuridica}/>}/>
         <Route path='/credito/persona/natural' element={<PrivateRoute component={CreditoPersonaNatural}/>}/>

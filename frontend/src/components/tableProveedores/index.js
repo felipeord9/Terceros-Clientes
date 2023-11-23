@@ -77,6 +77,13 @@ export default function TableProveedores({ proveedores, loading }) {
         width: '150px',
       },
       {
+        id: "correoFacturaElectronica",
+        name: "Correo Factura Electrónica",
+        selector: (row) => row.correoFacturaElectronica,
+        sortable: true,
+        width: '300px',
+      },
+      {
         id: "nameRep",
         name: "NombreRepLegal",
         selector: (row) => row.nameRepLegal,
@@ -234,7 +241,7 @@ export default function TableProveedores({ proveedores, loading }) {
       className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none',fontSize:20}}
     >
     <div className='rounder-4'>
-    <div className='login-wrapper rounder-4' style={{width:1000,height:400}} >
+    <div className='login-wrapper rounder-4' style={{width:1050,height:400}} >
       <DataTable
         className="bg-light text-center border border-2 h-100 w-100"
         style={{fontSize:20}}
@@ -256,6 +263,8 @@ export default function TableProveedores({ proveedores, loading }) {
         dense
         striped
         fixedHeader
+        noDataComponent={
+          <div style={{padding: 24}}>Ningún resultado encontrado...</div>} 
       />
       </div>
       </div>

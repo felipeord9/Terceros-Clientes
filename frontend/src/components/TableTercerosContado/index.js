@@ -375,6 +375,8 @@ export default function TableTerceros({ terceros, loading }) {
         dense
         striped
         fixedHeader
+        noDataComponent={
+          <div style={{padding: 24}}>Ningún resultado encontrado...</div>} 
       />
       </div>
       </div>

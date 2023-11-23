@@ -95,7 +95,7 @@ export default function Inicio2(){
             
               <h4><Checkbox
               /* checked={checked} */
-              onChange={(e)=>navigate('/proveedor/convenio/natural')}
+              onChange={(e)=>navigate('/proveedor/varios/natural')}
               inputProps={{ 'aria-label': 'controlled' }}
               /><BsFileEarmarkPersonFill />Persona Natural</h4>
               </div>
@@ -103,7 +103,7 @@ export default function Inicio2(){
             
               <h4 className="text-danger"><Checkbox
               /* checked={checked} */
-              onChange={(e)=>navigate('/credito/persona/natural')}
+              onChange={(e)=>navigate('/proveedor/varios/juridico')}
               inputProps={{ 'aria-label': 'controlled' }}
               /><IoBusiness />Persona juridica</h4>
               </div>

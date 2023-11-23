@@ -34,6 +34,7 @@ const createProveedor = async (req,res,next)=>{
             celular: body.celular,
             telefono: body.telefono,
             correoElectronico: body.correoElectronico,
+            correoFacturaElectronica: body.correoFacturaElectronica,
             actividadEconomica: body.actividadEconomica,
             tipoDocRepLegal: body.tipoDocRepLegal,
             numeroDocRepLegal: body.numeroDocRepLegal,
