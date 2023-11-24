@@ -18,6 +18,7 @@ import { getAllClasificaciones } from "../../services/clasificacionService";
 import { getAllDocuments } from '../../services/documentService';
 import { createCliente, deleteCliente } from "../../services/clienteService";
 import { fileSend, deleteFile } from "../../services/fileService";
+import { updateBitacora } from '../../services/bitacoraService';
 
 export default function ContadoPersonaJuridica(){
   /* instancias de contexto */
@@ -283,6 +284,10 @@ export default function ContadoPersonaJuridica(){
         //ejecutamos nuestra funcion que creara el cliente
         createCliente(body)
         .then(({data}) => {
+          const info={
+            accion:'1',
+          }
+          updateBitacora(user.email,info)
           fileSend(formData)
           .then(()=>{
             setLoading(false)

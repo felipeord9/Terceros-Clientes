@@ -17,6 +17,7 @@ import { FaFileDownload } from "react-icons/fa";
 import VinculacionProveedor from '../../pdfs/FORMATO  VINCULACION DE PROVEEDORES.pdf'
 import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
 import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
+import { updateBitacora } from '../../services/bitacoraService';
 
 export default function ConvenioJuridico(){
   /* instancias de contexto */
@@ -256,6 +257,10 @@ export default function ConvenioJuridico(){
         //ejecutamos nuestra funcion que creara el cliente
         createProveedor(body)
         .then(({data}) => {
+          const info={
+            accion:'1',
+          }
+          updateBitacora(user.email,info)
           fileSend(formData)
           .then(()=>{
             setLoading(false)

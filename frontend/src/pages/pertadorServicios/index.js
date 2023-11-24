@@ -17,9 +17,8 @@ import VinculacionProveedor from '../../pdfs/FORMATO  VINCULACION DE PROVEEDORES
 import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
 import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
 import { FaFileDownload } from "react-icons/fa";
-/* import { Worker, Viewer } from 'react-pdf-viewer';
- *//* import 'react-pdf-viewer/default-layout/lib/styles/index.css';
- */
+import { updateBitacora } from '../../services/bitacoraService';
+
 export default function PrestadorServicios(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
@@ -246,6 +245,10 @@ export default function PrestadorServicios(){
         //ejecutamos nuestra funcion que creara el cliente
         createProveedor(body)
         .then(({data}) => {
+          const info={
+            accion:'1',
+          }
+          updateBitacora(user.email,info)
           fileSend(formData)
           .then(()=>{
             setLoading(false)

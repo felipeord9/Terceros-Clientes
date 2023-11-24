@@ -5,8 +5,9 @@ import AuthContext from "../../context/authContext";
 import useUser from '../../hooks/useUser';
 import * as Bs from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import { createBitacora , deleteBitacora } from '../../services/bitacoraService';
 import { Fade } from "react-awesome-reveal";
-
+import Swal from "sweetalert2";
 
 export default function Login() {
   const {login,isLoginLoading,hasLoginError,isLogged}=useUser()
@@ -14,16 +15,49 @@ export default function Login() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate =useNavigate()
-
   useEffect(()=>{
     if(isLogged && user.role==='agencias' || isLogged && user.role==='cartera')navigate('/inicio');
     if(isLogged && user.role==='compras')navigate('/compras');
     if(isLogged && user.role==='admin')navigate('/inicio/admin');
+    if(isLogged){
+      const body={
+        usuario:email,
+        fechaIngreso: new Date(),
+        accion:info.accion,
+        fechaSalida:info.fechaSalida,
+      }
+      createBitacora(body)
+    }
   },[isLogged,navigate]);
+
+  const [info,setInfo]=useState({
+    usuario:'',
+    fechaIngreso: '',
+    accion:'0',
+    fechaSalida:null,
+    macEquipo:null,
+  })
+  useEffect(()=>{
+    if(isLogged && user){
+      setInfo({ 
+        usuario:user.name,      
+        fechaIngreso: new Date(),
+      })
+    }
+  },[isLogged])
 
   const handleLogin=async(e)=>{
     e.preventDefault();
-    login({email,password});
+    login({email,password})
+        /* const body={
+          usuario:email,
+          fechaIngreso: new Date(),
+          accion:info.accion,
+          fechaSalida:info.fechaSalida,
+          macEquipo:info.macEquipo,
+        }
+        createBitacora(body) */
+        /* deleteBitacora(email) */ 
   }
 
   const [shown,setShown]=useState("");

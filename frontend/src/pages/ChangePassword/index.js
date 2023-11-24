@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Logo from '../../assest/logo-gran-langostino.png'
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -6,8 +6,12 @@ import * as Bs from "react-icons/bs";
 import InputPassword from "../../components/InputPassword";
 import { changePassword } from "../../services/authService";
 import { Fade } from "react-awesome-reveal";
+import { updateBitacora } from '../../services/bitacoraService';
+import AuthContext from "../../context/authContext";
 
 export default function ChangePassword() {
+  const { user, setUser } = useContext(AuthContext);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -35,6 +39,10 @@ export default function ChangePassword() {
     }).then((result)=>{
       if(result.isConfirmed){
         changePassword({ currentPassword, newPassword })
+        const info={
+          accion:'1',
+        }
+        updateBitacora(user.email,info)
           .then((data) => {
             Swal.fire({
               title: "¡Correcto!",

@@ -15,6 +15,7 @@ import PrestadorServicios from './pages/pertadorServicios';
 import ConvenioJuridico from './pages/convenioJuridico';
 import TipoPersona from './pages/tipoPersona';
 import Tipo from './pages/tipo';
+import Bitacora from './pages/bitacora'
 import ConvenioNatural from './pages/convenioNatural';
 import ContadoPersonaNatural from './pages/contadoPN';
 import React, { Component } from "react";
@@ -71,6 +72,7 @@ function App() {
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
         <Route path='/terceros' element={<PrivateRoute component={Terceros}/>}/>
         <Route path='/Proveedores' element={<PrivateRoute component={Proveedores}/>}/>
+        <Route path='/bitacora' element={<PrivateRoute component={Bitacora}/>}/>
         <Route path='*' element={<Page404/>}/>
 
       </Routes>

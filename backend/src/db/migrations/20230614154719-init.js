@@ -12,6 +12,8 @@ const { AGENCY_TABLE, AgencySchema } = require("../models/agencyModel");
 const { PROVEEDOR_TABLE, ProveedorSchema } = require('../models/proveedoresModel');
 const { ACTIVIDAD_ECONOMICA_TABLE, ActividadEconomicaSchema} = require("../models/actividadModel")
 const { CLASIFICACION_TABLE,ClasificacionSchema } = require('../models/clasificacionModel')
+const { BITACORA_TABLE,BitacoraSchema } = require('../models/bitacoraModel')
+
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
@@ -24,6 +26,7 @@ module.exports = {
     await queryInterface.createTable(CIUDAD_TABLE,CiudadSchema);
     await queryInterface.createTable(DOCUMENT_TABLE,DocumentSchema);
     await queryInterface.createTable(USER_TABLE, UserSchema);
+    await queryInterface.createTable(BITACORA_TABLE, BitacoraSchema);
     await queryInterface.createTable(PROVEEDOR_TABLE,ProveedorSchema);
     await queryInterface.createTable(DETALLE_TABLE,DetalleSchema);
     await queryInterface.createTable(REGIMEN_FISCAL_TABLE,RegimenFiscalSchema);
@@ -38,6 +41,7 @@ module.exports = {
     await queryInterface.dropTable(CIUDAD_TABLE);
     await queryInterface.dropTable(PRECIO_TABLE);
     await queryInterface.dropTable(PROVEEDOR_TABLE);
+    await queryInterface.dropTable(BITACORA_TABLE);
     await queryInterface.dropTable(RESPONSABILIDAD_FISCAL_TABLE);
     await queryInterface.dropTable(USER_TABLE);
     await queryInterface.dropTable(REGIMEN_FISCAL_TABLE);

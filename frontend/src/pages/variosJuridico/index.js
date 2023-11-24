@@ -13,6 +13,7 @@ import { getAllActividad} from '../../services/actividadService';
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
+import { updateBitacora } from '../../services/bitacoraService';
 
 export default function VariosJuridico(){
   /* instancias de contexto */
@@ -240,6 +241,10 @@ export default function VariosJuridico(){
         //ejecutamos nuestra funcion que creara el cliente
         createProveedor(body)
         .then(({data}) => {
+          const info={
+            accion:'1',
+          }
+          updateBitacora(user.email,info)
           fileSend(formData)
           .then(()=>{
             setLoading(false)

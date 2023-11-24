@@ -10,6 +10,7 @@ import { PiFloppyDiskBackFill } from "react-icons/pi";
 import { BsClipboardCheckFill } from "react-icons/bs";
 import { FaHandshake } from "react-icons/fa6";
 import { FaPeopleLine } from "react-icons/fa6";
+import { GiArchiveRegister } from "react-icons/gi";
 import { TbCircleLetterJ } from 'react-icons/tb' /*letra j*/
 
 export const NavBarData = [
@@ -97,6 +98,12 @@ export const NavBarData = [
     title:'Proveedores',
     path: '/Proveedores',
     icon: <PiFloppyDiskBackFill />,
+    cName: "nav-text",
+    access: ['admin']
+  },{
+    title:'Bitácora',
+    path: '/bitacora',
+    icon: <GiArchiveRegister />,
     cName: "nav-text",
     access: ['admin']
   }

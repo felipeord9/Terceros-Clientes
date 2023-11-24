@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
 import * as FaIcons from "react-icons/fa";
@@ -30,6 +30,7 @@ import  Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal'
 import { AiFillEdit } from 'react-icons/ai'
 import Box from '@mui/material/Box';
+import { updateBitacora } from '../../services/bitacoraService';
 
 const style = {
   position: 'absolute',
@@ -69,6 +70,30 @@ export default function Navbar() {
     const handleCerrar=()=>{
         setCerrar(false);
     }
+
+  const [info,setInfo]=useState({
+    usuario:'',
+    accion:'0',
+    fechaSalida: new Date(),
+    macEquipo:null,
+  })
+  useEffect(()=>{
+    if(user){
+      setInfo({
+        usuario:user?.name,
+      })
+    }
+  },[user])
+  const handleExit=async(e)=>{
+    e.preventDefault();
+    const body={
+      usuario:info.usuario,
+      accion:info.accion,
+      fechaSalida: new Date(),
+      macEquipo:info.macEquipo,
+    }
+    updateBitacora(user.email,body);
+  }
 
     /* Modal instancias */
     const [openModal,setOpenModal]=useState(false);
@@ -213,7 +238,7 @@ export default function Navbar() {
                         </div>
                         <div className="d-flex flex-row justify-content-center">
                           <div onClick={handleClose} >
-                            <button  className='m-4' onClick={(e)=>logout(e)} style={{fontSize:18}}><strong>YES</strong></button>
+                            <button  className='m-4' onClick={(e)=>(handleExit(e),logout(e))} style={{fontSize:18}}><strong>YES</strong></button>
                           </div>
                         <div>
                           <Button variant="contained" color="primary" style={{width:90, height:55,fontSize:22}} className="m-4" onClick={handleCloseModal}>NO</Button> 

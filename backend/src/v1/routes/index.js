@@ -1,5 +1,6 @@
 const express = require('express')
 const UserRoutes = require('./userRoutes')
+const BitacoraRoutes = require('./bitacoraRoutes')
 const CiudadRoutes = require('./ciuidadRoutes')
 const ResponsabilidadRoutes = require('./responsabilidadRoutes')
 const MailRoutes = require('./mailRoutes')
@@ -23,6 +24,7 @@ function routerApi(app) {
 
     router.use('/auth', AuthRoutes)
     router.use('/users', UserRoutes)
+    router.use('/bitacora',BitacoraRoutes)
     router.use('/proveedor',ProveedorRoutes)
     router.use('/mail', MailRoutes)
     router.use('/actividad',ActividadRoutes)

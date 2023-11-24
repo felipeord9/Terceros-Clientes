@@ -3,7 +3,8 @@ import { Modal, Button } from "react-bootstrap";
 import Swal from 'sweetalert2'
 import { createUser, updateUser } from "../../services/userService";
 import * as Bs from "react-icons/bs";
-
+/* import bcrypt from 'bcrypt';
+ */
 export default function ModalUsers({
   user,
   setUser,
@@ -26,6 +27,7 @@ export default function ModalUsers({
         rowId: user?.rowId,
         name: user?.name,
         email: user?.email,
+        password:user?.password,
         role: user?.role,
       })
     }
@@ -124,6 +126,7 @@ export default function ModalUsers({
   }
   const [shown,setShown]=useState("");
   const switchShown =()=>setShown(!shown);
+  
   return (
     <div className="wrapper d-flex justify-content-center align-content-center" style={{userSelect:'none'}}>
     <Modal show={showModal} style={{ fontSize: 18, userSelect:'none' }} centered>
@@ -208,7 +211,7 @@ export default function ModalUsers({
                     required></input>
 {/*                   <span for='password' className='position-absolute' onClick={switchShown} style={{ right: 10, cursor: "pointer",fontSize:25 }}>{shown ? <Bs.BsEye/>:<Bs.BsEyeSlash/>}</span>
  */}                </div>
-              )}
+               )} 
             </div>
             <div className="d-flex w-100 mt-2">
               <span 

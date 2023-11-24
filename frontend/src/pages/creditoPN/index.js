@@ -23,6 +23,7 @@ import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOL
 import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
 import { FaFileDownload } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { updateBitacora } from '../../services/bitacoraService';
 
 export default function CreditoPersonaNatural(){
   /* instancias de contexto */
@@ -281,6 +282,10 @@ export default function CreditoPersonaNatural(){
         createCliente(body)
         .then(({data}) => {
           fileSend(formData)
+          const info={
+            accion:'1',
+          }
+          updateBitacora(user.email,info)
           .then(()=>{
             setLoading(false)
             setFiles([])
@@ -840,7 +845,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <input
                     id="DocVinculacion"
                     type="file"
-                    style={{backgroundColor:'#f3f3f3',width:331}}
+                    style={{backgroundColor:'#f3f3f3',width:330}}
                     /* onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))} */
                     onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1),FileChange(e,1))}
                     className="form-control form-control-sm border border-5 rounded-3"
