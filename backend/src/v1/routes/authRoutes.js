@@ -10,6 +10,7 @@ router
     passport.authenticate("local", { session: false }),
     AuthController.login
   )
+  .post('/comparar/contraseña',AuthController.compararPassword)
   .post(
     '/change/password',
     passport.authenticate("jwt", { session: false }),

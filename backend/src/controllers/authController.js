@@ -21,6 +21,13 @@ const changePassword = async (req, res, next) => {
   }
 }
 
+const compararPassword=async(realPassword,currentPassword)=>{
+  const esValida = await bcrypt.compare(realPassword,currentPassword);
+  if(!esValida){
+    return res.status(401).json({ mensaje: 'Contraseña actual incorrecta' });
+  }
+}
+
 const sendRecovery = async (req, res, next) => {
   try {
     const { email } = req.body
@@ -45,5 +52,6 @@ module.exports = {
   login,
   changePassword,
   sendRecovery,
-  changeRecoveryPassword
+  changeRecoveryPassword,
+  compararPassword
 }

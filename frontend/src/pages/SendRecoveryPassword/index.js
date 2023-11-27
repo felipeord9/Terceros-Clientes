@@ -22,7 +22,7 @@ export default function SendRecoveryPassword() {
       .then((data) => {
         Swal.fire({
           title: "¡CORECTO!",
-          text: "El correo de recuperación fue enviado de manera exitosa",
+          text: "Se te acaba de enviar el enlace de recuperación, revisa tu correo y sigue los pasos para reestablecer tu contraseña (Tienes 15 minutos para llevar a cabo este proceso)",
           icon: 'success',
           confirmButtonText: "Aceptar"
         })

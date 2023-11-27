@@ -1,10 +1,13 @@
 const boom = require('@hapi/boom')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
+const crypto = require('crypto');
 
 const MailService = require('./mailService')
 const UserService = require('./userService')
 const { config } = require('../config/config')
+const { response } = require('express')
 
 const getUser = async (email, password) => {
   const user = await UserService.findByEmail(email)
@@ -43,24 +46,30 @@ const changePassword = async (id, currentPassword, newPassword) => {
 }
 
 const sendRecovery = async (email) => {
-  const user =  UserService.findByEmail(email)
+  try{
 
-  if (!user) throw boom.unauthorized()
-  const payload = { sub: user.id }
-  const token = jwt.sign(payload, config.jwtSecret, {
-    expiresIn: '15min'
-  })
-  const mail = {
-    from: config.smtpEmail,
-    to: user.email,
-    subject: 'Email de recuperación de contraseña',
-    html: `<b>Ingresa aquí para recuperar su contraseña:  ${config.recoveryUrl}/${token}</b>`
+    const user = await UserService.findByEmail(email)
+  
+    if (!user) throw boom.unauthorized()
+  
+    const payload = { sub: user.id }
+    const token = jwt.sign(payload, config.jwtSecret, {
+      expiresIn: '15min'
+    })
+    const mail = {
+      from: 'Clientes@granlangostino.net',
+      to: user.email,
+      subject: 'Recuperación de contraseña',
+      html: `<b>Ingresa a este link para reestablecer tu contraseña: ${config.recoveryUrl}/${token}</b>`
+    }
+  
+    const rta = await MailService.sendEmails(mail)
+    await UserService.update(user.id, { recoveryToken: token })
+    return rta
+  }catch (error) {
+    console.error('Error al solicitar recuperación de contraseña:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
-
-  const rta = await MailService.sendEmails(mail)
-  console.log(rta)
-  await UserService.update(user.id, { recoveryToken: token })
-  return rta
 }
 
 const changeRecoveryPassword = async (token, newPassword) => {
@@ -103,5 +112,6 @@ module.exports = {
   changePassword,
   sendRecovery,
   changeRecoveryPassword,
+  
   //sendMail
 }

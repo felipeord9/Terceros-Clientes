@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Logo from '../../assest/logo-gran-langostino.png'
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -12,14 +12,29 @@ import AuthContext from "../../context/authContext";
 export default function ChangePassword() {
   const { user, setUser } = useContext(AuthContext);
 
+  const [realPassword,setRealPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errorInput, setErrorInput] = useState("");
   const navigate = useNavigate();
 
+  const [info,setInfo]=useState({
+    password:''
+  })
+  useEffect(()=>{
+    if(user){
+      setInfo({
+        password:user?.password,
+      })
+    }
+  },[user])
   const handleSubmit = (e) => {
     e.preventDefault();
+    /* if (currentPassword !== info.password){
+      setErrorInput("La contraseña actual es incorrecta");
+      return setTimeout(() => setErrorInput(""), 3000);
+    } */
     if (newPassword !== confirmNewPassword) {
       setErrorInput("La contraseña nueva no coincide");
       return setTimeout(() => setErrorInput(""), 3000);
@@ -28,6 +43,12 @@ export default function ChangePassword() {
       setErrorInput("La contraseña anterior es igual a la actual");
       return setTimeout(() => setErrorInput(""), 3000);
     }
+    /* try{
+      changePassword({ currentPassword, newPassword })
+    }catch(err){
+      setErrorInput("¡Contraseña actual incorrecta!")
+      return setTimeout(() => setErrorInput(""), 3000)
+    } */
     Swal.fire({
       title: '¿Está segur@ de querer cambiar su contraseña?',
           showDenyButton: true,
@@ -38,12 +59,13 @@ export default function ChangePassword() {
           icon:'question'
     }).then((result)=>{
       if(result.isConfirmed){
-        changePassword({ currentPassword, newPassword })
         const info={
           accion:'1',
         }
         updateBitacora(user.email,info)
-          .then((data) => {
+        .then((data) => {
+          changePassword({ currentPassword, newPassword })
+          .then(()=>{
             Swal.fire({
               title: "¡Correcto!",
               text: "Contraseña actualizada exitosamente",
@@ -53,6 +75,15 @@ export default function ChangePassword() {
             }).then(() => {
               navigate("/inicio");
             });
+          }).catch((err)=>{
+            Swal.fire({
+              title: "Uups!",
+              text: "¡Contraseña actual incorrecta! Verificala y vuelve a intentarlo",
+              icon: "warning",
+              showConfirmButton: false,
+              timer: 2500,
+            })
+          })
           })
       }else if(result.isDenied){
         Swal.fire('Oops', 'La información suministrada se ha descartado', 'info')
@@ -62,8 +93,15 @@ export default function ChangePassword() {
       }
   })
       .catch((error) => {
-        setErrorInput("¡Contraseña actual incorrecta!");
-        return setTimeout(() => setErrorInput(""), 3000);
+        Swal.fire({
+          title: "¡Uups!",
+          text: "¡Contraseña actual incorrecta! Verificala y vuelve a intentarlo",
+          icon: "warning",
+          showConfirmButton: false,
+          timer: 2500,
+        })
+        setErrorInput("¡Contraseña actual incorrecta!")
+        return setTimeout(() => setErrorInput(""), 3000)
       });
   };
   const [shown,setShown]=useState("");
@@ -86,9 +124,10 @@ export default function ChangePassword() {
       <h2 className="mt-1" style={{color:'black'}}><strong>Cambiar contraseña</strong></h2>
       </Fade>
       <form onSubmit={handleSubmit} className=''>
-        <div className='input_group m-3 '>
-        <input type={shown ? 'text':'password'} onChange={(e)=>setCurrentPassword(e.target.value)} id='current' className='input_group_input' required/>
-          <label for="current" className='input_group_label'>Contraseña actual</label>
+{/*           <input type="text" id="password" value={user.password}></input>
+ */}        <div className='input_group m-3 '>
+        <input  type={shown ? 'text':'password'} onChange={(e)=>setCurrentPassword(e.target.value)} id='current' className='input_group_input' required/>
+          <label  for="current" className='input_group_label'>Contraseña actual</label>
           <span className='position-absolute' onClick={switchShown} style={{ right: 10, cursor: "pointer",fontSize:25 }}>{shown ? <Bs.BsEye/>:<Bs.BsEyeSlash/>}</span>
         </div>
         <div className='input_group m-3 d-flex flex-column'>
@@ -109,13 +148,16 @@ export default function ChangePassword() {
         <center>
         <label><a href='/inicio' className='text-decoration-none' style={{fontSize:'medium'}}><strong>Volver al inicio</strong></a></label>
         </center>
-      </form>
-      <span
+        <div style={{height:12}}>
+        <span
           className="text-center text-danger m-0"
           style={{ fontSize: 15, height: 0 }}
         >
           {errorInput}
         </span>
+        </div>
+      </form>
+      
     </div>
     </div>
     </div>

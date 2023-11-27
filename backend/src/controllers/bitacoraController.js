@@ -2,6 +2,7 @@ const BitacoraService = require("../services/bitacoraService");
 const getmac = require('getmac');
 const getMAC =require ('getmac')
 var address = require('address');
+const os = require('os');
 
 const findAllBitacoras = async(req,res,next)=>{
   try{
@@ -45,12 +46,15 @@ const createBitacora = async (req, res, next) => {
     /* const direccion = address.mac(function (err, addr) {
       addr; 
     }) */
+    
     const data = await BitacoraService.create({
         usuario:body.usuario,
         accion:body.accion,
         fechaIngreso:body.fechaIngreso,
         fechaSalida:body.fechaSalida,
-        macEquipo:address.ipv6(),
+        macEquipo:address.mac(function (err, addr) {
+          return(addr);
+        })
     })
     
     res.status(201).json({
