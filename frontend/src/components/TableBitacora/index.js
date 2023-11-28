@@ -49,7 +49,6 @@ export default function TableBitacora({ bitacoras, loading }) {
     <div className='login-wrapper rounder-4' style={{width:1000,height:400}} >
       <DataTable
         className="bg-light text-center border border-2 h-100 w-100"
-        style={{fontSize:20}}
         columns={columns}
         data={bitacoras}
         fixedHeaderScrollHeight={200}
@@ -68,6 +67,7 @@ export default function TableBitacora({ bitacoras, loading }) {
         dense
         striped
         fixedHeader
+        
         noDataComponent={
           <div style={{padding: 24}}>Ningún resultado encontrado...</div>} 
       />

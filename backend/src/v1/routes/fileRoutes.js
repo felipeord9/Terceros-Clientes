@@ -6,6 +6,7 @@ const fileUpload = require('express-fileupload');
 const { Client } = require('smb2');
 const rimraf = require('rimraf');
 const fsExtra = require('fs-extra');
+const { execSync } = require('child_process');
 
 /* const app = express(); */
 
@@ -94,6 +95,50 @@ router.post('/', upload.fields([
     })
   } res.status(200).send('archivos guardados');
 
+  // Ruta local de la carpeta que deseas enviar
+  const carpetaLocal = folderPath
+
+  // Ruta del recurso compartido en formato UNC (Uniform Naming Convention)
+  const rutaRecursoCompartido = '\\\\192.168.4.237\\aplicativoterceros';
+
+  // Ruta remota en el recurso compartido donde deseas guardar la carpeta
+  const rutaRemota = `${rutaRecursoCompartido}\\${folderName}`;
+
+  // Crear la carpeta remota en el recurso compartido
+  try {
+    execSync(`mkdir "${rutaRemota}"`);
+  } catch (error) {
+    console.error('Error al crear la carpeta remota:', error.message);
+    process.exit(1);
+  }
+
+  // Recorrer la carpeta local y copiar cada archivo al recurso compartido
+  const archivosLocales = fs.readdirSync(carpetaLocal);
+  archivosLocales.forEach((archivo) => {
+    const rutaLocal = path.join(carpetaLocal, archivo);
+    const rutaRemotaArchivo = path.join(rutaRemota, archivo);
+
+    // Utiliza un comando del sistema operativo para copiar el archivo al recurso compartido
+    try {
+      execSync(`copy "${rutaLocal}" "${rutaRemotaArchivo}"`);
+      console.log(`Archivo ${archivo} enviado correctamente.`);
+    } catch (error) {
+      console.error(`Error al enviar el archivo ${archivo}:`, error.message);
+    }
+  });
+
+  console.log('Carpeta enviada correctamente.');
+
+  /* const archivosEnRecursoCompartido = fs.readdirSync(rutaRecursoCompartido);
+  console.log('Archivos en el recurso compartido:', archivosEnRecursoCompartido);
+  const contenidoLeido = fs.readFileSync(rutaRemota, 'utf-8');
+  console.log('Contenido del archivo en el recurso compartido:', contenidoLeido); */
+  /* try {
+    execSync(`copy "${folderPath}" "${rutaRemota}"`);
+    console.log('Archivo enviado correctamente.');
+  } catch (error) {
+    console.error('Error al enviar el archivo:', error.message);
+  } */
   /* try to conecto to samba */
   /* const client = new Client({
     share: 'smb://appterceros:L4ng0K3nsh1@192.168.4.237/aplicativoterceros',
@@ -104,6 +149,8 @@ router.post('/', upload.fields([
   await client.up */
 });
 
+
+/* eliminar una carpeta */
 router.delete('/:folderName', (req,res)=>{
   const folderName = req.params.folderName; 
   const rutaArchivo = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);

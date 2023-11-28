@@ -24,7 +24,8 @@ export default function SendRecoveryPassword() {
           title: "¡CORECTO!",
           text: "Se te acaba de enviar el enlace de recuperación, revisa tu correo y sigue los pasos para reestablecer tu contraseña (Tienes 15 minutos para llevar a cabo este proceso)",
           icon: 'success',
-          confirmButtonText: "Aceptar"
+          confirmButtonText: "Aceptar",
+          confirmButtonColor:'green'
         })
         navigate('/login')
       })

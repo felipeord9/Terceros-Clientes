@@ -236,8 +236,7 @@ export default function PrestadorServicios(){
           tipoFormulario:search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
-        const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
-        //agregamos la carpeta donde alojaremos los archivos
+        const folderName = search.cedula+'-'+search.primerApellido.toUpperCase()+'-'+ search.segundoApellido.toUpperCase()+'-'+ search.primerNombre.toUpperCase()+'-'+ search.otrosNombres.toUpperCase();        //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
         //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.primerApellido.toUpperCase()+' '+ search.segundoApellido.toUpperCase()+' '+ search.primerNombre.toUpperCase()+' '+ search.otrosNombres.toUpperCase();
