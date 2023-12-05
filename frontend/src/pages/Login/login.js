@@ -16,9 +16,9 @@ export default function Login() {
   const [password, setPassword] = useState();
   const navigate =useNavigate()
   useEffect(()=>{
-    if(isLogged && user.role==='agencias' || isLogged && user.role==='cartera')navigate('/inicio');
-    if(isLogged && user.role==='compras')navigate('/compras');
-    if(isLogged && user.role==='admin')navigate('/inicio/admin');
+    if(isLogged && user.role==='agencias' || isLogged && user.role==='cartera')navigate('/validar/tercero');
+    if(isLogged && user.role==='compras')navigate('/validar/Proveedor');
+    if(isLogged && user.role==='admin')navigate('/validacion/admin');
     if(isLogged){
       const body={
         usuario:email,

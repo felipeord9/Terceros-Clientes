@@ -18,6 +18,14 @@ const findOne = async (id) => {
     return Proveedor
 }
 
+const validarProveedor = async (cedula)=>{
+    const Proveedor = await models.Proveedores.findOne({
+        where:{cedula:cedula}
+    })
+    if(!Proveedor) throw boom.notFound('Proveedor no encontrado')
+    return Proveedor
+}
+
 const remove = async(id)=>{
     const proveedor = findOne(id)
     ;(await proveedor).destroy(id)
@@ -27,5 +35,6 @@ module.exports={
     find,
     create,
     findOne,
-    remove
+    remove,
+    validarProveedor,
 }

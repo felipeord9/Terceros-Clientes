@@ -17,7 +17,8 @@ const router = express.Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       
-    let uploadPath = 'C:/Users/Practicante 2/Downloads/';
+    //let uploadPath = 'C:/Users/Practicante 2/Downloads/';
+    let uploadPath = 'C:/Clientes-proveedores/';
     const date = new Date();
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // Los meses son de 0 a 11
@@ -67,6 +68,9 @@ router.post('/', upload.fields([
   { name: 'Ef' },
   { name: 'Certban' },
   { name: 'Refcom' },
+  { name: 'Refcom2' },
+  { name: 'Refcom3' },
+  { name: 'Refcom 4' },
   { name: 'Cvbo' },
   { name: 'Firdoc' },
   { name: 'Infemp' },
@@ -76,8 +80,9 @@ router.post('/', upload.fields([
 ]), async (req, res) => {
   const folderName = req.body.folderName; 
 
-  const folderPath = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);
- 
+  //const folderPath = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);
+  const folderPath = path.join(`C:/Clientes-Proveedores/${folderName}`);
+
 /* const folderPath = path.join(`smb${folderName}`);
  */if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
@@ -128,25 +133,6 @@ router.post('/', upload.fields([
   });
 
   console.log('Carpeta enviada correctamente.');
-
-  /* const archivosEnRecursoCompartido = fs.readdirSync(rutaRecursoCompartido);
-  console.log('Archivos en el recurso compartido:', archivosEnRecursoCompartido);
-  const contenidoLeido = fs.readFileSync(rutaRemota, 'utf-8');
-  console.log('Contenido del archivo en el recurso compartido:', contenidoLeido); */
-  /* try {
-    execSync(`copy "${folderPath}" "${rutaRemota}"`);
-    console.log('Archivo enviado correctamente.');
-  } catch (error) {
-    console.error('Error al enviar el archivo:', error.message);
-  } */
-  /* try to conecto to samba */
-  /* const client = new Client({
-    share: 'smb://appterceros:L4ng0K3nsh1@192.168.4.237/aplicativoterceros',
-    domain: null, // Puede ser null o omitido si no se requiere autenticación
-    username: appterceros,
-    password: L4ng0K3nsh1,
-  });
-  await client.up */
 });
 
 
@@ -166,5 +152,21 @@ router.delete('/:folderName', (req,res)=>{
       return res.status(500).send('Error al eliminar la carpeta');
     }
 });
+
+router.get('/archivos/compartidos',(req,res)=>{
+  const folderName = req.params.folderName; 
+  const rutaRecursoCompartido = '\\192.168.4.237\aplicativoterceros';
+
+  // Ruta remota en el recurso compartido donde deseas guardar la carpeta
+  const rutaRemota = `${rutaRecursoCompartido}\\${folderName}`;
+  fsExtra.readdir(rutaRemota, (err, files) => {
+    if (err) {
+      console.error('Error al obtener archivos:', err);
+      return;
+    }
+
+    console.log('Archivos en la carpeta compartida:', files);
+  });
+})
 
 module.exports=router

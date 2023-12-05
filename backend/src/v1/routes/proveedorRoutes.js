@@ -9,6 +9,7 @@ router
     .get('/',ProveedorController.findAllProveedores)
     .post('/',ProveedorController.createProveedor)
     .get('/:id',ProveedorController.findOneProveedor)
+    .get('/numero/:cedula',ProveedorController.validar)
     .delete('/:id',ProveedorController.deleteProveedor)
     
 module.exports = router

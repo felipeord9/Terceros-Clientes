@@ -100,6 +100,20 @@ const findOneCliente = async (req, res, next) => {
     }
   };
 
+const validar = async (req,res,next)=>{
+    try{
+        const{params:{cedula}}=req;
+        const data = await ClienteService.validarCliente(cedula);
+
+        res.status(200).json({
+            message: 'OK',
+            data
+          })
+        } catch (error) {
+          next(error)
+        }
+}
+
 const deleteCliente = async(req,res,next)=>{
     try{
         const {params:{id}}=req
@@ -117,5 +131,6 @@ module.exports = {
     findAllClientes,
     createCliente,
     findOneCliente,
-    deleteCliente
+    deleteCliente,
+    validar
 }

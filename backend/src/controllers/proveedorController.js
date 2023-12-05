@@ -84,6 +84,20 @@ const findOneProveedor = async (req, res, next) => {
     }
   };
 
+  const validar = async (req,res,next)=>{
+    try{
+        const{params:{cedula}}=req;
+        const data = await ProveedorService.validarProveedor(cedula);
+
+        res.status(200).json({
+            message: 'OK',
+            data
+          })
+        } catch (error) {
+          next(error)
+        }
+  }
+
 const deleteProveedor = async(req,res,next)=>{
     try{
         const {params:{id}}=req
@@ -101,5 +115,6 @@ module.exports = {
     findAllProveedores,
     createProveedor,
     findOneProveedor,
-    deleteProveedor
+    deleteProveedor,
+    validar,
 }

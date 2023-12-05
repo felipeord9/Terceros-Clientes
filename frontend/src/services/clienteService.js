@@ -12,6 +12,16 @@ const findClientes = async () => {
     return data
 } 
 
+const validarCliente = async (cedula)=>{
+  const token = JSON.parse(localStorage.getItem("token"))
+  const { data } = await axios.get(`${url}/numero/${cedula}`,{
+    headers:{
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return data
+}
+
 const createCliente = (body) => {
     const token = JSON.parse(localStorage.getItem("token"))
     return fetch(url, {
@@ -42,5 +52,6 @@ const deleteCliente = (id) => {
 export {
     findClientes,
     createCliente,
-    deleteCliente
+    deleteCliente,
+    validarCliente
 }

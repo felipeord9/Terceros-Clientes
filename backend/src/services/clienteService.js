@@ -18,6 +18,14 @@ const findOne = async (id) => {
     return Cliente
 }
 
+const validarCliente = async (cedula)=>{
+    const cliente = await models.Clientes.findOne({
+        where:{cedula:cedula}
+    })
+    if(!cliente) throw boom.notFound('Cliente no encontrado')
+    return cliente
+}
+
 const remove = async(id)=>{
     const cliente = findOne(id)
     ;(await cliente).destroy(id)
@@ -35,5 +43,6 @@ module.exports={
     find,
     create,
     findOne,
-    remove
+    remove,
+    validarCliente
 }

@@ -837,7 +837,7 @@ const [colorVality,setColorVality]=useState('red');
                   </input>
                 </div>
                   <div className="w-100 d-flex flex-row">
-                  <label className="me-1">Precio sugerido:</label>
+                  <label className="me-1">Lista de Precios:</label>
                   <select
                     style={{width:245}}
                     ref={selectPrecioRef}

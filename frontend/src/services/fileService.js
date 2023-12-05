@@ -26,3 +26,9 @@ export const deleteFile = (folderName)=>{
   .then((res) => res.json())
   .then((res) => res);
 }
+
+export const getArchivos = (folderName)=>{
+  return fetch(`${url}/archivos/compartidos/${folderName}`,{
+
+  })
+}

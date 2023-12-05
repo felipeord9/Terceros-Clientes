@@ -28,7 +28,11 @@ import CreditoPersonaNatural from './pages/creditoPN';
 import CreditoPersonaJuridica from './pages/creditoPJ';
 import Users from './pages/Users';
 import Terceros from './pages/terceros';
-
+import ValidarTercero from './pages/validarTercero';
+import ValidarProveedor from './pages/validarProveedor';
+import ValidacionAdmin from './pages/validacion';
+import MostartInfo from './pages/mostrarInfo';
+import MostrarProveedor from './pages/mostrarProveedor';
 
 function App() {
   return(
@@ -42,6 +46,15 @@ function App() {
 {/*         <Route path='/recovery/password' element={<RecoveryPassword/>}/>
  */}        <Route path='/send/recovery' element={<SendRecovery/>}/>
         <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
+
+        {/* Validacion de tercero */}
+        <Route path='/validar/tercero' element={<PrivateRoute component={ValidarTercero}/>}/>
+        <Route path='/validar/Proveedor' element={<PrivateRoute component={ValidarProveedor}/>}/>
+        <Route path='/validacion/admin' element={<PrivateRoute component={ValidacionAdmin}/>}/>
+
+        {/* Mostrar validacion */}
+        <Route path='/info/validacion' element={<PrivateRoute component={MostartInfo}/>}/>
+        <Route path='/informacion/validacion' element={<PrivateRoute component={MostrarProveedor}/>}/>
 
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>

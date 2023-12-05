@@ -12,6 +12,7 @@ import { FaHandshake } from "react-icons/fa6";
 import { FaPeopleLine } from "react-icons/fa6";
 import { GiArchiveRegister } from "react-icons/gi";
 import { TbCircleLetterJ } from 'react-icons/tb' /*letra j*/
+import { RiPassValidLine } from "react-icons/ri";
 
 export const NavBarData = [
   {
@@ -36,6 +37,28 @@ export const NavBarData = [
     access:['compras']   
   }
   ,
+  {
+    title:'Validación Existencia',
+    path:'/validacion/admin',
+    icon:<RiPassValidLine />,
+    cName:'nav-text',
+    access:['admin']
+  },
+  {
+    title:'Validación Existencia',
+    path:'/validar/tercero',
+    icon:<RiPassValidLine />,
+    cName:'nav-text',
+    access:['cartera','agencias']
+  },
+  {
+    title:'Validación Existencia',
+    path:'/validar/proveedor',
+    icon:<RiPassValidLine />,
+    cName:'nav-text',
+    access:['compras']
+  },
+  
   {title:'Persona natural - contado',
     path:'/contado/persona/natural',
     icon:<RiContactsBook2Fill/>,
