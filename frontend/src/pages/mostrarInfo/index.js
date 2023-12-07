@@ -228,6 +228,7 @@ export default function MostartInfo(){
           setLabelColor('#008F39')
           setNuevoTexto('Cargado')
           setLogo({Logo_pdf})
+          
         }else if(valor===0){
           setLabelColor('#CB3234')
           setNuevoTexto('No fue cargado')
@@ -238,8 +239,13 @@ export default function MostartInfo(){
         }
       },[valor]);
       return (
-        <label className="" style={{color:labelColor, height:18}}><strong>{nuevoTexto}<img src={LogoPdf} style={{width:100}}></img></strong></label>
+        <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {mostrarImagen(valor)} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
       )
+    }
+    const mostrarImagen=(valor)=>{
+      if(valor===1){
+        return <img src={Logo_pdf} style={{width:100}}></img>
+      }
     }
 
     return(
@@ -379,7 +385,7 @@ export default function MostartInfo(){
           )}
         </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Vinculacion:</label>
                   {/* <input
                   id="docVinculacion"     
@@ -395,7 +401,7 @@ export default function MostartInfo(){
                   )}
                   {/* <img className="pt-1" src={Logo_pdf} style={{width:100}}></img> */}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_ComprAntc:</label>
                   {/* <input
                   id="docComprAntc"     
@@ -411,7 +417,7 @@ export default function MostartInfo(){
                   )}
 
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_CtaInst:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCtalnst}>{info.docCtalnst}</TextOfBinary>
@@ -419,7 +425,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25">
+                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Pagare:</label>
                   {data ? (
                   <TextOfBinary valor={data.docPagare}>{info.docPagare}</TextOfBinary>
@@ -429,15 +435,15 @@ export default function MostartInfo(){
                   </div>
       </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Rut:</label>
                   {data ? (
-                  <TextOfBinary valor={data.docRut}>{info.docRut}</TextOfBinary>
+                  <TextOfBinary valor={data.docRut}></TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Ccio:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCcio}>{info.docCcio}</TextOfBinary>
@@ -445,7 +451,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_CrepL:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCrepL}>{info.docCrepL}</TextOfBinary>
@@ -453,7 +459,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25">
+                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Ef:</label>
                   {data ? (
                   <TextOfBinary valor={data.docEf}>{info.docEf}</TextOfBinary>
@@ -463,7 +469,7 @@ export default function MostartInfo(){
                   </div>
       </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Refcom:</label>
                   {data ? (
                   <TextOfBinary valor={data.docRefcom}>{info.docRefcom}</TextOfBinary>
@@ -471,7 +477,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Cvbo:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCvbo}>{info.docCvbo}</TextOfBinary>
@@ -479,7 +485,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Firdoc:</label>
                   {data ? (
                   <TextOfBinary valor={data.docFirdoc}>{info.docFirdoc}</TextOfBinary>
@@ -487,7 +493,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25">
+                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Infemp:</label>
                   {data ? (
                   <TextOfBinary valor={data.docInfemp}>{info.docInfemp}</TextOfBinary>
@@ -497,7 +503,7 @@ export default function MostartInfo(){
                   </div>
       </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Infrl:</label>
                   {data ? (
                   <TextOfBinary valor={data.docInfrl}>{info.docInfrl}</TextOfBinary>
@@ -505,7 +511,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_CerBan:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCerBan}>{info.docCerBan}</TextOfBinary>
@@ -513,7 +519,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4">
+                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_ValAnt:</label>
                   {data ? (
                   <TextOfBinary valor={data.docValAnt}>{info.docValAnt}</TextOfBinary>
@@ -521,7 +527,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 ">
+                <div className="d-flex flex-column align-items-start w-25 " style={{height:120}}>
                   <label className="me-1 fw-bold">Doc_Otros:</label>
                   {data ? (
                   <TextOfBinary valor={data.docOtros}>{info.docOtros}</TextOfBinary>
@@ -532,7 +538,7 @@ export default function MostartInfo(){
       </div>
       <center>
       <div className="d-flex flex-row mt-4 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-5">
+                <div className="d-flex flex-column align-items-start w-25 me-5" >
                   <label className="me-1 fw-bold">Fecha Creación:</label>
                   {data ? (
                       <input
@@ -545,7 +551,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 me-5">
+                <div className="d-flex flex-column align-items-start w-25 me-5" >
                   <label className="me-1 fw-bold">Usuario Creador:</label>
                   {data ? (
                       <input
@@ -558,7 +564,7 @@ export default function MostartInfo(){
                     <p>no hay nada</p>
                   )}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 ">
+                <div className="d-flex flex-column align-items-start w-25 " >
                   <label className="me-1 fw-bold">Tipo formato:</label>
                   {data ? (
                       <input

@@ -13,9 +13,13 @@ export const fileSend = async(formData) =>{
         return data;
       } catch (error) {
         throw error;
+      }
     }
-}
 
+export const getArchivos = (folderName)=>{
+   
+}
+    
 export const deleteFile = (folderName)=>{
   return fetch(`${url}/uploadMultiple/${folderName}`,{
     method:'DELETE',
@@ -25,10 +29,4 @@ export const deleteFile = (folderName)=>{
   })
   .then((res) => res.json())
   .then((res) => res);
-}
-
-export const getArchivos = (folderName)=>{
-  return fetch(`${url}/archivos/compartidos/${folderName}`,{
-
-  })
 }
