@@ -86,6 +86,20 @@ const createCliente = async (req,res,next)=>{
     }
 }
 
+const updateCliente = async (req, res, next) => {
+    try {
+      const { params: { id }, body } = req
+      const data = await ClienteService.update(id, body)
+  
+      res.json(200).json({
+        message: 'Updated',
+        data
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
 const findOneCliente = async (req, res, next) => {
     try {
       const { params: { id } } = req;
@@ -132,5 +146,6 @@ module.exports = {
     createCliente,
     findOneCliente,
     deleteCliente,
-    validar
+    validar,
+    updateCliente
 }

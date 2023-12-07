@@ -4,18 +4,29 @@ const find=()=>{
     const Clientes = models.Clientes.findAll()
     return Clientes
 };
-
+const findOne = async (id) => {
+    const cliente = await models.Clientes.findByPk(id)
+  
+    if(!cliente) throw boom.notFound('Cliente no encontrado')
+  
+    return cliente
+  }
 const create = async(body)=>{
     const newCliente = await models.Clientes.create(body)
     return newCliente    
 }
 
-const findOne = async (id) => {
-    const Cliente = await models.Clientes.findByPk(id)
+const findCliente = async (id)=>{
+    const client = await models.Clientes.findByPk(id)
+    if(!client) throw boom.notFound('Error')
+    return client
+}
+
+const update = async (id, changes) => {
+    const cliente = await findOne(id)
+    const updatedCliente = await cliente.update(changes)
   
-    if(!Cliente) throw boom.notFound('Tercero no encontrado')
-  
-    return Cliente
+    return updatedCliente
 }
 
 const validarCliente = async (cedula)=>{
@@ -44,5 +55,7 @@ module.exports={
     create,
     findOne,
     remove,
-    validarCliente
+    validarCliente,
+    update,
+    findCliente
 }

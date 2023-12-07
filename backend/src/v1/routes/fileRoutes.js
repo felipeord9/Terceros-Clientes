@@ -111,7 +111,9 @@ router.post('/', upload.fields([
 
   // Crear la carpeta remota en el recurso compartido
   try {
-    execSync(`mkdir "${rutaRemota}"`);
+    if(!fs.existsSync(rutaRemota)){
+      execSync(`mkdir "${rutaRemota}"`);
+    }
   } catch (error) {
     console.error('Error al crear la carpeta remota:', error.message);
     process.exit(1);

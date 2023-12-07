@@ -33,6 +33,8 @@ import ValidarProveedor from './pages/validarProveedor';
 import ValidacionAdmin from './pages/validacion';
 import MostartInfo from './pages/mostrarInfo';
 import MostrarProveedor from './pages/mostrarProveedor';
+import EditarPNC from './pages/editPNC';
+import EditarPNCR from './pages/editarPNCR';
 
 function App() {
   return(
@@ -55,6 +57,10 @@ function App() {
         {/* Mostrar validacion */}
         <Route path='/info/validacion' element={<PrivateRoute component={MostartInfo}/>}/>
         <Route path='/informacion/validacion' element={<PrivateRoute component={MostrarProveedor}/>}/>
+
+        {/* Editar informacion validada */}
+        <Route path='/editar/info/PNC' element={<PrivateRoute component={EditarPNC}/>}/>
+        <Route path='/editar/info/PNCR' element={<PrivateRoute component={EditarPNCR}/>}/>
 
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>

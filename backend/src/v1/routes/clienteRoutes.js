@@ -10,6 +10,7 @@ router
     .post('/',ClienteController.createCliente)
     .get('/:id',ClienteController.findOneCliente)
     .get('/numero/:cedula',ClienteController.validar)
+    .patch('/update/:id',ClienteController.updateCliente)
     .delete('/:id',ClienteController.deleteCliente)
     
 module.exports = router

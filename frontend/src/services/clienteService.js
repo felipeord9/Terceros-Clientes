@@ -37,6 +37,16 @@ const createCliente = (body) => {
       .then((res) => res);
 };
 
+export const updateCliente = async (id, body) => {
+  const token = JSON.parse(localStorage.getItem("token"))
+  const { data } = await axios.patch(`${url}/update/${id}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return data
+}
+
 const deleteCliente = (id) => {
   return fetch(`${url}/${id}`, {
     method: "DELETE",
@@ -53,5 +63,5 @@ export {
     findClientes,
     createCliente,
     deleteCliente,
-    validarCliente
+    validarCliente,
 }

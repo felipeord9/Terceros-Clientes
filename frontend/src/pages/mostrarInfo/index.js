@@ -17,6 +17,7 @@ import AuthContext from "../../context/authContext";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import Button from '@mui/material/Button';
 import Logo_pdf from '../../assest/logo_pdf.jpg'
+import { CiEdit } from "react-icons/ci";
 
 export default function MostartInfo(){
   const { user, setUser } = useContext(AuthContext);
@@ -248,6 +249,15 @@ export default function MostartInfo(){
       }
     }
 
+    const [tipoForm,setTipoForm]=useState();
+    const handleEditClient=(e)=>{
+      if(data.tipoFormulario==='PNC'){
+        return navigate('/editar/info/PNC')
+      }else if(data.tipoFormulario==='PNCR'){
+        return navigate('/editar/info/PNCR')
+      }
+    }
+
     return(
       <div className=" wrapper d-flex justify-content-center w-100 h-auto m-auto" style={{userSelect:'none'}}>
 
@@ -258,6 +268,9 @@ export default function MostartInfo(){
           <Button style={{height:35}} onClick={(e)=>handleClickBack(e)} variant="contained" className="d-flex justify-content-start"><RiArrowGoBackFill className="me-1" />back</Button>
           <div style={{width:160}}></div>
           <h1 className="mb-3"><strong>Información Del Cliente</strong></h1>
+          <div style={{width:110}}></div>
+          <button onClick={(e)=>handleEditClient(e)} style={{height:55,width:150}}><CiEdit />Actualizar</button>
+          {/* <span>{data.tipoFormulario}</span> */}
         </div>
       <div className="w-100 rounded-4 p-2" style={{backgroundColor:'#C7C8CA'}}>
       <div className="d-flex flex-row mt-2 mb-2">
@@ -572,6 +585,7 @@ export default function MostartInfo(){
                       className="form-control form-control-sm"                   
                       disabled
                       value={data.tipoFormulario}
+                      onChange={(e)=>setTipoForm(e)}
                     ></input>
                   ):(
                     <p>no hay nada</p>
