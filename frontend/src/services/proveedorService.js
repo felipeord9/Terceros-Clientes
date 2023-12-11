@@ -37,6 +37,16 @@ const createProveedor = (body) => {
       .then((res) => res);
 };
 
+export const updateProveedor = async (id, body) => {
+  const token = JSON.parse(localStorage.getItem("token"))
+  const { data } = await axios.patch(`${url}/update/${id}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return data
+}
+
 const deleteProveedor = (id) => {
   return fetch(`${url}/${id}`, {
     method: "DELETE",

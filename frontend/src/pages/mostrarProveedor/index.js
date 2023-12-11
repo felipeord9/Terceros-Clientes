@@ -17,6 +17,7 @@ import AuthContext from "../../context/authContext";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import Button from '@mui/material/Button';
 import Logo_pdf from '../../assest/logo_pdf.jpg'
+import { CiEdit } from "react-icons/ci";
 
 export default function MostrarProveedor(){
   const { user, setUser } = useContext(AuthContext);
@@ -240,7 +241,20 @@ export default function MostrarProveedor(){
         return <img src={Logo_pdf} style={{width:100}}></img>
       }
     }
-
+    const [tipoForm,setTipoForm]=useState();
+    const handleEditClient=(e)=>{
+      if(data.tipoFormulario==='PMN'){
+        return navigate('/editar/info/PMN')
+      }else if(data.tipoFormulario==='PMJ'){
+        return navigate('/editar/info/PMJ')
+      }else if(data.tipoFormulario==='PS'){
+        return navigate('/editar/info/PS')
+      }else if(data.tipoFormulario==='PVJ'){
+        return navigate('/editar/info/PVJ')
+      }else if(data.tipoFormulario==='PVN'){
+        return navigate('/editar/info/PVN')
+      }
+    }
     return(
       <div className=" wrapper d-flex justify-content-center w-100 h-auto m-auto" style={{userSelect:'none'}}>
 
@@ -249,8 +263,10 @@ export default function MostrarProveedor(){
       >
         <div className="w-100 d-flex flex-row" >
           <Button style={{height:35}} onClick={(e)=>handleClickBack(e)} variant="contained" className="d-flex justify-content-start"><RiArrowGoBackFill className="me-1" />back</Button>
-          <div style={{width:160}}></div>
+          <div style={{width:120}}></div>
           <h1 className="mb-3"><strong>Información Del Proveedor</strong></h1>
+          <div style={{width:90}}></div>
+          <button onClick={(e)=>handleEditClient(e)} style={{height:55,width:150}}><CiEdit />Actualizar</button>
         </div>
       <div className="w-100 rounded-4 p-2" style={{backgroundColor:'#C7C8CA'}}>
       <div className="d-flex flex-row mt-2 mb-2">

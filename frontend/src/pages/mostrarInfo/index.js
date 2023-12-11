@@ -255,6 +255,10 @@ export default function MostartInfo(){
         return navigate('/editar/info/PNC')
       }else if(data.tipoFormulario==='PNCR'){
         return navigate('/editar/info/PNCR')
+      }else if(data.tipoFormulario==='PJC'){
+        return navigate('/editar/info/PJC')
+      }else if(data.tipoFormulario==='PJCR'){
+        return navigate('/editar/info/PJCR')
       }
     }
 

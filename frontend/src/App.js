@@ -35,6 +35,13 @@ import MostartInfo from './pages/mostrarInfo';
 import MostrarProveedor from './pages/mostrarProveedor';
 import EditarPNC from './pages/editPNC';
 import EditarPNCR from './pages/editarPNCR';
+import EditarPJC from './pages/editarPJC';
+import EditarPJCR from './pages/editarPJCR';
+import EditPMN from './pages/editarPMN';
+import EditarPMJ from './pages/editarPMJ';
+import EditPS from './pages/editarPS';
+import EditPVN from './pages/editarPVN';
+import EditarPVJ from './pages/editarPVJ';
 
 function App() {
   return(
@@ -61,6 +68,13 @@ function App() {
         {/* Editar informacion validada */}
         <Route path='/editar/info/PNC' element={<PrivateRoute component={EditarPNC}/>}/>
         <Route path='/editar/info/PNCR' element={<PrivateRoute component={EditarPNCR}/>}/>
+        <Route path='/editar/info/PJC' element={<PrivateRoute component={EditarPJC}/>}/>
+        <Route path='/editar/info/PJCR' element={<PrivateRoute component={EditarPJCR}/>}/>
+        <Route path='/editar/info/PMN' element={<PrivateRoute component={EditPMN}/>}/>
+        <Route path='/editar/info/PMJ' element={<PrivateRoute component={EditarPMJ}/>}/>
+        <Route path='/editar/info/PS' element={<PrivateRoute component={EditPS}/>}/>
+        <Route path='/editar/info/PVN' element={<PrivateRoute component={EditPVN}/>}/>
+        <Route path='/editar/info/PVJ' element={<PrivateRoute component={EditarPVJ}/>}/>
 
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>

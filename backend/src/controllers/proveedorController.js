@@ -69,7 +69,19 @@ const createProveedor = async (req,res,next)=>{
         next(error)
     }
 }
-
+const updateProveedor = async (req, res, next) => {
+    try {
+      const { params: { id }, body } = req
+      const data = await ProveedorService.update(id, body)
+  
+      res.json(200).json({
+        message: 'Updated',
+        data
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 const findOneProveedor = async (req, res, next) => {
     try {
       const { params: { id } } = req;
@@ -117,4 +129,6 @@ module.exports = {
     findOneProveedor,
     deleteProveedor,
     validar,
+    updateProveedor,
+    
 }

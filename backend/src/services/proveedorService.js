@@ -4,18 +4,24 @@ const find=()=>{
     const Proveedores = models.Proveedores.findAll()
     return Proveedores
 };
-
-const create = async(body)=>{
-    const newProveedor = await models.Proveedores.create(body)
-    return newProveedor    
-}
-
 const findOne = async (id) => {
     const Proveedor = await models.Proveedores.findByPk(id)
   
     if(!Proveedor) throw boom.notFound('Tercero no encontrado')
   
     return Proveedor
+}
+
+const create = async(body)=>{
+    const newProveedor = await models.Proveedores.create(body)
+    return newProveedor    
+}
+
+const update = async (id, changes) => {
+    const proveedor = await findOne(id)
+    const updatedProveedor = await proveedor.update(changes)
+  
+    return updatedProveedor
 }
 
 const validarProveedor = async (cedula)=>{
@@ -37,4 +43,5 @@ module.exports={
     findOne,
     remove,
     validarProveedor,
+    update,
 }

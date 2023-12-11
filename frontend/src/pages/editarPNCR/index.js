@@ -26,6 +26,7 @@ import { FaFileDownload } from "react-icons/fa";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import { MdNoteAdd } from "react-icons/md";
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
 import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
 
@@ -215,8 +216,8 @@ export default function EditarPNCR(){
   const handleSubmit = (e) => {
     e.preventDefault();
     Swal.fire({
-      title: "¿Está segur@?",
-        text: "Se realizará el registro del Cliente",
+        title: "¿Está segur@?",
+        text:'Se Actualizará la información del Cliente',
         icon:'question',
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
@@ -679,10 +680,12 @@ const [colorVality,setColorVality]=useState('red');
                     id="tipoDocumento"
                     value={search.tipoDocumento}
                     onChange={handlerChangeSearch}
-                    style={{width:240}}
+                    style={{width:240,backgroundColor:'grey'}}
                     className="form-select form-select-sm m-100 me-3"
                     /* onChange={(e)=>setDocument(JSON.parse(e.target.value))} */
                     required
+                    disabled
+
                   >
                     <option selected value='' disabled>
                   -- Seleccione el tipo de documento --
@@ -715,6 +718,8 @@ const [colorVality,setColorVality]=useState('red');
                     maxLength={10}
                     size={10}
                     placeholder="Campo obligatorio"
+                    disabled
+                    style={{backgroundColor:'grey'}}
                   >
                   </input>
                   <span className="validity fw-bold"></span>
@@ -1001,8 +1006,10 @@ const [colorVality,setColorVality]=useState('red');
                    <FaFileDownload />Descargar
                    </a>
                    </div>
-                   <TextOfBinary valor={search.docVinculacion}></TextOfBinary>
-                   <div className=" rounded-2 pt-1" >
+                   <div className="d-flex flex-column" style={{height:120}}>
+                    <TextOfBinary valor={search.docVinculacion}></TextOfBinary>
+                  </div>                   
+                  <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
                      id="DocVinculacion"
@@ -1029,7 +1036,9 @@ const [colorVality,setColorVality]=useState('red');
                    <FaFileDownload />{/* <IoMdDownload /> */}Descargar
                    </a>
                    </div>
-                   <TextOfBinary valor={search.docComprAntc}></TextOfBinary>
+                   <div className="d-flex flex-column" style={{height:120}}>
+                    <TextOfBinary valor={search.docComprAntc}></TextOfBinary>
+                  </div>                  
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1053,8 +1062,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-                   <label className="fw-bold mt-1 me-2">CARTA DE INSTRUCCIONES: </label>
-                   <TextOfBinary valor={search.docCtalnst}></TextOfBinary>
+               <div className="d-flex flex-column" style={{height:120}}>
+                  <label className="fw-bold mt-1 me-2">CARTA DE INSTRUCCIONES: </label>
+                    <TextOfBinary valor={search.docCtalnst}></TextOfBinary>
+                  </div>                   
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1077,9 +1088,11 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
+                   <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">PAGARE: </label>
-                   <TextOfBinary valor={search.docPagare}></TextOfBinary>
-                   <div className=" rounded-2 pt-1" >
+                    <TextOfBinary valor={search.docPagare}></TextOfBinary>
+                  </div>                   
+                  <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
                      id="DocPagare"
@@ -1103,9 +1116,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
+                   <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">RUT: </label>
-                   <TextOfBinary valor={search.docRut}></TextOfBinary>
-
+                    <TextOfBinary valor={search.docRut}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1128,8 +1142,11 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
+                   <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
-                   <div className=" rounded-2 pt-1" >
+                    <TextOfBinary valor={search.docCcio}></TextOfBinary>
+                  </div>                   
+                  <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
                      id="DocCcio"
@@ -1152,7 +1169,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-                   <label className="fw-bold mt-1 me-2">CÉDULA: </label>
+                  <div className="d-flex flex-column" style={{height:120}}>
+                    <label className="fw-bold mt-1 me-2" >CÉDULA: </label>
+                    <TextOfBinary valor={search.docCrepL}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1176,7 +1196,10 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                   <label className="fw-bold mt-1 me-2">ESTADOS FINANCI. O CERTIFI. DE CONTADOR: </label>
+                 <div className="d-flex flex-column" style={{height:120}}>
+                    <label className="fw-bold mt-1 me-2">ESTADOS FINANCI. O CERTIFI. DE CONTADOR: </label>
+                    <TextOfBinary valor={search.docEf}></TextOfBinary>
+                  </div>                   
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1202,7 +1225,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
+               <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">CERTIFICACIÓN BANCARIA: </label>
+                    <TextOfBinary valor={search.docCerBan}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1227,12 +1253,15 @@ const [colorVality,setColorVality]=useState('red');
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
                    <div className="d-flex flex-row">
                    {/* <div style={{width:50}}></div> */}
+                   <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
+                    <TextOfBinary valor={search.docRefcom}></TextOfBinary>
+                  </div>
                    </div>
                    <div className=" d-flex flex-row">
                    <div className="">
                    <div className="d-flex flex-row">
-                     <Button  style={{height:40}} className="rounded-5 d-flex justify-content-center align-items-center me-1" onClick={addFileInput}><MdNoteAdd />{/* <img src={Mas} style={{width:18}} /> */}</Button>
+                     <IconButton style={{color:'#2979FF',width:40,height:40}} /* className="rounded-5 d-flex justify-content-center align-items-center me-1" */ onClick={addFileInput}><NoteAddIcon />{/* <img src={Mas} style={{width:18}} /> */}</IconButton>
                    <input
                        id="DocRefcom"
                        type="file"
@@ -1286,7 +1315,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
+               <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">CARTA VISTO BUENO ADMINIS. DE LA AGENCIA: </label>
+                    <TextOfBinary valor={search.docCvbo}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1308,7 +1340,10 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
+                 <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">VALIDACIÓN DE ANTECEDENTES: </label>
+                    <TextOfBinary valor={search.docValAnt}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1332,7 +1367,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
+               <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1 me-2">FICHA RELACIÓN DOCUMENTOS: </label>
+                    <TextOfBinary valor={search.docFirdoc}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
@@ -1354,7 +1392,10 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ">
+                 <div className="d-flex flex-column" style={{height:120}}>
                    <label className="fw-bold mt-1">OTROS: </label>
+                    <TextOfBinary valor={search.docOtros}></TextOfBinary>
+                  </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
