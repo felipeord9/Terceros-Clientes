@@ -295,6 +295,8 @@ export default function CreditoPersonaJuridica(){
         const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const originalFolderName = search.cedula+'-'+search.razonSocial.toUpperCase();
+        formData.append('originalFolderName', originalFolderName);
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente

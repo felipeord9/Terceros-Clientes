@@ -70,7 +70,7 @@ router.post('/', upload.fields([
   { name: 'Refcom' },
   { name: 'Refcom2' },
   { name: 'Refcom3' },
-  { name: 'Refcom 4' },
+  { name: 'Refcom4' },
   { name: 'Cvbo' },
   { name: 'Firdoc' },
   { name: 'Infemp' },
@@ -89,38 +89,15 @@ router.post('/', upload.fields([
     
     // Ruta de la carpeta de destino
     const carpetaDestino = `C:/Clientes-Proveedores/${folderName}`;
-    
+    /* const nombreArchivos =  */
     const archivosLocales = fsExtra.readdirSync(carpetaOrigen);
   archivosLocales.forEach((archivo) => {
-    /* fs.rename(archivo,folderName, (err) => {
-      if (err) {
-        console.error('Error al intentar renombrar el archivo:', err);
-      } else {
-        console.log('Archivo renombrado exitosamente.');
-      }
-    }); */
     const rutaLocal = path.join(carpetaOrigen, archivo);
     const rutaRemotaArchivo = path.join(carpetaDestino, archivo);
     fsExtra.copySync(rutaLocal, rutaRemotaArchivo);
-    // Utiliza un comando del sistema operativo para copiar el archivo al recurso compartido
-    /* try {
-      execSync(`copy "${rutaLocal}" "${rutaRemotaArchivo}"`);
-      console.log(`Archivo ${archivo} enviado correctamente.`);
-    } catch (error) {
-      console.error(`Error al enviar el archivo ${archivo}:`, error.message);
-    } */
   });
   console.log('Archivos copiados exitosamente.');
-  /* folderPath=carpetaDestino */
-    /* try {
-      execSync(`copy "${carpetaOrigen}" "${carpetaDestino}"`);
-      console.log(`Archivo ${archivo} enviado correctamente.`);
-    } catch (error) {
-      console.error(`Error al enviar el archivo ${archivo}:`, error.message);
-    } */
-  }/* else{
-    folderPath = path.join(`C:/Clientes-Proveedores/${folderName}`);
-  } */
+  }
   const folderPath = path.join(`C:/Clientes-Proveedores/${folderName}`);
   //const folderPath = path.join(`C:/Users/Practicante 2/Downloads/${folderName}`);
 

@@ -127,10 +127,36 @@ export default function EditarPMJ(){
     tipoDocumento:'',
     actividadEconomica:'',
   });
+  const [compare,setCompare]=useState({
+    cedula:'',
+    razonSocial:'',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+    docRut:'',
+    docInfemp:'',
+    docInfrl:'',
+    docOtros:'',
+    docVinculacion:'',
+    docComprAntc:'',
+    docCtalnst:'',
+    docPagare:'',
+    docCcio:'',
+    docCrepL:'',
+    docEf:'',
+    docRefcom:'',
+    docCvbo:'',
+    docFirdoc:'',
+    docCerBan:'',
+    docValAnt:'',
+  })
   useEffect(()=>{
     const datosTercero = localStorage.getItem('data');
     if(datosTercero){
       setSearch(JSON.parse(datosTercero));
+      setCompare(JSON.parse(datosTercero))
+
     }
   },[]);
   const [loading, setLoading] = useState(false);
@@ -173,6 +199,24 @@ export default function EditarPMJ(){
       [id]: value,
     });
   };
+
+  const changeSearch = (e)=>{
+    const file = e.target.files[0]; 
+    const {id,value} = e.target;
+    /* value = 1; */
+    console.log(value);
+    if(file){
+      setCompare({
+        ...compare,
+        [id]:1,
+      });
+    }else{
+      setCompare({
+        ...compare,
+        [id]:0,
+      })
+    }
+  }
 
   const idParser = (id) => {
     let numeroComoTexto = id.toString();
@@ -259,18 +303,19 @@ export default function EditarPMJ(){
           /* createdAt: new Date(),
           createdBy: user.name.toUpperCase(), */
           solicitante:search.solicitante.toUpperCase(),
-          docVinculacion:search.docVinculacion,
-          docComprAntc:search.docComprAntc,
-          docRut:search.docRut,
-          docCcio:search.docCcio,
-          docCrepL:search.docCrepL,
-          docEf:search.docEf,
-          docRefcom:search.docRefcom,
-          docInfemp:search.docInfemp,
-          docInfrl:search.docInfrl,
-          docValAnt:search.docValAnt,
-          docCerBan:search.docCerBan,
-          docOtros:search.docOtros,
+          docVinculacion:compare.docVinculacion,
+          docComprAntc:compare.docComprAntc,
+          docRut:compare.docRut,
+          docCcio:compare.docCcio,
+          docCrepL:compare.docCrepL,
+          docEf:compare.docEf,
+          docRefcom:compare.docRefcom,
+          docInfemp:compare.docInfemp,
+          docInfrl:compare.docInfrl,
+          docCerBan:compare.docCerBan,
+          docValAnt:compare.docValAnt,
+          docOtros:compare.docOtros,
+          
           agencia: search.agencia,
           tipoFormulario:search.tipoFormulario,
         };
@@ -278,9 +323,13 @@ export default function EditarPMJ(){
         const folderName = search.cedula+'-'+search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const originalFolderName= compare.cedula+'-'+ compare.razonSocial.toUpperCase();
+        formData.append('originalFolderName',originalFolderName);
         //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
+        const originalClientName = compare.razonSocial.toUpperCase();
+        formData.append('originalClientName',originalClientName)
         //ejecutamos nuestra funcion que creara el cliente
         updateProveedor(search.id,body)
         .then(({data}) => {
@@ -826,11 +875,11 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocVinculacion"
+                    id="docVinculacion"
                     type="file"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e)=>(handleFileChange(e, 0),setDocVinculacion(1))} */
-                    onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1),FileChange(e,1))}
+                    onChange={(e)=>(handleFileChange('Vinculacion',e),setDocVinculacion(1),FileChange(e,1),changeSearch(e))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[1] && (
@@ -856,11 +905,11 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocComprAntc"
+                    id="docComprAntc"
                     type="file"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e)=>(handleFileChange(e, 1),setDocComprAntc(1))} */
-                    onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1),FileChange(e,2))}
+                    onChange={(e)=>(handleFileChange('ComprAntc',e),setDocComprAntc(1),FileChange(e,2),changeSearch(e))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[2] && (
@@ -884,15 +933,15 @@ const [colorVality,setColorVality]=useState('red');
                    <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="RUT"
+                    id="docCcio"
                     type="file"
-                    placeholder="RUT"
+                    placeholder="docCcio"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Ccio', e),setDocCcio(1),FileChange(e,3))}
+                    onChange={(e) => (handleFileChange('Ccio', e),setDocCcio(1),FileChange(e,3),changeSearch(e))}
                   />
                   {selectedFiles[3] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -913,14 +962,14 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="INFOLAFT"
+                    id="docRut"
                     type="file"
-                    placeholder="INFOLAFT"
+                    placeholder="docRut"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,4))}
+                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,4),changeSearch(e))}
                   />
                   {selectedFiles[4] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -942,15 +991,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="RUT"
+                    id="docCerBan"
                     type="file"
-                    placeholder="RUT"
+                    placeholder="docCerBan"
                     className="form-control form-control-sm  border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Certban', e),setDocCerBan(1),FileChange(e,5))}
+                    onChange={(e) => (handleFileChange('Certban', e),setDocCerBan(1),FileChange(e,5),changeSearch(e))}
                   />
                   {selectedFiles[5] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -970,14 +1019,14 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="INFOLAFT"
+                    id="docRefcom"
                     type="file"
-                    placeholder="INFOLAFT"
+                    placeholder="docRefcom"
                     className="form-control form-control-sm  border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Refcom',e),setDocRefcom(1),FileChange(e,6))}
+                    onChange={(e) => (handleFileChange('Refcom',e),setDocRefcom(1),FileChange(e,6),changeSearch(e))}
                   />
                   {selectedFiles[6] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -999,15 +1048,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="RUT"
+                    id="docEf"
                     type="file"
-                    placeholder="RUT"
+                    placeholder="docEf"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Ef', e),setDocEf(1),FileChange(e,7))}
+                    onChange={(e) => (handleFileChange('Ef', e),setDocEf(1),FileChange(e,7),changeSearch(e))}
                   />
                   {selectedFiles[7] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -1027,14 +1076,14 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="INFOLAFT"
+                    id="docCrepL"
                     type="file"
-                    placeholder="INFOLAFT"
+                    placeholder="docCrepL"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('CrepL',e),setDocCrepL(1),FileChange(e,8))}
+                    onChange={(e) => (handleFileChange('CrepL',e),setDocCrepL(1),FileChange(e,8),changeSearch(e))}
                   />
                   {selectedFiles[8] && (
                     <div className=" pt-1 ps-2" style={{width:50}} >
@@ -1056,15 +1105,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="RUT"
+                    id="docInfemp"
                     type="file"
-                    placeholder="RUT"
+                    placeholder="docInfemp"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Infemp', e),setDocInfemp(1),FileChange(e,9))}
+                    onChange={(e) => (handleFileChange('Infemp', e),setDocInfemp(1),FileChange(e,9),changeSearch(e))}
                   />
                   {selectedFiles[9] && (
                     <div className=" pt-1 ps-2" style={{width:50}} >
@@ -1084,14 +1133,14 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="INFOLAFT"
+                    id="docInfrl"
                     type="file"
-                    placeholder="INFOLAFT"
+                    placeholder="docInfrl"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,10))}
+                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,10),changeSearch(e))}
                   />
                   {selectedFiles[10] && (
                     <div className=" pt-1 ps-2" style={{width:50}} >
@@ -1111,11 +1160,11 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                   <div className="d-flex flex-row">
                   <input
-                    id="DocOtros"
+                    id="docOtros"
                     type="file"
                     style={{backgroundColor:'#f3f3f3',width:720}}
                     /* onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))} */
-                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,11))}
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,11),changeSearch(e))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[11] && (
@@ -1128,6 +1177,17 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                 </div>
           </div>
+          {/* <span>{compare.docVinculacion}</span>
+                <span>{compare.docComprAntc}</span>
+                <span>{compare.docRut}</span>
+                <span>{compare.docCcio}</span>
+                <span>{compare.docCerBan}</span>
+                <span>{compare.docRefcom}</span>
+                <span>{compare.docEf}</span>
+                <span>{compare.docCrepL}</span>
+                <span>{compare.docInfemp}</span>
+                <span>{compare.docInfrl}</span>
+                <span>{compare.docOtros}</span> */}
           <hr className="my-1 mt-4" />
 
         <div className="d-flex flex-column mb-3">

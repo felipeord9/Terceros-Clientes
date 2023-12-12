@@ -120,10 +120,19 @@ export default function EditarPVJ(){
     tipoDocumento:'',
     actividadEconomica:'',
   });
+  const [compare,setCompare]=useState({
+    cedula:'',
+    razonSocial:'',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+  })
   useEffect(()=>{
     const datosTercero = localStorage.getItem('data');
     if(datosTercero){
       setSearch(JSON.parse(datosTercero));
+      setCompare(JSON.parse(datosTercero))
     }
   },[]);
   const [loading, setLoading] = useState(false);
@@ -271,9 +280,13 @@ export default function EditarPVJ(){
         const folderName = search.cedula+'-'+search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const originalFolderName= compare.cedula+'-'+ compare.razonSocial.toUpperCase();
+        formData.append('originalFolderName',originalFolderName);
         //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
+        const originalClientName = compare.razonSocial.toUpperCase();
+        formData.append('originalClientName',originalClientName)
         //ejecutamos nuestra funcion que creara el cliente
         updateProveedor(search.id,body)
         .then(({data}) => {

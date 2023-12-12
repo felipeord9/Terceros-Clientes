@@ -140,10 +140,23 @@ export default function EditarPJC(){
     tipoDocRepLegal:'',
     precioSugerido:'',
   });
+  const [compare,setCompare]=useState({
+    cedula:'',
+    razonSocial:'',
+    primerApellido:'',
+    segundoApellido:'',
+    primerNombre:'',
+    otrosNombres:'',
+    docRut:'',
+    docInfemp:'',
+    docInfrl:'',
+    docOtros:'',
+  })
   useEffect(()=>{
     const datosTercero = localStorage.getItem('data');
     if(datosTercero){
       setSearch(JSON.parse(datosTercero));
+      setCompare(JSON.parse(datosTercero))
     }
   },[]);
   const [loading, setLoading] = useState(false);
@@ -193,6 +206,26 @@ export default function EditarPJC(){
       [id]: value,
     });
   };
+
+  const changeSearch = (e)=>{
+    const file = e.target.files[0]; 
+    const {id,value} = e.target;
+    /* value = 1; */
+    console.log(value);
+    if(file){
+      setCompare({
+        ...compare,
+        [id]:1,
+      });
+    }else{
+      setCompare({
+        ...compare,
+        [id]:0,
+      })
+    }
+  }
+
+  
 
   const idParser = (id) => {
     let numeroComoTexto = id.toString();
@@ -280,10 +313,10 @@ export default function EditarPJC(){
           /* createdAt: new Date(),
           createdBy: user.name.toUpperCase(), */
           solicitante: search.solicitante.toUpperCase(),
-          docRut:search.docRut,
-          docInfemp:search.docInfemp,
-          docInfrl:search.docInfrl,
-          docOtros:search.docOtros,
+          docRut:compare.docRut,
+          docInfemp:compare.docInfemp,
+          docInfrl:compare.docInfrl,
+          docOtros:compare.docOtros,
           clasificacion: search.clasificacion,
           agencia: search.agencia,
           tipoFormulario: search.tipoFormulario,
@@ -292,8 +325,14 @@ export default function EditarPJC(){
         const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const originalFolderName= compare.cedula+'-'+ compare.razonSocial.toUpperCase();
+        formData.append('originalFolderName',originalFolderName);
+
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
+        const originalClientName = compare.razonSocial.toUpperCase();
+        formData.append('originalClientName',originalClientName)
+
         //ejecutamos nuestra funcion que creara el cliente
         updateCliente(search.id, body)
         .then(({data}) => {
@@ -501,6 +540,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
           <h1 className="mb-3"><strong>Actualizar Información Del Cliente</strong></h1>
           
         </div>
+        {/* <span>{docRut}</span> */}
       <form className="" onSubmit={handleSubmit}>
         <div className=" rounded shadow-sm p-3 mb-3" style={{backgroundColor:'#C7C8CA'}}>
           <div className="d-flex flex-column gap-1">
@@ -1115,6 +1155,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
             </div> 
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:22}}>DOCUMENTOS OBLIGATORIOS</label>
+              
               <div className="d-flex flex-row ">
                 <div className="me-2 w-100">
                 <div className="d-flex flex-column" style={{height:120}}>
@@ -1125,15 +1166,17 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocRut"
+                    id="docRut"
                     /* onChange={(e)=>(handleFileChange(e, 0),setDocRut(1))} */
                     type="file"
                     style={{backgroundColor:'#f3f3f3',width:335}}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
-                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1),FileChange(e,1))}
+                    /* value={'1'} */
+                    onChange={(e) => (handleFileChange('Rut', e),setDocRut(1),FileChange(e,1),changeSearch(e))}
                   />
                   {selectedFiles[1] && (
+                    
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
                     <a href={URL.createObjectURL(selectedFiles[1])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
@@ -1151,11 +1194,11 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocInfemp"
+                    id="docInfemp"
                     type="file"
                     style={{backgroundColor:'#f3f3f3',width:335}}
                     /* onChange={(e)=>(handleFileChange(e, 1),setDocInfemp(1))} */
-                    onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1),FileChange(e,2))}
+                    onChange={(e)=>(handleFileChange('Infemp',e),setDocInfemp(1),FileChange(e,2),changeSearch(e))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[2] && (
@@ -1178,10 +1221,10 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocInfrl"
+                    id="docInfrl"
                     type="file"
                     /* onChange={(e)=>(handleFileChange(e, 2),setDocInfrl(1))} */
-                    onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,3))}
+                    onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,3),changeSearch(e))}
                     placeholder="RUT"
                     style={{backgroundColor:'#f3f3f3',width:335}}
                     className="form-control form-control-sm me-2 border border-5 rounded-3"
@@ -1195,6 +1238,10 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   )} 
                   </div>
                   </div>
+                  {/* <span>{compare.docRut}</span>
+                  <span>{compare.docInfrl}</span>
+                  <span>{compare.docInfemp}</span>
+                  <span>{compare.docOtros}</span> */}
                 </div> 
               <div className="d-flex flex-column mt-2 w-100">
               <div className="d-flex flex-column" style={{height:120}}>
@@ -1204,11 +1251,11 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="DocOtros"
+                    id="docOtros"
                     style={{backgroundColor:'#f3f3f3',width:335}}
                     type="file"
                     /* onChange={(e)=>(handleFileChange(e, 3),setDocOtros(1))} */
-                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,4))}
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,4),changeSearch(e))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
                     {selectedFiles[4] && (

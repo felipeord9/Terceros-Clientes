@@ -235,6 +235,8 @@ export default function VariosJuridico(){
         const folderName = search.cedula+'-'+search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
+        const originalFolderName = search.cedula+'-'+search.razonSocial.toUpperCase();
+        formData.append('originalFolderName', originalFolderName);
         //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)

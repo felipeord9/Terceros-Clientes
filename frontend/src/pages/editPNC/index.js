@@ -131,6 +131,10 @@ export default function EditPNC(){
     segundoApellido:'',
     primerNombre:'',
     otrosNombres:'',
+    docRut:'',
+    docInfemp:'',
+    docInfrl:'',
+    docOtros:'',
   })
   useEffect(()=>{
     const datosTercero = localStorage.getItem('data');
@@ -140,7 +144,6 @@ export default function EditPNC(){
     }
   },[]);
   
-  const [PA,setPA]=useState([search.celular]);
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
   
@@ -188,6 +191,24 @@ export default function EditPNC(){
       [id]: value,
     });
   };
+
+  const changeSearch = (e)=>{
+    const file = e.target.files[0]; 
+    const {id,value} = e.target;
+    /* value = 1; */
+    console.log(value);
+    if(file){
+      setCompare({
+        ...compare,
+        [id]:1,
+      });
+    }else{
+      setCompare({
+        ...compare,
+        [id]:0,
+      })
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -251,11 +272,11 @@ export default function EditPNC(){
           solicitante:search.solicitante.toUpperCase(),
           tipoFormulario:search.tipoFormulario,
           
-          docRut:search.docRut,
+          docRut:compare.docRut,
           
-          docInfrl:search.docInfrl,
+          docInfrl:compare.docInfrl,
           
-          docOtros:search.docOtros,
+          docOtros:compare.docOtros,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
 /*         const folderName = search.cedula;
@@ -439,11 +460,7 @@ const [colorVality,setColorVality]=useState('red');
     /* const valorBinario = valor */
     /* const nuevoTexto = valor ? 'Fue cargado':'No fue cargado'; */
     useEffect(()=>{
-      if(valor=== 1 && search.primerApellido.toUpperCase() === compare.primerApellido.toUpperCase() &&
-      search.segundoApellido.toUpperCase() === compare.segundoApellido.toUpperCase() &&
-      search.primerNombre.toUpperCase() === compare.primerNombre.toUpperCase() &&
-      search.otrosNombres.toUpperCase() === compare.otrosNombres.toUpperCase()
-      ){
+      if(valor=== 1){
         setLabelColor('#008F39')
         setNuevoTexto('Cargado')
         /* setLogo({Logo_pdf}) */
@@ -454,7 +471,7 @@ const [colorVality,setColorVality]=useState('red');
         setLogo(null)
       }else{
         setLabelColor('#CB3234')
-        setNuevoTexto('Si el nombre cambia, Debe volver a cargar el pdf')
+        setNuevoTexto('')
         setLogo(null)
         /* setLabelColor(null)
         setNuevoTexto('') */
@@ -466,11 +483,7 @@ const [colorVality,setColorVality]=useState('red');
     )
   }
   const mostrarImagen=(valor)=>{
-    if(valor=== 1 && search.primerApellido.toUpperCase() === compare.primerApellido.toUpperCase() &&
-    search.segundoApellido.toUpperCase() === compare.segundoApellido.toUpperCase() &&
-    search.primerNombre.toUpperCase() === compare.primerNombre.toUpperCase() &&
-    search.otrosNombres.toUpperCase() === compare.otrosNombres.toUpperCase()
-    ){
+    if(valor=== 1){
       return <img src={Logo_pdf} style={{width:100}}></img>
     }else{
       return null;
@@ -498,6 +511,7 @@ const [colorVality,setColorVality]=useState('red');
           <h1 className="mb-3"><strong>Actualizar Información Del Cliente</strong></h1>
           
         </div>
+        
         {/* <span>{compare.otrosNombres}</span>
         <span>{search.otrosNombres}</span> */}
       <form className="" onSubmit={handleSubmit} >
@@ -642,10 +656,12 @@ const [colorVality,setColorVality]=useState('red');
                     id="tipoDocumento"
                     value={search.tipoDocumento}
                     onChange={handlerChangeSearch}
-                    style={{width:240}}
+                    style={{width:240,backgroundColor:'grey'}}
                     className="form-select form-select-sm m-100 me-3"
                     /* onChange={(e)=>setDocument(JSON.parse(e.target.value))} */
                     required
+                    disabled
+
                   >
                     <option selected value='' disabled>
                   -- Seleccione el tipo de documento --
@@ -673,6 +689,8 @@ const [colorVality,setColorVality]=useState('red');
                     value={search.cedula}
                     onChange={(e)=>(handlerChangeSearch(e),handleInputChange(e))}
                     required
+                    disabled
+                    style={{backgroundColor:'grey'}}
                     max={9999999999}
                     minLength={0}
                     maxLength={10}
@@ -964,15 +982,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="RUT"
+                    id="docRut"
                     type="file"
-                    placeholder="RUT"
+                    placeholder="docRut"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
                     /* second form */
-                    onChange={(e) => (handleFileChange('Rut', e),/* setSearch({docRut:1}) */setDocRut(1),FileChange(e,1))}
+                    onChange={(e) => (handleFileChange('Rut', e),/* setSearch({docRut:1}) */setDocRut(1),FileChange(e,1),changeSearch(e))}
                   />
                   {selectedFiles[1] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -992,15 +1010,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="INFOLAFT"
+                    id="docInfrl"
                     type="file"
-                    placeholder="INFOLAFT"
+                    placeholder="docInfrl"
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     /* value={search.docInfrl} */
                     style={{backgroundColor:'#f3f3f3',width:330}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,2))}
+                    onChange={(e) => (handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,2),changeSearch(e))}
                   />
                   {selectedFiles[2] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -1021,15 +1039,15 @@ const [colorVality,setColorVality]=useState('red');
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
-                    id="otros"
+                    id="docOtros"
                     type="file"
-                    placeholder="OTROS"
+                    placeholder="docOtros"
                     /* value={search.docOtros} */
                     style={{backgroundColor:'#f3f3f3',width:720}}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
                     /* onChange={(e) => (handleFileChange(e, 2),setDocOtros(1))} */
-                    onChange={(e) => (handleFileChange('Otros',e),setDocOtros(1),FileChange(e,3))}
+                    onChange={(e) => (handleFileChange('Otros',e),setDocOtros(1),FileChange(e,3),changeSearch(e))}
                   />
                   {selectedFiles[3] && (
                     <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
@@ -1042,6 +1060,7 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                 </div> 
             </div>
+            
           </div>
         <div className="d-flex flex-column mb-3 mt-3">
           <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
