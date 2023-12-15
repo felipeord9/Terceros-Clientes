@@ -2,15 +2,16 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs')
+const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const { Client } = require('smb2');
 const rimraf = require('rimraf');
 const fsExtra = require('fs-extra');
 const { execSync } = require('child_process');
 
-/* const app = express(); */
 
 const router = express.Router();
+
 
 //metodo multer.storage.diskStorage
 
@@ -38,6 +39,8 @@ const storage = multer.diskStorage({
 });
 
 /* const upload = multer({ storage: storage }); */
+
+const nameX = null;
 
 const upload = multer({ dest: 'uploads/' });
 router.post('/', upload.fields([
@@ -78,9 +81,8 @@ router.post('/', upload.fields([
   { name: 'Otros'},
   { name: 'ValAnt'},
 ]), async (req, res) => {
-  const folderName = req.body.folderName; 
+  const folderName = req.body.folderName;
   const originalFolderName = req.body.originalFolderName;
-  const originalFileName = req.body.originalClientName;
   /* const folderPath=null */
   if(folderName !== originalFolderName){
     
@@ -91,10 +93,28 @@ router.post('/', upload.fields([
     const carpetaDestino = `C:/Clientes-Proveedores/${folderName}`;
     /* const nombreArchivos =  */
     const archivosLocales = fsExtra.readdirSync(carpetaOrigen);
+
   archivosLocales.forEach((archivo) => {
     const rutaLocal = path.join(carpetaOrigen, archivo);
     const rutaRemotaArchivo = path.join(carpetaDestino, archivo);
     fsExtra.copySync(rutaLocal, rutaRemotaArchivo);
+
+    /* changing names of files */
+    const palabraABorrar  = req.body.originalClientName;
+    const palabraReemplazo  = req.body.clientName;
+    const extension = path.extname(archivo);
+    const nombreBase  = path.basename(archivo);
+    const nuevoNombre = nombreBase.replace(palabraABorrar,palabraReemplazo);
+    const rutaOriginal = path.join(carpetaDestino,archivo);
+    const rutaNueva = path.join(carpetaDestino,nuevoNombre+extension);
+    fs.rename(rutaOriginal,rutaNueva,(err)=>{
+      if (err) {
+        console.error('Error al renombrar el archivo:', err);
+      } else {
+        console.log(`Archivo renombrado: ${nombreBase} => ${nuevoNombre}`);
+      }
+    })
+
   });
   console.log('Archivos copiados exitosamente.');
   }
@@ -172,6 +192,44 @@ router.delete('/:folderName', (req,res)=>{
       return res.status(500).send('Error al eliminar la carpeta');
     }
 });
+
+const carpetaCompartida = '\\\\192.168.4.237\\aplicativoterceros\\87877767-COMFENALCO';
+
+router.get('/archivo/:nombreArchivo',(req,res)=>{
+  /* router.post('/archivo/:nombreArchivo',(req,res)=>{
+    const {nombre} = req.body;
+    folderName= req.body
+  }) */
+  const { nombreArchivo } = req.params;
+  const folderName = req.body.folderName;
+  /* const rutaArchivo = path.join('\\\\192.168.4.237\\aplicativoterceros\\1006101631-ORDOÑEZ-MARIN-FELIPE-JOSE', nombreArchivo); */
+  const rutaArchivo = path.join(`${carpetaCompartida}`, nombreArchivo);
+  /* const rutaArchivo = path.join(folderName, nombreArchivo); */
+  try{
+    res.sendFile(rutaArchivo);
+
+  }catch (error){
+    console.log('Error no hay ningun archivo con este nombre',error)
+  }
+})
+
+/* const carpetaCompartida = '\\\\192.168.4.237\\aplicativoterceros\\1006101631-ORDOÑEZ-MARIN-FELIPE-JOSE'; // Reemplaza con la ruta de tu carpeta compartida
+router.get('/archivos',express.static(carpetaCompartida));
+ */
+
+
+/* app.use('/archivos',express.static(carpetaCompartida)) */
+/* get the files in the ftp */
+/* const arr = express.static();
+arr.get('archivos',('\\\\192.168.4.237\\aplicativoterceros\\1006101631-ORDOÑEZ-MARIN-FELIPE-EMANUEL')) */
+/* router.use('/archivos', express.static(carpetaCompartida));
+ *//* router.use('/archivo',(req,res)=>{
+  const folderName = req.body.folderName;
+  const carpetaCompartida = `\\\\192.168.4.237\\aplicativoterceros\\${folderName}`; // Reemplaza con la ruta de tu carpeta compartida
+  express.static(carpetaCompartida)
+
+}) */
+
 
 router.get('/archivos/compartidos',(req,res)=>{
   const folderName = req.params.folderName; 

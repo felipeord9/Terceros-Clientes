@@ -71,10 +71,25 @@ const deleteUser = async (req, res, next) => {
   }
 }
 
+const deleteByName = async (req, res, next) => {
+  try {
+    const { params: { name }} = req
+    const data = await UserService.removeByName(name)
+
+    res.status(200).json({
+      message: 'Deleted',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+} 
+
 module.exports = {
   findAllUsers,
   findOneUser,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  deleteByName,
 };

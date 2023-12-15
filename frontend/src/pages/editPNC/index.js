@@ -975,8 +975,10 @@ const [colorVality,setColorVality]=useState('red');
               <div className="d-flex flex-row ">
                 <div className="pe-2 w-50" style={{height:160}}>
                   <div className="d-flex flex-column" style={{height:120}}>
-                  <label className="fw-bold mt-1 ">RUT: </label>
-                  
+                  <div className="d-flex flex-row">
+                  <label className="fw-bold mt-1 me-2">RUT: </label>
+                  <label className="ms-2 mt-1 ">(AÑO 2023) </label>
+                  </div>                  
                   <TextOfBinary valor={search.docRut}></TextOfBinary>
                   </div>
                   <div className=" rounded-2 pt-1" >

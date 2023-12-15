@@ -15,6 +15,7 @@ router
   .get("/:id", UserController.findOneUser)
   .post('/', UserController.createUser)
   .patch('/:id', UserController.updateUser)
-  .delete('/:id', UserController.deleteUser);
+  .delete('/:id', UserController.deleteUser)
+  .delete('/delete/:name', UserController.deleteByName);
 
 module.exports = router

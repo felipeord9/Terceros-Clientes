@@ -4,6 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Button } from "@mui/material";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
+import { config } from "../../config";
 import { FaEye } from "react-icons/fa";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
@@ -497,6 +498,8 @@ const [selectedFiles, setSelectedFiles] = useState([]);
       return navigate('/validacion/admin')
     }
   }
+
+  const [mostrarEnlace, setMostrarEnlace] = useState(false);
   const TextOfBinary =({valor})=>{
     const [labelColor, setLabelColor] = useState('');
     const [nuevoTexto,setNuevoTexto] = useState('');
@@ -507,20 +510,23 @@ const [selectedFiles, setSelectedFiles] = useState([]);
       if(valor=== 1){
         setLabelColor('#008F39')
         setNuevoTexto('Cargado')
+        setMostrarEnlace(true)
         /* setLogo({Logo_pdf}) */
 
       }else if(valor===0){
         setLabelColor('#CB3234')
         setNuevoTexto('No fue cargado')
+        setMostrarEnlace(false)
         setLogo(null)
       }else{
         setLabelColor(null)
         setNuevoTexto('')
+        setMostrarEnlace(false)
       }
     },[valor]);
     
     return (
-      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {mostrarImagen(valor)} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
+      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {/* {mostrarImagen(valor)} */} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
     )
   }
   const mostrarImagen=(valor)=>{
@@ -528,12 +534,42 @@ const [selectedFiles, setSelectedFiles] = useState([]);
       return <img src={Logo_pdf} style={{width:100}}></img>
     }
   }
+
+  const [nombreArchivo, setNombreArchivo] = useState([search.razonSocial]);
+
+  const generarEnlace = (e) => {
+    // Puedes cambiar la ruta según tu configuración
+    /* setNombreArchivo(`Rut-${search.razonSocial}.pdf`) */
+    /* const enlace = `${config.apiUrl2}/uploadMultiple/archivo/${nombreArchivo}`;
+    window.open(enlace, '_blank'); */
+    try{
+      const nombreFolder = fetch(`${config.apiUrl2}/uploadMultiple/archivo/${nombreArchivo}`,{
+        method:'post',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(search.cedula+'-'+ search.razonSocial ),
+      })
+      if (nombreFolder.ok) {
+        console.log('Nombre enviado con éxito al servidor');
+      } else {
+        console.error('Error al enviar el nombre al servidor');
+      }
+    } catch (error){
+      console.error('Error en la solicitud fetch:', error);
+    }
+
+    /* const folderName = search.cedula+'-'+ search.razonSocial.toUpperCase();
+    formData.append('folderName', folderName); */
+  };
+
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
     <div
       className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white'}}
     >
+      {/* <span>${search.razonSocial}</span> */}
     <div className="w-100 d-flex flex-row" >
           <Button style={{height:35}} onClick={(e)=>window.history.back(e)} variant="contained" className="d-flex justify-content-start"><RiArrowGoBackFill className="me-1" />back</Button>
           <div style={{width:30}}></div>
@@ -1158,10 +1194,24 @@ const [selectedFiles, setSelectedFiles] = useState([]);
               
               <div className="d-flex flex-row ">
                 <div className="me-2 w-100">
-                <div className="d-flex flex-column" style={{height:120}}>
+                <div className="d-flex flex-column" /* style={{height:120}} */>
+                  <div className="d-flex flex-row">
                   <label className="fw-bold mt-1 ">RUT: </label>
-                  
-                  <TextOfBinary valor={search.docRut}></TextOfBinary>
+                  <label className="ms-2 mt-1 ">(AÑO 2023) </label>
+                  </div>
+                  <div className="d-flex flex-row">
+                    <TextOfBinary valor={search.docRut}></TextOfBinary>
+                    {search.docRut === 1 &&(
+                      <a 
+                      
+                      className="ms-3"
+                      href={`${config.apiUrl2}/uploadMultiple/archivo/Rut-${search.razonSocial}.pdf`}
+                      onClick={(e)=> generarEnlace(e)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      /* onClick={(e)=>generarEnlace(e)} */>Ver Rut</a>
+                    )}
+                  </div>
                   </div>                  
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
@@ -1187,11 +1237,21 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   </div>
                 </div>
                 <div className="ms-2 w-100">
-                <div className="d-flex flex-column" style={{height:120}}>
+                <div className="d-flex flex-column" /* style={{height:120}} */>
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
+                  <div className="d-flex flex-row">
                   <TextOfBinary valor={search.docInfemp}></TextOfBinary>
+                  {search.docInfemp === 1 &&(
+                    <a 
+                        disabled ={!mostrarEnlace}
+                        href={`${config.apiUrl2}/uploadMultiple/archivo/Infemp-${search.razonSocial}.pdf`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        /* onClick={(e)=>generarEnlace(e)} */>Ver Infolaft</a>
+                    )}
+                  </div>
                   </div>                  
-                  <div className=" rounded-2 pt-1" >
+                  <div className=" rounded-2 pt-2" >
                   <div className="d-flex flex-row">
                   <input
                     id="docInfemp"
@@ -1214,11 +1274,21 @@ const [selectedFiles, setSelectedFiles] = useState([]);
               </div>
               <div className="d-flex flex-row">
               <div className="d-flex flex-column mt-2 w-100 me-2">
-                  <div className="d-flex flex-column" style={{height:120}}>
+                  <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
+                  <div className="d-flex flex-row">
                   <TextOfBinary valor={search.docInfrl}></TextOfBinary>
+                  {search.docInfrl === 1 &&(
+                    <a 
+                    disabled ={!mostrarEnlace}
+                    href={`${config.apiUrl2}/uploadMultiple/archivo/Infrl-${search.razonSocial}.pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    /* onClick={(e)=>generarEnlace(e)} */>Ver Infolaft rep. legal</a>
+                  )}
                   </div>
-                  <div className=" rounded-2 pt-1" >
+                  </div>
+                  <div className=" rounded-2 pt-2" >
                   <div className="d-flex flex-row">
                   <input
                     id="docInfrl"
@@ -1244,11 +1314,22 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <span>{compare.docOtros}</span> */}
                 </div> 
               <div className="d-flex flex-column mt-2 w-100">
-              <div className="d-flex flex-column" style={{height:120}}>
+              <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
+                  <div className="d-flex flex-row">
                   <TextOfBinary valor={search.docOtros}></TextOfBinary>
+                  {search.docOtros === 1 &&(
+                    <a 
+                    className="ms-3"
+                    disabled ={!mostrarEnlace}
+                    href={`${config.apiUrl2}/uploadMultiple/archivo/Otros-${search.razonSocial}.pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    /* onClick={(e)=>generarEnlace(e)} */>Ver Otros</a>
+                  )}
+                  </div>
                   </div>                  
-                  <div className=" rounded-2 pt-1" >
+                  <div className=" rounded-2 pt-2" >
                   <div className="d-flex flex-row">
                   <input
                     id="docOtros"

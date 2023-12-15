@@ -107,11 +107,14 @@ export default function Navbar() {
     const handleClickInicio=(e)=>{
       e = e.target.value
       if(user.role==='agencias' || user.role==='cartera'){
-        return navigate('/inicio')
+        /* return navigate('/inicio') */
+        return navigate('/menu/principal')
       }else if(user.role==='compras'){
-        return navigate('/compras')
+        /* return navigate('/compras') */
+        return navigate('/menu/principal')
       }else{
-        return navigate('/inicio/admin')
+        /* return navigate('/inicio/admin') */
+        return navigate('/menu/principal/admin')
       }
     }
   return (

@@ -141,11 +141,27 @@ const deleteCliente = async(req,res,next)=>{
     }
 }
 
+const deleteByCedula = async (req, res, next) => {
+  try {
+    const { params: { cedula }} = req
+    const data = await ClienteService.removeByCedula(cedula)
+
+    res.status(200).json({
+      message: 'Deleted',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+} 
+
 module.exports = {
     findAllClientes,
     createCliente,
     findOneCliente,
     deleteCliente,
     validar,
-    updateCliente
+    updateCliente,
+    deleteByCedula,
+
 }

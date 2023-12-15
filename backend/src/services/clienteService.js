@@ -22,6 +22,16 @@ const findCliente = async (id)=>{
     return client
 }
 
+const findByCedula = async (cedula) => {
+    const cliente = await models.Clientes.findOne({
+     where: {cedula }
+  })
+  
+    if(!cliente) throw boom.notFound('Cliente no encontrado')
+  
+    return cliente
+  }
+
 const update = async (id, changes) => {
     const cliente = await findOne(id)
     const updatedCliente = await cliente.update(changes)
@@ -49,7 +59,11 @@ const remove = async(id)=>{
  */    /* models.Clientes.destroy(id)
     models.Clientes.sequelize.query(`DELETE FROM clientes_id WHERE ${cliente.id}`) */
 }
-
+const removeByCedula = async(cedula)=>{
+    const cliente = await findByCedula(cedula)
+    await cliente.destroy(cedula)
+    return cedula
+}
 module.exports={
     find,
     create,
@@ -57,5 +71,7 @@ module.exports={
     remove,
     validarCliente,
     update,
-    findCliente
+    findCliente,
+    removeByCedula,
+
 }

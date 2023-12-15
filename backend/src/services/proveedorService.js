@@ -11,6 +11,15 @@ const findOne = async (id) => {
   
     return Proveedor
 }
+const findByCedula = async (cedula) => {
+    const proveedor = await models.Proveedores.findOne({
+     where: {cedula }
+  })
+  
+    if(!proveedor) throw boom.notFound('Proveedor no encontrado')
+  
+    return proveedor
+  }
 
 const create = async(body)=>{
     const newProveedor = await models.Proveedores.create(body)
@@ -37,6 +46,12 @@ const remove = async(id)=>{
     ;(await proveedor).destroy(id)
 }
 
+const removeByCedula = async(cedula)=>{
+    const proveedor = await findByCedula(cedula)
+    await proveedor.destroy(cedula)
+    return cedula
+}
+
 module.exports={
     find,
     create,
@@ -44,4 +59,6 @@ module.exports={
     remove,
     validarProveedor,
     update,
+    removeByCedula,
+    findByCedula,
 }

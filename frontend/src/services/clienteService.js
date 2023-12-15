@@ -58,10 +58,22 @@ const deleteCliente = (id) => {
     .then((res) => res);
 };
 
+const deleteByCedula = (cedula) => {
+  return fetch(`${url}/delete/${cedula}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => res);
+};
+
 
 export {
     findClientes,
     createCliente,
     deleteCliente,
     validarCliente,
+    deleteByCedula,
 }

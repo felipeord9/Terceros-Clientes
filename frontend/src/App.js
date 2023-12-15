@@ -42,6 +42,8 @@ import EditarPMJ from './pages/editarPMJ';
 import EditPS from './pages/editarPS';
 import EditPVN from './pages/editarPVN';
 import EditarPVJ from './pages/editarPVJ';
+import MenuPrincipalAdmin from './pages/mpAdmin';
+import MenuPrincipal from './pages/mpClientes';
 
 function App() {
   return(
@@ -75,6 +77,10 @@ function App() {
         <Route path='/editar/info/PS' element={<PrivateRoute component={EditPS}/>}/>
         <Route path='/editar/info/PVN' element={<PrivateRoute component={EditPVN}/>}/>
         <Route path='/editar/info/PVJ' element={<PrivateRoute component={EditarPVJ}/>}/>
+
+        {/* menus principales */}
+        <Route path='/menu/principal/admin' element={<PrivateRoute component={MenuPrincipalAdmin}/>}/>
+        <Route path='/menu/principal' element={<PrivateRoute component={MenuPrincipal}/>}/>
 
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>

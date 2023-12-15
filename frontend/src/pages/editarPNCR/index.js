@@ -1162,8 +1162,10 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column" style={{height:150}}>
                    <label className="fw-bold mt-1 me-2">RUT: </label>
+                   <label className="ms-2 mt-1 ">(AÑO 2023) </label>
+
                     <TextOfBinary valor={search.docRut}></TextOfBinary>
                   </div>
                    <div className=" rounded-2 pt-1" >
@@ -1188,8 +1190,10 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column" style={{height:150}}>
                    <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
+                   <label className="ms-2 mt-1 ">(Con una vigencia no mayor a 30 días) </label>
+
                     <TextOfBinary valor={search.docCcio}></TextOfBinary>
                   </div>                   
                   <div className=" rounded-2 pt-1" >

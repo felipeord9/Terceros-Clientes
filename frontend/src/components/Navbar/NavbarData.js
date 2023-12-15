@@ -13,26 +13,41 @@ import { FaPeopleLine } from "react-icons/fa6";
 import { GiArchiveRegister } from "react-icons/gi";
 import { TbCircleLetterJ } from 'react-icons/tb' /*letra j*/
 import { RiPassValidLine } from "react-icons/ri";
+import { AiOutlineSelect } from "react-icons/ai";
 
 export const NavBarData = [
   {
-    title:'Inicio',
-    path:'/inicio',
-    icon:<GoHomeFill/>,
-    cName:'nav-text',
-    access:['cartera','agencias']   
-  },
-  {
-    title:'Inicio',
-    path:'/inicio/admin',
+    title:'Menu Principal',
+    path:'/menu/principal/admin',
     icon:<GoHomeFill/>,
     cName:'nav-text',
     access:['admin']   
   },
   {
-    title:'Inicio',
-    path:'/compras',
+    title:'Menu Principal',
+    path:'/menu/principal',
     icon:<GoHomeFill/>,
+    cName:'nav-text',
+    access:['agencias','compras','cartera']   
+  },
+  {
+    title:'Crear Tercero',
+    path:'/inicio',
+    icon:<AiOutlineSelect />,
+    cName:'nav-text',
+    access:['cartera','agencias']   
+  },
+  {
+    title:'Crear Tercero',
+    path:'/inicio/admin',
+    icon:<AiOutlineSelect/>,
+    cName:'nav-text',
+    access:['admin']   
+  },
+  {
+    title:'Crear Tercero',
+    path:'/compras',
+    icon:<AiOutlineSelect/>,
     cName:'nav-text',
     access:['compras']   
   }

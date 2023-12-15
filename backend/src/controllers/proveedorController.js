@@ -123,6 +123,20 @@ const deleteProveedor = async(req,res,next)=>{
     }
 }
 
+const deleteByCedula = async (req, res, next) => {
+  try {
+    const { params: { cedula }} = req
+    const data = await ProveedorService.removeByCedula(cedula)
+
+    res.status(200).json({
+      message: 'Deleted',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+} 
+
 module.exports = {
     findAllProveedores,
     createProveedor,
@@ -130,5 +144,6 @@ module.exports = {
     deleteProveedor,
     validar,
     updateProveedor,
+    deleteByCedula,
     
 }

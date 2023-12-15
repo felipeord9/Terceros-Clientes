@@ -984,6 +984,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
               <div className="d-flex flex-row">
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <label className="fw-bold mt-1 me-2">RUT: </label>
+                  <label className="ms-2 mt-1 ">(AÑO 2023) </label>
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
@@ -1007,6 +1008,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                 </div> 
                 <div className="d-flex flex-column mt-2 w-100 ms-2">
                   <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
+                  <label className="ms-2 mt-1 ">(Con una vigencia no mayor a 30 días) </label>
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
                   <input
@@ -1145,7 +1147,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                       className="form-control form-control-sm border border-5 rounded-3 d-flex flex-column mb-2"
                       accept=".pdf"                  
                     />
-                    {/* <span>`Refcom ${input.id+1}`</span> */}
+                    {/* <span>`Refcom {input.id+1}`</span> */}
                     </div>
                     {selectedFiles[11+index] && (
                     <div className=" pt-1 ps-2" style={{width:50}} >

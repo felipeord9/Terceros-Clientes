@@ -12,5 +12,6 @@ router
     .get('/numero/:cedula',ClienteController.validar)
     .patch('/update/:id',ClienteController.updateCliente)
     .delete('/:id',ClienteController.deleteCliente)
+    .delete('/delete/:cedula', ClienteController.deleteByCedula);
     
 module.exports = router
