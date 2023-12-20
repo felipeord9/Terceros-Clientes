@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoMdPersonAdd } from "react-icons/io";
 
-export default function MenuPrincipalClientes(){
+export default function MpPrueba(){
   const { user, setUser } = useContext(AuthContext);
   const navigate =useNavigate()
     const [cedula,setCedula] = useState('');
@@ -36,9 +36,9 @@ export default function MenuPrincipalClientes(){
 
     const handleClickInicio=(e)=>{
       e = e.target.value
-      if(user.role==='cartera'){
+      if(user.role==='agencias' || user.role==='cartera'){
         return navigate('/inicio')
-      }else if(user.role==='compras' || user.role==='agencias'){
+      }else if(user.role==='compras'){
         return navigate('/compras')
       }else{
         return navigate('/inicio/admin')
@@ -94,8 +94,9 @@ export default function MenuPrincipalClientes(){
         color: hover ? 'white':'black',
         padding: '10px',
         cursor: 'pointer',
-        height:170,width:260,
-        fontSize:21
+        height:150,width:250,
+        fontSize:21,
+        borderColor:'#D92121'
       };
     
       return (
@@ -117,22 +118,28 @@ export default function MenuPrincipalClientes(){
       <div className='login-wrapper p-2 mb-5 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
     <div className='d-flex flex-row '>
     <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
-      <div>
-        <center>
-        <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>Menú Principal Clientes </strong></label>
-        <hr style={{width:700, color:'black'}}/>
-        <h4>A continuación, elige la acción que deseas realizar</h4>
+      <div className="d-flex flex-row">
+        <center>        
         </center>
-        <div className="d-flex flex-row">
-        <div className="d-flex flex-row">
-        </div>
-        </div>
         <center>
-        <div className="m-3">
+        <div className="m-3" style={{border:10 ,borderColor:'#D92121'}}>
         <div className=" mb-3">
-          <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Cliente</BotonColorCambiante></a>
-          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Cliente</BotonColorCambiante></a>
+          <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Tercero</BotonColorCambiante></a>
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Tercero</BotonColorCambiante></a>
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
+        </div>
+        <div className="d-flex flex-row  mb-3">
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta solicitudes</BotonColorCambiante></a>
+          <div className="d-flex justify-content-center align-items-center" style={{height:150,width:270}}>
+          <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>Menú </strong></label>
+          {/* <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong> </strong></label */}
+          </div>
+          <a onClick={(e)=>navigate('/bitacora')}><BotonColorCambiante>Bitácora</BotonColorCambiante></a>
+        </div>
+        <div className="">
+        <a onClick={(e)=>navigate('/usuarios')}> <BotonColorCambiante>Gestionar usuarios</BotonColorCambiante></a>
+        <a onClick={(e)=>navigate('/terceros')}>  <BotonColorCambiante>Eliminar cliente</BotonColorCambiante></a>
+        <a onClick={(e)=>navigate('/Proveedores')}><BotonColorCambiante>Eliminar proveedor</BotonColorCambiante></a>
         </div>
         </div>
         </center>

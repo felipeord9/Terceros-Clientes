@@ -117,16 +117,38 @@ export default function MenuPrincipalAdmin(){
       <div className='login-wrapper p-2 mb-5 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
     <div className='d-flex flex-row '>
     <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
-      <div>
+    <div className="d-flex flex-row">
+        <center>        
+        </center>
+        <center>
+        <div className="m-3" style={{border:10 ,borderColor:'#D92121'}}>
+        <div className=" mb-3">
+          <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Tercero</BotonColorCambiante></a>
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Tercero</BotonColorCambiante></a>
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
+        </div>
+        <div className="d-flex flex-row ">
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta solicitudes</BotonColorCambiante></a>
+          <div className="d-flex justify-content-center align-items-center" style={{height:140,width:240}}>
+          <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>Menú </strong></label>
+          {/* <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong> </strong></label */}
+          </div>
+          <a onClick={(e)=>navigate('/bitacora')}><BotonColorCambiante>Bitácora</BotonColorCambiante></a>
+        </div>
+        <div className="">
+        <a onClick={(e)=>navigate('/usuarios')}> <BotonColorCambiante>Gestionar usuarios</BotonColorCambiante></a>
+        <a onClick={(e)=>navigate('/terceros')}>  <BotonColorCambiante>Eliminar cliente</BotonColorCambiante></a>
+        <a onClick={(e)=>navigate('/Proveedores')}><BotonColorCambiante>Eliminar proveedor</BotonColorCambiante></a>
+        </div>
+        </div>
+        </center>
+      </div>
+      {/* <div>
         <center>
         <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:65, userSelect:'none'}}><strong>Menú principal</strong></label>
         <hr style={{width:750, color:'black'}}/>
-        <h4>A continuación elige la acción que deseas realizar</h4>
+        <h4>A continuación, elige la acción que deseas realizar</h4>
         </center>
-        <div className="d-flex flex-row">
-        <div className="d-flex flex-row">
-        </div>
-        </div>
         <center>
         <div className="m-3">
         <div className=" mb-3">
@@ -134,24 +156,17 @@ export default function MenuPrincipalAdmin(){
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Tercero</BotonColorCambiante></a>
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta solicitudes</BotonColorCambiante></a>
-          {/* <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)} >Creación Tercero</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)}>Consulta Tercero</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)} >Creacion sucursal</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 " onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)}>Consulta solicitudes</button> */}
         </div>
         <div className="">
         <a onClick={(e)=>navigate('/bitacora')}><BotonColorCambiante>Bitácora</BotonColorCambiante></a>
         <a onClick={(e)=>navigate('/usuarios')}> <BotonColorCambiante>Gestionar usuarios</BotonColorCambiante></a>
         <a onClick={(e)=>navigate('/terceros')}>  <BotonColorCambiante>Eliminar cliente</BotonColorCambiante></a>
         <a onClick={(e)=>navigate('/Proveedores')}><BotonColorCambiante>Eliminar proveedor</BotonColorCambiante></a>
-        {/* <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)} >Bitácora</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)}>Crear usuarios</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 me-2" onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)} >Cambiar contraseña</button>
-          <button style={buttonStyle} className="rounded-0 border border-3 " onMouseEnter={(e)=>handleMouseEnter(e)} onMouseLeave={(e)=>handleMouseLeave(e)} >Eliminar terceros</button> */}
+
         </div>
         </div>
         </center>
-      </div>
+      </div> */}
       </Fade>
       
     </div>

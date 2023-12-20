@@ -164,6 +164,28 @@ export default function CreditoPersonaNatural(){
     tipoFormulario:'PNCR',
     valorEstimado:'',
   });
+  const [compare,setCompare]=useState({
+    docRefcom2:'0',
+    docRefcom3:'0',
+  })
+
+  const changeSearch = (e)=>{
+    const file = e.target.files[0]; 
+    const {id,value} = e.target;
+    /* value = 1; */
+    console.log(value);
+    if(file){
+      setCompare({
+        ...compare,
+        [id]:1,
+      });
+    }else{
+      setCompare({
+        ...compare,
+        [id]:0,
+      })
+    }
+  }
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
   /* rama seleccionada de cada variable */
@@ -307,6 +329,8 @@ export default function CreditoPersonaNatural(){
           docCrepL:docCrepL,
           docEf:docEf,
           docRefcom:docRefcom,
+          docRefcom2:compare.docRefcom2,
+          docRefcom3:compare.docRefcom3,
           docCvbo:docCvbo,
           docFirdoc:docFirdoc,
           docInfemp:docInfemp,
@@ -1112,7 +1136,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div className=" d-flex flex-row">
                   <div className="">
                   <div className="d-flex flex-row">
-                    <Button  style={{height:40}} className="rounded-5 d-flex justify-content-center align-items-center me-1" onClick={addFileInput}><MdNoteAdd />{/* <img src={Mas} style={{width:18}} /> */}</Button>
+                    <IconButton  style={{backgroundColor:'#2979FF',color:'white',width:40,height:40}} className="rounded-5 d-flex justify-content-center align-items-center me-1" onClick={addFileInput}><MdNoteAdd />{/* <img src={Mas} style={{width:18}} /> */}</IconButton>
                   <input
                       id="DocRefcom"
                       type="file"
@@ -1139,11 +1163,11 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <div key={index} className="d-flex flex-row">
                     <div key={input.id} className="d-flex flex-row">
                     <input
-                      id="DocRefcom"
+                      id={`docRefcom${input.id+1}`}
                       type="file"
                       style={{backgroundColor:'#f3f3f3',width:282}}
                       /* onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))} */
-                      onChange={(e)=>(handleFileChange(`Refcom${input.id+1}`,e),setDocRefcom(1),FileChange(e,11+index),actualizarFiles(input.id,e))}
+                      onChange={(e)=>(handleFileChange(`Refcom${input.id+1}`,e),FileChange(e,11+index),actualizarFiles(input.id,e),changeSearch(e))}
                       className="form-control form-control-sm border border-5 rounded-3 d-flex flex-column mb-2"
                       accept=".pdf"                  
                     />
@@ -1161,6 +1185,7 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   </div>
                   </div>   
                   </div>
+                  
                   </div>
                 </div> 
               </div>

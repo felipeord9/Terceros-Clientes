@@ -114,7 +114,15 @@ export default function ValidarTercero(){
             docOtros:data.docOtros,
           })
           localStorage.setItem('data',JSON.stringify(data));
-          navigate('/info/validacion')
+          if(data.tipoFormulario==='PNC'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PNCR'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PJC'){
+            navigate('/info/valid')
+          }else if(data.tipoFormulario==='PJCR'){
+            navigate('/info/valid')
+          }
           })
           .catch((error)=>{
             Swal.fire({

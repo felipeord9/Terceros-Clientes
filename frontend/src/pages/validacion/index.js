@@ -107,7 +107,15 @@ export default function ValidacionAdmin(){
             docOtros:data.docOtros,
           })
           localStorage.setItem('data',JSON.stringify(data));
-          navigate('/info/validacion')
+          if(data.tipoFormulario==='PNC'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PNCR'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PJC'){
+            navigate('/info/valid')
+          }else if(data.tipoFormulario==='PJCR'){
+            navigate('/info/valid')
+          }
           })
           .catch((error)=>{
             Swal.fire({
@@ -170,7 +178,11 @@ export default function ValidacionAdmin(){
           docOtros:data.docOtros,
         })
         localStorage.setItem('data',JSON.stringify(data));
-        navigate('/informacion/validacion')
+        if(data.tipoFormulario==='PMN' || data.tipoFormulario==='PS' || data.tipoFormulario==='PVN'){
+          navigate('/informacion/validacion')
+        }else if(data.tipoFormulario==='PMJ' || data.tipoFormulario==='PVJ' ){
+          navigate('/informacion/valid')
+        }
         })
         .catch((error)=>{
           Swal.fire({

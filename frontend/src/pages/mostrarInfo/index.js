@@ -18,6 +18,19 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import Button from '@mui/material/Button';
 import Logo_pdf from '../../assest/logo_pdf.jpg'
 import { CiEdit } from "react-icons/ci";
+import { config } from "../../config";
+
+const CarpetaArchivoLink = ({ carpeta, archivo }) => {
+  const url = `${config.apiUrl2}/uploadMultiple/obtener-archivo/${carpeta}/${archivo}`;
+  return (
+    <div>
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {archivo}
+      </a>
+    </div>
+  );
+
+};
 
 export default function MostartInfo(){
   const { user, setUser } = useContext(AuthContext);
@@ -56,6 +69,8 @@ export default function MostartInfo(){
       docCrepL:'',
       docEf:'',
       docRefcom:'',
+      docRefcom2:'',
+      docRefcom3:'',
       docCvbo:'',
       docFirdoc:'',
       docInfemp:'',
@@ -68,6 +83,7 @@ export default function MostartInfo(){
       const datosTercero = localStorage.getItem('data');
       if(datosTercero){
         setData(JSON.parse(datosTercero));
+        setInfo(JSON.parse(datosTercero));
       }
     },[]);
     const [data,setData]=useState(null);
@@ -107,6 +123,8 @@ export default function MostartInfo(){
             docCrepL:data.docCrepL,
             docEf:data.docEf,
             docRefcom:data.docRefcom,
+            docRefcom2:data.docRefcom2,
+            docRefcom3:data.docRefcom3,
             docCvbo:data.docCvbo,
             docFirdoc:data.docFirdoc,
             docInfemp:data.docInfemp,
@@ -240,7 +258,7 @@ export default function MostartInfo(){
         }
       },[valor]);
       return (
-        <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {mostrarImagen(valor)} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
+        <label className=" mb-2" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {/* {mostrarImagen(valor)} */} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
       )
     }
     const mostrarImagen=(valor)=>{
@@ -385,7 +403,7 @@ export default function MostartInfo(){
                   )}
                 </div>
       </div>
-      <div className="d-flex flex-column mb-3">
+      <div className="d-flex flex-column mb-3 mt-3">
           <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
           {data ? (
 
@@ -402,7 +420,7 @@ export default function MostartInfo(){
           )}
         </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Vinculacion:</label>
                   {/* <input
                   id="docVinculacion"     
@@ -416,9 +434,12 @@ export default function MostartInfo(){
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docVinculacion === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Vinculacion-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   {/* <img className="pt-1" src={Logo_pdf} style={{width:100}}></img> */}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_ComprAntc:</label>
                   {/* <input
                   id="docComprAntc"     
@@ -432,124 +453,176 @@ export default function MostartInfo(){
                   ):(
                     <p>no hay nada</p>
                   )}
-
+                  {info.docComprAntc === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`ComprAntc-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_CtaInst:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCtalnst}>{info.docCtalnst}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docCtalnst === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`CtaInst-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25">
                   <label className="me-1 fw-bold">Doc_Pagare:</label>
                   {data ? (
                   <TextOfBinary valor={data.docPagare}>{info.docPagare}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docPagare === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Pagare-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
       </div>
+      
+      
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Rut:</label>
                   {data ? (
                   <TextOfBinary valor={data.docRut}></TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docRut === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Rut-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Ccio:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCcio}>{info.docCcio}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docCcio === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Ccio-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_CrepL:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCrepL}>{info.docCrepL}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docCrepL === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`CrepL-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25" >
                   <label className="me-1 fw-bold">Doc_Ef:</label>
                   {data ? (
                   <TextOfBinary valor={data.docEf}>{info.docEf}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docEf === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Ef-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
       </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Refcom:</label>
                   {data ? (
                   <TextOfBinary valor={data.docRefcom}>{info.docRefcom}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docRefcom === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Refcom-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
+                  {info.docRefcom2 === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Refcom2-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
+                  {info.docRefcom3 === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Refcom3-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Cvbo:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCvbo}>{info.docCvbo}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docCvbo === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Cvbo-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Firdoc:</label>
                   {data ? (
                   <TextOfBinary valor={data.docFirdoc}>{info.docFirdoc}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docFirdoc === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Firdoc-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25" >
                   <label className="me-1 fw-bold">Doc_Infemp:</label>
                   {data ? (
                   <TextOfBinary valor={data.docInfemp}>{info.docInfemp}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docInfemp === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Infemp-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
       </div>
       <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_Infrl:</label>
                   {data ? (
                   <TextOfBinary valor={data.docInfrl}>{info.docInfrl}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docInfrl === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Infrl-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_CerBan:</label>
                   {data ? (
                   <TextOfBinary valor={data.docCerBan}>{info.docCerBan}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docCerBan === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Certban-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4" style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 me-4" >
                   <label className="me-1 fw-bold">Doc_ValAnt:</label>
                   {data ? (
                   <TextOfBinary valor={data.docValAnt}>{info.docValAnt}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
+                  {info.docValAnt === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`ValAnt-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                  )}
                   </div>
-                <div className="d-flex flex-column align-items-start w-25 " style={{height:120}}>
+                <div className="d-flex flex-column align-items-start w-25 " >
                   <label className="me-1 fw-bold">Doc_Otros:</label>
                   {data ? (
                   <TextOfBinary valor={data.docOtros}>{info.docOtros}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
+                  )}
+                  {info.docOtros === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Otros-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
                   )}
                   </div>
       </div>

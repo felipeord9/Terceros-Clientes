@@ -64,6 +64,8 @@ const createCliente = async (req,res,next)=>{
             docCrepL:body.docCrepL,
             docEf:body.docEf,
             docRefcom:body.docRefcom,
+            docRefcom2:body.docRefcom2,
+            docRefcom3:body.docRefcom3,
             docCvbo:body.docCvbo,
             docFirdoc:body.docFirdoc,
             docInfemp:body.docInfemp,

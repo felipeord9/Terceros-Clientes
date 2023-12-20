@@ -341,6 +341,20 @@ export default function TableTerceros({ terceros, loading }) {
         width: '110px',
       },
       {
+        id: "docRefcom2",
+        name: "Refcom2",
+        selector: (row) => row.docRefcom2,
+        sortable: true,
+        width: '120px',
+      },
+      {
+        id: "docRefcom3",
+        name: "Refcom3",
+        selector: (row) => row.docRefcom3,
+        sortable: true,
+        width: '120px',
+      },
+      {
         id: "docCvbo",
         name: "Cvbo",
         selector: (row) => row.docCvbo,

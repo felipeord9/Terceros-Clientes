@@ -22,7 +22,19 @@ import { fileSend, deleteFile } from "../../services/fileService";
 import { updateBitacora } from '../../services/bitacoraService';
 import { RiArrowGoBackFill } from "react-icons/ri";
 import Logo_pdf from '../../assest/logo_pdf.jpg'
+import { config } from "../../config";
 
+const CarpetaArchivoLink = ({ carpeta, archivo }) => {
+  const url = `${config.apiUrl2}/uploadMultiple/obtener-archivo/${carpeta}/${archivo}`;
+  return (
+    <div>
+      <a className="ms-2" href={url} target="_blank" rel="noopener noreferrer">
+        {archivo}
+      </a>
+    </div>
+  );
+
+};
 export default function EditPNC(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
@@ -135,6 +147,20 @@ export default function EditPNC(){
     docInfemp:'',
     docInfrl:'',
     docOtros:'',
+    docVinculacion:'',
+    docComprAntc:'',
+    docCtalnst:'',
+    docPagare:'',
+    docCcio:'',
+    docCrepL:'',
+    docEf:'',
+    docRefcom:'',
+    docRefcom2:'',
+    docRefcom3:'',
+    docCvbo:'',
+    docFirdoc:'',
+    docCerBan:'',
+    docValAnt:'',
   })
   useEffect(()=>{
     const datosTercero = localStorage.getItem('data');
@@ -271,11 +297,23 @@ export default function EditPNC(){
           observations:search.observations,
           solicitante:search.solicitante.toUpperCase(),
           tipoFormulario:search.tipoFormulario,
-          
+          docVinculacion:compare.docVinculacion,
+          docComprAntc:compare.docComprAntc,
+          docCtalnst:compare.docCtalnst,
+          docPagare:compare.docPagare,
           docRut:compare.docRut,
-          
+          docCcio:compare.docCcio,
+          docCrepL:compare.docCrepL,
+          docEf:compare.docEf,
+          docRefcom:compare.docRefcom,
+          docRefcom2:compare.docRefcom2,
+          docRefcom3:compare.docRefcom3,
+          docCvbo:compare.docCvbo,
+          docFirdoc:compare.docFirdoc,
           docInfrl:compare.docInfrl,
-          
+          docInfemp:compare.docInfemp,
+          docValAnt:compare.docValAnt,
+          docCerBan:compare.docCerBan,
           docOtros:compare.docOtros,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
@@ -479,7 +517,7 @@ const [colorVality,setColorVality]=useState('red');
     },[valor]);
     
     return (
-      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {mostrarImagen(valor)} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
+      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {/* {mostrarImagen(valor)} */} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
     )
   }
   const mostrarImagen=(valor)=>{
@@ -973,13 +1011,19 @@ const [colorVality,setColorVality]=useState('red');
             <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
               <div className="d-flex flex-row ">
-                <div className="pe-2 w-50" style={{height:160}}>
-                  <div className="d-flex flex-column" style={{height:120}}>
+                <div className="pe-2 w-50">
+                  <div className="d-flex flex-column" >
                   <div className="d-flex flex-row">
+                  
                   <label className="fw-bold mt-1 me-2">RUT: </label>
                   <label className="ms-2 mt-1 ">(AÑO 2023) </label>
-                  </div>                  
+                  </div>   
+                  <div className="d-flex flex-column">               
                   <TextOfBinary valor={search.docRut}></TextOfBinary>
+                  {search.docRut === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Rut-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
@@ -1004,10 +1048,15 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                   </div>
                 </div>
-                <div className="ps-2 w-50" style={{height:160}}>
-                  <div className="d-flex flex-column" style={{height:120}}>
+                <div className="ps-2 w-50" >
+                  <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
-                  <TextOfBinary valor={search.docInfrl}></TextOfBinary>
+                  <div className="d-flex flex-column">
+                    <TextOfBinary valor={search.docInfrl}></TextOfBinary>
+                    {search.docInfrl === 1 &&(
+                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Infrl-${search.razonSocial}.pdf`} />
+                    )}
+                  </div>                  
                   </div>
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">
@@ -1033,10 +1082,15 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                 </div>
               </div>
-              <div className="ps-2 w-50" style={{height:160}}>
-                  <div className="d-flex flex-column" style={{height:120}}>
+              <div className="ps-2 w-50" >
+                  <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <TextOfBinary valor={search.docOtros}></TextOfBinary>
+                  <div className="d-flex flex-column">
+                    <TextOfBinary valor={search.docOtros}></TextOfBinary>
+                    {search.docOtros === 1 &&(
+                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Otros-${search.razonSocial}.pdf`} />
+                    )}
+                  </div>                  
                   </div>
                   <div className=" rounded-2 pt-1" >
                   <div className="d-flex flex-row">

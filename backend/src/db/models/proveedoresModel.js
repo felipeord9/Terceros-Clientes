@@ -174,6 +174,16 @@ const ProveedorSchema={
         allowNull: false,
         field: "doc_refcom",
     },
+    docRefcom2:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: "doc_refcom_2",
+    },
+    docRefcom3:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: "doc_refcom_3",
+    },
     docInfemp:{
         type: DataTypes.INTEGER,
         allowNull: false,

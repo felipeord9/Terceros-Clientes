@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoMdPersonAdd } from "react-icons/io";
 
-export default function MenuPrincipalClientes(){
+export default function MenuPrincipalProveedores(){
   const { user, setUser } = useContext(AuthContext);
   const navigate =useNavigate()
     const [cedula,setCedula] = useState('');
@@ -47,9 +47,9 @@ export default function MenuPrincipalClientes(){
 
     const handleClickBack=(e)=>{
       e = e.target.value
-      if(user.role==='agencias' || user.role==='cartera'){
+      if(user.role==='cartera'){
         return navigate('/validar/tercero')
-      }else if(user.role==='compras'){
+      }else if(user.role==='compras' || user.role==='agencias'){
         return navigate('/validar/Proveedor')
       }else{
         return navigate('/validacion/admin')
@@ -119,7 +119,7 @@ export default function MenuPrincipalClientes(){
     <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
       <div>
         <center>
-        <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong>Menú Principal Clientes </strong></label>
+        <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong> Menú Principal Proveedores </strong></label>
         <hr style={{width:700, color:'black'}}/>
         <h4>A continuación, elige la acción que deseas realizar</h4>
         </center>
@@ -130,10 +130,10 @@ export default function MenuPrincipalClientes(){
         <center>
         <div className="m-3">
         <div className=" mb-3">
-          <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Cliente</BotonColorCambiante></a>
-          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Cliente</BotonColorCambiante></a>
-          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
-        </div>
+          <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Proveedor</BotonColorCambiante></a>
+          <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Proveedor</BotonColorCambiante></a>
+{/*           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
+ */}        </div>
         </div>
         </center>
       </div>

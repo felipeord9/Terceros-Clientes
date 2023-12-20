@@ -12,8 +12,11 @@ const { Precio, PrecioSchema} = require('./preciosModel')
 const { Proveedor, ProveedorSchema} = require('./proveedoresModel')
 const { ActividadEconomica,ActividadEconomicaSchema } = require('./actividadModel')
 const { Bitacora,BitacoraSchema } = require('./bitacoraModel')
+const { Sucursal,SucursalSchema } = require('./sucursalModel')
+
 
 function setupModels(sequelize) {
+  Sucursal.init(SucursalSchema,Sucursal.config(sequelize))
   Precio.init(PrecioSchema,Precio.config(sequelize))
   Proveedor.init(ProveedorSchema,Proveedor.config(sequelize))
   Detalle.init(DetalleSchema,Detalle.config(sequelize))
@@ -31,6 +34,7 @@ function setupModels(sequelize) {
 
 
   Bitacora.associate(sequelize.models)
+  Sucursal.associate(sequelize.models)
   User.associate(sequelize.models)
   Precio.associate(sequelize.models)
   Proveedor.associate(sequelize.models)

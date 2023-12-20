@@ -114,7 +114,11 @@ export default function ValidarProveedor(){
           docOtros:data.docOtros,
         })
         localStorage.setItem('data',JSON.stringify(data));
-        navigate('/informacion/validacion')
+        if(data.tipoFormulario==='PMN' || data.tipoFormulario==='PS' || data.tipoFormulario==='PVN'){
+          navigate('/informacion/validacion')
+        }else if(data.tipoFormulario==='PMJ' || data.tipoFormulario==='PVJ' ){
+          navigate('/informacion/valid')
+        }
         })
         .catch((error)=>{
           Swal.fire({
@@ -137,9 +141,9 @@ export default function ValidarProveedor(){
 
     const handleClickInicio=(e)=>{
       e = e.target.value
-      if(user.role==='agencias' || user.role==='cartera'){
+      if( user.role==='cartera'){
         return navigate('/inicio')
-      }else if(user.role==='compras'){
+      }else if(user.role==='compras' || user.role==='agencias'){
         return navigate('/compras')
       }else{
         return navigate('/inicio/admin')

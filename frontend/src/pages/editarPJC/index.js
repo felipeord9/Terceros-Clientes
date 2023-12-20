@@ -24,6 +24,18 @@ import { updateBitacora } from '../../services/bitacoraService';
 import Logo_pdf from '../../assest/logo_pdf.jpg'
 import { RiArrowGoBackFill } from "react-icons/ri";
 
+const CarpetaArchivoLink = ({ carpeta, archivo }) => {
+  const url = `${config.apiUrl2}/uploadMultiple/obtener-archivo/${carpeta}/${archivo}`;
+
+  return (
+    <div>
+      <a className="ms-2" href={url} target="_blank" rel="noopener noreferrer">
+        {archivo}
+      </a>
+    </div>
+  );
+};
+
 export default function EditarPJC(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
@@ -1199,17 +1211,10 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                   <label className="fw-bold mt-1 ">RUT: </label>
                   <label className="ms-2 mt-1 ">(AÑO 2023) </label>
                   </div>
-                  <div className="d-flex flex-row">
+                  <div className="d-flex flex-column">
                     <TextOfBinary valor={search.docRut}></TextOfBinary>
                     {search.docRut === 1 &&(
-                      <a 
-                      
-                      className="ms-3"
-                      href={`${config.apiUrl2}/uploadMultiple/archivo/Rut-${search.razonSocial}.pdf`}
-                      onClick={(e)=> generarEnlace(e)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      /* onClick={(e)=>generarEnlace(e)} */>Ver Rut</a>
+                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Rut-${search.razonSocial}.pdf`} />
                     )}
                   </div>
                   </div>                  
@@ -1239,15 +1244,16 @@ const [selectedFiles, setSelectedFiles] = useState([]);
                 <div className="ms-2 w-100">
                 <div className="d-flex flex-column" /* style={{height:120}} */>
                   <label className="fw-bold mt-1 me-2">INFOLAFT: </label>
-                  <div className="d-flex flex-row">
+                  <div className="d-flex flex-column">
                   <TextOfBinary valor={search.docInfemp}></TextOfBinary>
                   {search.docInfemp === 1 &&(
-                    <a 
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Infemp-${search.razonSocial}.pdf`} />
+                    /* <a 
                         disabled ={!mostrarEnlace}
                         href={`${config.apiUrl2}/uploadMultiple/archivo/Infemp-${search.razonSocial}.pdf`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        /* onClick={(e)=>generarEnlace(e)} */>Ver Infolaft</a>
+                        >Ver Infolaft</a> */
                     )}
                   </div>
                   </div>                  
@@ -1276,15 +1282,17 @@ const [selectedFiles, setSelectedFiles] = useState([]);
               <div className="d-flex flex-column mt-2 w-100 me-2">
                   <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">INFOLAFT REP. LEGAL: </label>
-                  <div className="d-flex flex-row">
+                  <div className="d-flex flex-column">
                   <TextOfBinary valor={search.docInfrl}></TextOfBinary>
                   {search.docInfrl === 1 &&(
-                    <a 
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Infrl-${search.razonSocial}.pdf`} />
+
+                    /* <a 
                     disabled ={!mostrarEnlace}
                     href={`${config.apiUrl2}/uploadMultiple/archivo/Infrl-${search.razonSocial}.pdf`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    /* onClick={(e)=>generarEnlace(e)} */>Ver Infolaft rep. legal</a>
+                    >Ver Infolaft rep. legal</a> */
                   )}
                   </div>
                   </div>
@@ -1316,16 +1324,18 @@ const [selectedFiles, setSelectedFiles] = useState([]);
               <div className="d-flex flex-column mt-2 w-100">
               <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <div className="d-flex flex-row">
+                  <div className="d-flex flex-column">
                   <TextOfBinary valor={search.docOtros}></TextOfBinary>
                   {search.docOtros === 1 &&(
-                    <a 
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Otros-${search.razonSocial}.pdf`} />
+
+                    /* <a 
                     className="ms-3"
                     disabled ={!mostrarEnlace}
                     href={`${config.apiUrl2}/uploadMultiple/archivo/Otros-${search.razonSocial}.pdf`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    /* onClick={(e)=>generarEnlace(e)} */>Ver Otros</a>
+                    >Ver Otros</a> */
                   )}
                   </div>
                   </div>                  

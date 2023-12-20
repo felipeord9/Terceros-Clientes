@@ -242,6 +242,20 @@ export default function TableProveedores({ proveedores, loading }) {
         width: '110px',
       },
       {
+        id: "docRefcom2",
+        name: "Refcom2",
+        selector: (row) => row.docRefcom2,
+        sortable: true,
+        width: '120px',
+      },
+      {
+        id: "docRefcom3",
+        name: "Refcom3",
+        selector: (row) => row.docRefcom3,
+        sortable: true,
+        width: '120px',
+      },
+      {
         id: "docInfemp",
         name: "Infemp",
         selector: (row) => row.docInfemp,

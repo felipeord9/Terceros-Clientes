@@ -43,7 +43,11 @@ import EditPS from './pages/editarPS';
 import EditPVN from './pages/editarPVN';
 import EditarPVJ from './pages/editarPVJ';
 import MenuPrincipalAdmin from './pages/mpAdmin';
-import MenuPrincipal from './pages/mpClientes';
+import MenuPrincipalClientes from './pages/mpClientes';
+import MenuPrincipalProveedores from './pages/mpProveedores';
+import ShowInfoWithRzs from './pages/showWithRzs';
+import ShowProveedorWithRzs from './pages/showProRzs';
+import MpPrueba from './pages/mpPrueba';
 
 function App() {
   return(
@@ -65,7 +69,10 @@ function App() {
 
         {/* Mostrar validacion */}
         <Route path='/info/validacion' element={<PrivateRoute component={MostartInfo}/>}/>
+        <Route path='/info/valid' element={<PrivateRoute component={ShowInfoWithRzs}/>}/>
         <Route path='/informacion/validacion' element={<PrivateRoute component={MostrarProveedor}/>}/>
+        <Route path='/informacion/valid' element={<PrivateRoute component={ShowProveedorWithRzs}/>}/>
+
 
         {/* Editar informacion validada */}
         <Route path='/editar/info/PNC' element={<PrivateRoute component={EditarPNC}/>}/>
@@ -80,7 +87,9 @@ function App() {
 
         {/* menus principales */}
         <Route path='/menu/principal/admin' element={<PrivateRoute component={MenuPrincipalAdmin}/>}/>
-        <Route path='/menu/principal' element={<PrivateRoute component={MenuPrincipal}/>}/>
+        <Route path='/menu/principal/Clientes' element={<PrivateRoute component={MenuPrincipalClientes}/>}/>
+        <Route path='/menu/principal/Proveedores' element={<PrivateRoute component={MenuPrincipalProveedores}/>}/>
+        <Route path='/menu/principal/Prueba' element={<PrivateRoute component={MpPrueba}/>}/>
 
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>

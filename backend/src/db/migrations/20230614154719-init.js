@@ -13,12 +13,14 @@ const { PROVEEDOR_TABLE, ProveedorSchema } = require('../models/proveedoresModel
 const { ACTIVIDAD_ECONOMICA_TABLE, ActividadEconomicaSchema} = require("../models/actividadModel")
 const { CLASIFICACION_TABLE,ClasificacionSchema } = require('../models/clasificacionModel')
 const { BITACORA_TABLE,BitacoraSchema } = require('../models/bitacoraModel')
+const { SUCURSAL_TABLE,SucursalSchema } = require('../models/sucursalModel')
 
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(ACTIVIDAD_ECONOMICA_TABLE,ActividadEconomicaSchema);
+    await queryInterface.createTable(SUCURSAL_TABLE,SucursalSchema);
     await queryInterface.createTable(DEPARTAMENTO_TABLE,DepartamentoSchema);
     await queryInterface.createTable(CLIENTE_TABLE,ClienteSchema);
     await queryInterface.createTable(PRECIO_TABLE,PrecioSchema);
@@ -35,6 +37,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable(SUCURSAL_TABLE);
     await queryInterface.dropTable(DEPARTAMENTO_TABLE);
     await queryInterface.dropTable(DETALLE_TABLE);
     await queryInterface.dropTable(ACTIVIDAD_ECONOMICA_TABLE);

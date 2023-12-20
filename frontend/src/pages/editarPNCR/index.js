@@ -29,6 +29,24 @@ import { MdNoteAdd } from "react-icons/md";
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
 import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
+import { config } from "../../config";
+
+const CarpetaArchivoLink = ({ carpeta, archivo }) => {
+  const [vacio,setVacio] = useState(false);
+
+  const url = `${config.apiUrl2}/uploadMultiple/obtener-archivo/${carpeta}/${archivo}`;
+  if(!url){
+    setVacio(true)
+  }
+  return (
+    <div>
+      <a disabled={vacio} className="ms-2" href={url} target="_blank" rel="noopener noreferrer">
+        {archivo}
+      </a>
+    </div>
+  );
+
+};
 
 export default function EditarPNCR(){
   /* instancias de contexto */
@@ -154,6 +172,8 @@ export default function EditarPNCR(){
     docCrepL:'',
     docEf:'',
     docRefcom:'',
+    docRefcom2:'',
+    docRefcom3:'',
     docCvbo:'',
     docFirdoc:'',
     docCerBan:'',
@@ -177,6 +197,8 @@ export default function EditarPNCR(){
     docCrepL:'',
     docEf:'',
     docRefcom:'',
+    docRefcom2:'',
+    docRefcom3:'',
     docCvbo:'',
     docFirdoc:'',
     docCerBan:'',
@@ -325,6 +347,8 @@ export default function EditarPNCR(){
           docCrepL:compare.docCrepL,
           docEf:compare.docEf,
           docRefcom:compare.docRefcom,
+          docRefcom2:compare.docRefcom2,
+          docRefcom3:compare.docRefcom3,
           docCvbo:compare.docCvbo,
           docFirdoc:compare.docFirdoc,
           docInfrl:compare.docInfrl,
@@ -526,7 +550,7 @@ const [colorVality,setColorVality]=useState('red');
     },[valor]);
     
     return (
-      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {mostrarImagen(valor)} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
+      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {/* {mostrarImagen(valor)} */} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
     )
   }
   const mostrarImagen=(valor)=>{
@@ -1052,8 +1076,13 @@ const [colorVality,setColorVality]=useState('red');
                    <FaFileDownload />Descargar
                    </a>
                    </div>
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column" >
+                   <div className="d-flex flex-column">
                     <TextOfBinary valor={search.docVinculacion}></TextOfBinary>
+                    {search.docVinculacion === 1 &&(
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Vinculacion-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                    )}
+                  </div>                   
                   </div>                   
                   <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1082,8 +1111,11 @@ const [colorVality,setColorVality]=useState('red');
                    <FaFileDownload />{/* <IoMdDownload /> */}Descargar
                    </a>
                    </div>
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column" >
                     <TextOfBinary valor={search.docComprAntc}></TextOfBinary>
+                    {search.docComprAntc === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`ComprAntc-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
                   </div>                  
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1108,9 +1140,14 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-               <div className="d-flex flex-column" style={{height:120}}>
+               <div className="d-flex flex-column" >
                   <label className="fw-bold mt-1 me-2">CARTA DE INSTRUCCIONES: </label>
+                  <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docCtalnst}></TextOfBinary>
+                    {search.docCtalnst === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`CtaInst-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>                   
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1134,9 +1171,14 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column">
                    <label className="fw-bold mt-1 me-2">PAGARE: </label>
+                   <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docPagare}></TextOfBinary>
+                    {search.docPagare === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Pagare-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>                   
                   <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1162,11 +1204,15 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-                   <div className="d-flex flex-column" style={{height:150}}>
+                   <div className="d-flex flex-column">
+                    <div className="d-flex flex-row">
                    <label className="fw-bold mt-1 me-2">RUT: </label>
                    <label className="ms-2 mt-1 ">(AÑO 2023) </label>
-
+                   </div>
                     <TextOfBinary valor={search.docRut}></TextOfBinary>
+                    {search.docRut === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Rut-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1190,11 +1236,14 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                   <div className="d-flex flex-column" style={{height:150}}>
+                   <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1 me-2">CERTIFICADO CAMARA DE COMERCIO: </label>
-                   <label className="ms-2 mt-1 ">(Con una vigencia no mayor a 30 días) </label>
+                   <label className=" ">(Con una vigencia no mayor a 30 días) </label>
 
                     <TextOfBinary valor={search.docCcio}></TextOfBinary>
+                    {search.docCcio === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Ccio-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
                   </div>                   
                   <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1219,9 +1268,12 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-                  <div className="d-flex flex-column" style={{height:120}}>
+                  <div className="d-flex flex-column" >
                     <label className="fw-bold mt-1 me-2" >CÉDULA: </label>
                     <TextOfBinary valor={search.docCrepL}></TextOfBinary>
+                    {search.docCrepL === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`CrepL-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1246,9 +1298,14 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                 <div className="d-flex flex-column" style={{height:120}}>
+                 <div className="d-flex flex-column" >
                     <label className="fw-bold mt-1 me-2">ESTADOS FINANCI. O CERTIFI. DE CONTADOR: </label>
+                    <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docEf}></TextOfBinary>
+                    {search.docEf === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Ef-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                    </div>
                   </div>                   
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1272,12 +1329,18 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                    </div>
                  </div> 
+                 
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-               <div className="d-flex flex-column" style={{height:120}}>
+               <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1 me-2">CERTIFICACIÓN BANCARIA: </label>
+                   <div className="d-flex flex-column">
                     <TextOfBinary valor={search.docCerBan}></TextOfBinary>
+                    {search.docCerBan === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Certban-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                    </div>
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1303,15 +1366,27 @@ const [colorVality,setColorVality]=useState('red');
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
                    <div className="d-flex flex-row">
                    {/* <div style={{width:50}}></div> */}
-                   <div className="d-flex flex-column" style={{height:120}}>
+                   <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1 me-2">REFERENCIAS COMERCIALES: </label>
+                   <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docRefcom}></TextOfBinary>
+                    {search.docRefcom === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Refcom-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  {search.docRefcom2 === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Refcom2-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  {search.docRefcom3 === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Refcom3-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>
                    </div>
                    <div className=" d-flex flex-row">
                    <div className="">
                    <div className="d-flex flex-row">
-                     <IconButton style={{color:'#2979FF',width:40,height:40}} /* className="rounded-5 d-flex justify-content-center align-items-center me-1" */ onClick={addFileInput}><NoteAddIcon />{/* <img src={Mas} style={{width:18}} /> */}</IconButton>
+                     <IconButton className="me-1" style={{backgroundColor:'#2979FF',color:'white',width:40,height:40}} /* className="rounded-5 d-flex justify-content-center align-items-center me-1" */ onClick={addFileInput}><NoteAddIcon />{/* <img src={Mas} style={{width:18}} /> */}</IconButton>
+                   
                    <input
                        id="docRefcom"
                        type="file"
@@ -1338,15 +1413,17 @@ const [colorVality,setColorVality]=useState('red');
                    <div key={index} className="d-flex flex-row">
                      <div key={input.id} className="d-flex flex-row">
                      <input
-                       id="docRefcom"
+                       id={`docRefcom${input.id+1}`}
+                       /* id="docRefcom2" */
                        type="file"
                        style={{backgroundColor:'#f3f3f3',width:282}}
                        /* onChange={(e)=>(handleFileChange(e,9),setDocRefcom(1))} */
-                       onChange={(e)=>(handleFileChange(`Refcom${input.id+1}`,e),setDocRefcom(1),FileChange(e,11+index),actualizarFiles(input.id,e))}
+                       onChange={(e)=>(handleFileChange(`Refcom${input.id+1}`,e),FileChange(e,11+index),actualizarFiles(input.id,e),changeSearch(e))}
                        className="form-control form-control-sm border border-5 rounded-3 d-flex flex-column mb-2"
                        accept=".pdf"                  
                      />
                      {/* <span>`Refcom ${input.id+1}`</span> */}
+                     {/* <span>${compare.docRefcom2}</span> */}
                      </div>
                      {selectedFiles[11+index] && (
                      <div className=" pt-1 ps-2" style={{width:50}} >
@@ -1365,9 +1442,14 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-               <div className="d-flex flex-column" style={{height:120}}>
+               <div className="d-flex flex-column">
                    <label className="fw-bold mt-1 me-2">CARTA VISTO BUENO ADMINIS. DE LA AGENCIA: </label>
+                   <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docCvbo}></TextOfBinary>
+                    {search.docCvbo === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Cvbo-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1390,18 +1472,18 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ms-2">
-                 <div className="d-flex flex-column" style={{height:120}}>
+                 <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1 me-2">VALIDACIÓN DE ANTECEDENTES: </label>
-                    <TextOfBinary valor={search.docValAnt}></TextOfBinary>
+                    <TextOfBinary valor={search.docInfrl}></TextOfBinary>
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
                    <input
-                     id="docValAnt"
+                     id="docInfrl"
                      type="file"
                      style={{backgroundColor:'#f3f3f3',width:331}}
                      /* onChange={(e)=>(handleFileChange(e,11),setDocValAnt(1))} */
-                     onChange={(e)=>(handleFileChange('ValAnt',e),setDocValAnt(1),FileChange(e,16),changeSearch(e))}
+                     onChange={(e)=>(handleFileChange('Infrl',e),setDocInfrl(1),FileChange(e,16),changeSearch(e))}
                      className="form-control form-control-sm border border-5 rounded-3"
                      accept=".pdf"                  />
                      {selectedFiles[16] && (
@@ -1417,9 +1499,14 @@ const [colorVality,setColorVality]=useState('red');
                </div>
                <div className="d-flex flex-row">
                <div className="d-flex flex-column mt-2 w-100 me-2">
-               <div className="d-flex flex-column" style={{height:120}}>
+               <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1 me-2">FICHA RELACIÓN DOCUMENTOS: </label>
+                   <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docFirdoc}></TextOfBinary>
+                    {search.docFirdoc === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Firdoc-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">
@@ -1442,9 +1529,14 @@ const [colorVality,setColorVality]=useState('red');
                    </div>
                  </div> 
                  <div className="d-flex flex-column mt-2 w-100 ">
-                 <div className="d-flex flex-column" style={{height:120}}>
+                 <div className="d-flex flex-column" >
                    <label className="fw-bold mt-1">OTROS: </label>
+                   <div className="d-flex flex-column">               
                     <TextOfBinary valor={search.docOtros}></TextOfBinary>
+                    {search.docOtros === 1 && (
+                    <CarpetaArchivoLink carpeta={`${search.cedula}-${search.primerApellido}-${search.segundoApellido}-${search.primerNombre}-${search.otrosNombres}`} archivo={`Otros-${search.primerApellido} ${search.segundoApellido} ${search.primerNombre} ${search.otrosNombres}.pdf`}/>
+                  )}
+                  </div>
                   </div>
                    <div className=" rounded-2 pt-1" >
                    <div className="d-flex flex-row">

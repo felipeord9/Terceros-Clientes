@@ -195,23 +195,22 @@ router.delete('/:folderName', (req,res)=>{
 
 const carpetaCompartida = '\\\\192.168.4.237\\aplicativoterceros\\87877767-COMFENALCO';
 
-router.get('/archivo/:nombreArchivo',(req,res)=>{
-  /* router.post('/archivo/:nombreArchivo',(req,res)=>{
-    const {nombre} = req.body;
-    folderName= req.body
-  }) */
+router.get('/obtener-archivo/:carpeta/:archivo', (req, res) => {
+  const { carpeta, archivo } = req.params;
+  const rutaArchivo = path.join('\\\\192.168.4.237\\aplicativoterceros\\', carpeta, archivo);
+  res.sendFile(rutaArchivo);
+});
+
+/* router.get('/archivo/:nombreArchivo',(req,res)=>{
   const { nombreArchivo } = req.params;
   const folderName = req.body.folderName;
-  /* const rutaArchivo = path.join('\\\\192.168.4.237\\aplicativoterceros\\1006101631-ORDOÑEZ-MARIN-FELIPE-JOSE', nombreArchivo); */
   const rutaArchivo = path.join(`${carpetaCompartida}`, nombreArchivo);
-  /* const rutaArchivo = path.join(folderName, nombreArchivo); */
   try{
     res.sendFile(rutaArchivo);
-
   }catch (error){
     console.log('Error no hay ningun archivo con este nombre',error)
   }
-})
+}) */
 
 /* const carpetaCompartida = '\\\\192.168.4.237\\aplicativoterceros\\1006101631-ORDOÑEZ-MARIN-FELIPE-JOSE'; // Reemplaza con la ruta de tu carpeta compartida
 router.get('/archivos',express.static(carpetaCompartida));

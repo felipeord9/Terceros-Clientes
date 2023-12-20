@@ -25,17 +25,24 @@ export const NavBarData = [
   },
   {
     title:'Menu Principal',
-    path:'/menu/principal',
+    path:'/menu/principal/Clientes',
     icon:<GoHomeFill/>,
     cName:'nav-text',
-    access:['agencias','compras','cartera']   
+    access:['cartera']   
   },
   {
-    title:'Crear Tercero',
+    title:'Menu Principal',
+    path:'/menu/principal/Proveedores',
+    icon:<GoHomeFill/>,
+    cName:'nav-text',
+    access:['agencias','compras']   
+  },
+  {
+    title:'Crear Cliente',
     path:'/inicio',
     icon:<AiOutlineSelect />,
     cName:'nav-text',
-    access:['cartera','agencias']   
+    access:['cartera']   
   },
   {
     title:'Crear Tercero',
@@ -45,11 +52,11 @@ export const NavBarData = [
     access:['admin']   
   },
   {
-    title:'Crear Tercero',
+    title:'Crear Proveedor',
     path:'/compras',
     icon:<AiOutlineSelect/>,
     cName:'nav-text',
-    access:['compras']   
+    access:['compras','agencias']   
   }
   ,
   {
@@ -64,14 +71,14 @@ export const NavBarData = [
     path:'/validar/tercero',
     icon:<RiPassValidLine />,
     cName:'nav-text',
-    access:['cartera','agencias']
+    access:['cartera']
   },
   {
     title:'Validación Existencia',
     path:'/validar/proveedor',
     icon:<RiPassValidLine />,
     cName:'nav-text',
-    access:['compras']
+    access:['compras','agencias']
   },
   
   {title:'Persona natural - contado',
