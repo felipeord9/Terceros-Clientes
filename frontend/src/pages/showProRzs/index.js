@@ -279,6 +279,8 @@ export default function ShowProveedorWithRzs(){
         return navigate('/editar/info/PVJ')
       }else if(data.tipoFormulario==='PVN'){
         return navigate('/editar/info/PVN')
+      }else if(data.tipoFormulario==='CCP'){
+        return navigate('/editar/info/CCP')
       }
     }
 

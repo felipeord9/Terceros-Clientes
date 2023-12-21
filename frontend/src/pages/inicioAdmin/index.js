@@ -70,6 +70,9 @@ export default function InicioAdmin(){
                 <MenuItem value={50} onClick={(e)=>navigate('/tipo/persona')} className=""><strong>Proveedor Mcia y Convenios</strong></MenuItem>
                 <MenuItem value={60} onClick={(e)=>navigate('/prestador/servicios')} className="" style={{color:'blue'}}><strong>Prestador de servicios</strong></MenuItem>
                 <MenuItem value={70} onClick={(e)=>navigate('/tipo/proveedor')} className="" style={{color:'red'}}><strong>Proveedores varios (Agencias)</strong></MenuItem>
+                <center>
+                <hr style={{width:300, color:'black'}}/></center>
+                <MenuItem value={50} onClick={(e)=>navigate('/Parqueaderos')}><strong className="ps-2 ">PARQUEADEROS</strong></MenuItem>
                 </Select>
               </FormControl>
             </Box>

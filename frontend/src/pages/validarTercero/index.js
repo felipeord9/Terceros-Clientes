@@ -122,6 +122,8 @@ export default function ValidarTercero(){
             navigate('/info/valid')
           }else if(data.tipoFormulario==='PJCR'){
             navigate('/info/valid')
+          }else if(data.tipoFormulario==='CCP'){
+            navigate('/informacion/valid')
           }
           })
           .catch((error)=>{

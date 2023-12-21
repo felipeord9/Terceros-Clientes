@@ -48,6 +48,8 @@ import MenuPrincipalProveedores from './pages/mpProveedores';
 import ShowInfoWithRzs from './pages/showWithRzs';
 import ShowProveedorWithRzs from './pages/showProRzs';
 import MpPrueba from './pages/mpPrueba';
+import Parqueaderos from './pages/parqueaderos';
+import EditarCCP from './pages/editarCCP';
 
 function App() {
   return(
@@ -84,6 +86,7 @@ function App() {
         <Route path='/editar/info/PS' element={<PrivateRoute component={EditPS}/>}/>
         <Route path='/editar/info/PVN' element={<PrivateRoute component={EditPVN}/>}/>
         <Route path='/editar/info/PVJ' element={<PrivateRoute component={EditarPVJ}/>}/>
+        <Route path='/editar/info/CCP' element={<PrivateRoute component={EditarCCP}/>}/>
 
         {/* menus principales */}
         <Route path='/menu/principal/admin' element={<PrivateRoute component={MenuPrincipalAdmin}/>}/>
@@ -116,6 +119,7 @@ function App() {
         <Route path='/contado/persona/juridica' element={<PrivateRoute component={ContadoPersonaJuridica}/>}/>
         <Route path='/credito/persona/natural' element={<PrivateRoute component={CreditoPersonaNatural}/>}/>
         <Route path='/credito/persona/juridica' element={<PrivateRoute component={CreditoPersonaJuridica}/>}/>
+        <Route path='/Parqueaderos' element={<PrivateRoute component={Parqueaderos}/>} />
         <Route path='/change/password' element={<PrivateRoute component={ChangePassword}/>}/>
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
         <Route path='/terceros' element={<PrivateRoute component={Terceros}/>}/>

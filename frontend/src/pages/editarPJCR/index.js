@@ -415,7 +415,7 @@ export default function EditarPJCR(){
             setLoading(false)
             setFiles([])
             Swal.fire({
-              title: 'Creación exitosa!',
+              title: 'Actualización exitosa!',
               text: `El Cliente "${search.razonSocial.toLocaleUpperCase()}" con Número 
               de documento "${search.cedula}" se ha actualizado de manera satisfactoria`,
               icon: 'success',

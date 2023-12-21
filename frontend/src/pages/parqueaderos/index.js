@@ -1,50 +1,26 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import Swal from "sweetalert2";
-import { Button } from "@mui/material";
-import { Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import AuthContext from "../../context/authContext";
 import "./styles.css";
-import { Navigate , useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
-import { createProveedor, deleteProveedor, updateProveedor } from '../../services/proveedorService';
+import { createProveedor, deleteProveedor } from '../../services/proveedorService';
+import { createCliente, deleteCliente } from '../../services/clienteService'
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllActividad} from '../../services/actividadService';
 import { getAllAgencies } from "../../services/agencyService";
 import { getAllDocuments } from '../../services/documentService'
 import { fileSend, deleteFile } from "../../services/fileService";
-import { FaFileDownload } from "react-icons/fa";
-import VinculacionProveedor from '../../pdfs/FORMATO  VINCULACION DE PROVEEDORES.pdf'
-import VinculacionCliente from '../../pdfs/FORMATO  VINCULACION CLIENTES CON SOLICITUD DE CREDITO.pdf';
-import Compromiso from '../../pdfs/COMPROMISO ANTICORRUPCION.pdf';
 import { updateBitacora } from '../../services/bitacoraService';
-import { RiArrowGoBackFill } from "react-icons/ri";
-import Logo_pdf from '../../assest/logo_pdf.jpg'
-import { config } from "../../config";
 
-const CarpetaArchivoLink = ({ carpeta, archivo }) => {
-  const [vacio,setVacio] = useState(false);
-
-  const url = `${config.apiUrl2}/uploadMultiple/obtener-archivo/${carpeta}/${archivo}`;
-  if(!url){
-    setVacio(true)
-  }
-  return (
-    <div>
-      <a disabled={vacio} className="ms-2" href={url} target="_blank" rel="noopener noreferrer">
-        {archivo}
-      </a>
-    </div>
-  );
-
-};
-export default function EditarPVJ(){
+export default function Parqueaderos(){
   /* instancias de contexto */
   const { user, setUser } = useContext(AuthContext);
   const {department,setDepartment}=useContext(DepartmentContext)
-  const navigate =useNavigate()
+
   /* inicializar variables */
   const [agencia, setAgencia] = useState(null);
   const [document,setDocument] = useState(null);
@@ -55,11 +31,15 @@ export default function EditarPVJ(){
   /* inicializar los documentos adjuntos */
   const [docVinculacion,setDocVinculacion]=useState(0);
   const [docComprAntc,setDocComprAntc]=useState(0);
+  const [docCtaInst,setDocCtaInst]=useState(0);
+  const [docPagare,setDocPagare]=useState(0);
   const [docRut,setDocRut]=useState(0);
   const [docCcio,setDocCcio]=useState(0);
   const [docCrepL,setDocCrepL]=useState(0);
   const [docEf,setDocEf]=useState(0);
   const [docRefcom,setDocRefcom]=useState(0);
+  const [docCvbo,setDocCvbo]=useState(0);
+  const [docFirdoc,setDocFirdoc]=useState(0);
   const [docInfemp,setDocInfemp]=useState(0);
   const [docInfrl,setDocInfrl]=useState(0);
   const [docOtros,setDocOtros]=useState(0);
@@ -74,6 +54,7 @@ export default function EditarPVJ(){
     input2: null,
     input3: null,
     input4: null,
+    input5: null,
   });
 /*   const [folderName, setFolderName] = useState('');
  */
@@ -99,6 +80,7 @@ export default function EditarPVJ(){
   const [actividades, setActividades] = useState([]);
 
   const [search, setSearch] = useState({
+    clasificacion:'-',
     cedula:'',
     tipoPersona:'2',
     tipoDocumento:'N',
@@ -112,64 +94,10 @@ export default function EditarPVJ(){
     telefono:'',
     correoElectronico:'',
     correoFacturaElectronica:'',
-    tipoDocRepLegal:'',
-    numeroDocRepLegal:'',
-    nameRepLegal:'',
-    apellidoRepLegal:'',
     observations:'',
     solicitante:'',
-    tipoFormulario:'PMJ',
-    docVinculacion:'',
-    docComprAntc:'',
-    docRut:'',
-    docCcio:'',
-    docCrepL:'',
-    docEf:'',
-    docRefcom:'',
-    docInfemp:'',
-    docInfrl:'',
-    docValAnt:'',
-    docCerBan:'',
-    docOtros:'',
-    agencia:'',
-    departamento:'',
-    ciudad:'',
-    tipoDocumento:'',
-    actividadEconomica:'',
+    tipoFormulario:'CCP'
   });
-  const [compare,setCompare]=useState({
-    cedula:'',
-    razonSocial:'',
-    primerApellido:'',
-    segundoApellido:'',
-    primerNombre:'',
-    otrosNombres:'',
-    docRut:'',
-    docInfemp:'',
-    docInfrl:'',
-    docOtros:'',
-    docVinculacion:'',
-    docComprAntc:'',
-    docCtalnst:'',
-    docPagare:'',
-    docCcio:'',
-    docCrepL:'',
-    docEf:'',
-    docRefcom:'',
-    docRefcom2:'',
-    docRefcom3:'',
-    docCvbo:'',
-    docFirdoc:'',
-    docCerBan:'',
-    docValAnt:'',
-  })
-  useEffect(()=>{
-    const datosTercero = localStorage.getItem('data');
-    if(datosTercero){
-      setSearch(JSON.parse(datosTercero));
-      setCompare(JSON.parse(datosTercero))
-    }
-  },[]);
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState(false);
   
@@ -246,8 +174,8 @@ export default function EditarPVJ(){
     e.preventDefault();
     Swal.fire({
       title: "¿Está segur@?",
-      text: "Se actualizará la información del Proveedor",
-      icon:'question',
+        text: "Se realizará el registro del Centro Comercial o Parqueadero",
+        icon:'question',
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#198754",
         showCancelButton: true,
@@ -271,65 +199,73 @@ export default function EditarPVJ(){
         }); */
         //creamos el cuerpo de nuestra instancia
         const body={
-          cedula: search.cedula,
-          numeroDocumento: search.cedula,
+          clasificacion:search.clasificacion,
           tipoDocumento: search.tipoDocumento,
+          departamento: departamento.codigo,
+          ciudad: ciudad.codigo,
+          regimenFiscal:'-',
+          responsabilidadFiscal:'-',
+          detalleTributario:'-',
+          departamentoSucursal:'-',
+          ciudadSucursal:'-',
+          cedula: search.cedula,
+          nombreSucursal:'-',
+          direccionSucursal:'-',
+          celularSucursal:'-',
+          telefonoSucursal:'-',
+          correoSucursal:'-',
+          valorEstimado:'-',
+          precioSugerido:'-',
+          numeroDocumento: search.cedula,
           tipoPersona: search.tipoPersona,
           razonSocial: search.razonSocial.toUpperCase() ,
-          primerApellido:search.primerApellido,
-          segundoApellido:search.segundoApellido,
-          primerNombre:search.primerNombre,
-          otrosNombres:search.otrosNombres,
-          departamento: search.departamento,
-          ciudad: search.ciudad,
+          primerApellido:search.primerApellido.toUpperCase(),
+          segundoApellido:search.segundoApellido.toUpperCase(),
+          primerNombre:search.primerNombre.toUpperCase(),
+          otrosNombres:search.otrosNombres.toUpperCase(),
           direccion: search.direccion.toUpperCase(),
           celular: search.celular,
           telefono:search.telefono,
-          correoElectronico: search.correoElectronico.toLowerCase(),
+          correoNotificaciones:search.correoElectronico.toLowerCase(),
           correoFacturaElectronica: search.correoFacturaElectronica.toLowerCase(),
-          actividadEconomica: search.actividadEconomica,         
           tipoDocRepLegal: search.tipoDocumento,
-          numeroDocRepLegal: search.numeroDocRepLegal,
-          nameRepLegal:search.nameRepLegal.toUpperCase(),
-          apellidoRepLegal:search.apellidoRepLegal.toUpperCase(),
+          numeroDocRepLegal: search.cedula,
+          nameRepLegal:search.razonSocial.toUpperCase(),
+          apellidoRepLegal:search.razonSocial.toUpperCase(),
           observations:search.observations,
-          /* createdAt: new Date(),
-          createdBy: user.name.toUpperCase(), */
+          createdAt: new Date(),
+          createdBy: user.name.toUpperCase(),
           solicitante:search.solicitante.toUpperCase(),
-          docVinculacion:compare.docVinculacion,
-          docComprAntc:compare.docComprAntc,
-          docCtalnst:compare.docCtalnst,
-          docPagare:compare.docPagare,
-          docRut:compare.docRut,
-          docCcio:compare.docCcio,
-          docCrepL:compare.docCrepL,
-          docEf:compare.docEf,
-          docRefcom:compare.docRefcom,
-          docRefcom2:compare.docRefcom2,
-          docRefcom3:compare.docRefcom3,
-          docCvbo:compare.docCvbo,
-          docFirdoc:compare.docFirdoc,
-          docInfrl:compare.docInfrl,
-          docInfemp:compare.docInfemp,
-          docValAnt:compare.docValAnt,
-          docCerBan:compare.docCerBan,
-          docOtros:compare.docOtros,
-          agencia: search.agencia,
+          docVinculacion:docVinculacion,
+          docComprAntc:docComprAntc,
+          docCtalnst:docCtaInst,
+          docPagare:docPagare,
+          docRut:docRut,
+          docCcio:docCcio,
+          docCrepL:docCrepL,
+          docEf:docEf,
+          docRefcom:docRefcom,
+          docCvbo:docCvbo,
+          docFirdoc:docFirdoc,
+          docInfemp:docInfemp,
+          docInfrl:docInfrl,
+          docValAnt:docValAnt,
+          docCerBan:docCerBan,
+          docOtros:docOtros,
+          agencia: agencia.id,
           tipoFormulario:search.tipoFormulario,
         };
         //creamos una constante la cual llevará el nombre de nuestra carpeta
         const folderName = search.cedula+'-'+search.razonSocial.toUpperCase();
         //agregamos la carpeta donde alojaremos los archivos
         formData.append('folderName', folderName); // Agregar el nombre de la carpeta al FormData
-        const originalFolderName= compare.cedula+'-'+ compare.razonSocial.toUpperCase();
-        formData.append('originalFolderName',originalFolderName);
+        const originalFolderName = search.cedula+'-'+search.razonSocial.toUpperCase();
+        formData.append('originalFolderName', originalFolderName);
         //creamos una constante con el nombre del cliente para darselo a todos los documentos
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
-        const originalClientName = compare.razonSocial.toUpperCase();
-        formData.append('originalClientName',originalClientName)
         //ejecutamos nuestra funcion que creara el cliente
-        updateProveedor(search.id,body)
+        createCliente(body)
         .then(({data}) => {
           const info={
             accion:'1',
@@ -340,9 +276,9 @@ export default function EditarPVJ(){
             setLoading(false)
             setFiles([])
             Swal.fire({
-              title: 'Actualización exitosa!',
-              text: `El Proveedor "${search.razonSocial}" con Número 
-              de documento "${search.cedula}" se ha actualizado de manera satisfactoria`,
+              title: 'Creación exitosa!',
+              text: `El Centro Comercial o Parqueadero "${data.razonSocial}" con Número 
+              de documento "${data.cedula}" se ha registrado de manera exitosa`,
               icon: 'success',
               position:'center',
               showConfirmButton: true,
@@ -350,13 +286,16 @@ export default function EditarPVJ(){
               confirmButtonText:'Aceptar',
             })
             .then(()=>{
-              handleValidacion(e);
-              /* window.location.reload(); */
+              window.location.reload();
             })
           }) 
           .catch((err)=>{
             setLoading(false);
-            
+            if(!data){
+              deleteFile(folderName);
+            }else{
+              deleteProveedor(data.id);
+            }
             Swal.fire({
               title: "¡Ha ocurrido un error!",
               text: `
@@ -374,11 +313,11 @@ export default function EditarPVJ(){
       })
       .catch((err)=>{
         setLoading(false);
-        
+        deleteFile(folderName);
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `
-              Hubo un error al momento de guardar la informacion del proveedor, intente de nuevo.
+              Hubo un error al momento de guardar la informacion del Centro Comercial o Parqueadero, intente de nuevo.
               Si el problema persiste por favor comuniquese con el área de sistemas.`,
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -394,7 +333,7 @@ export default function EditarPVJ(){
     Swal.fire({
       title: "¡Ha ocurrido un error!",
         text: `
-          Hubo un error al momento de actualizar el proveedor, intente de nuevo.
+          Hubo un error al momento de registrar el Centro Comercial o Parqueadero, intente de nuevo.
           Si el problema persiste por favor comuniquese con el área de sistemas.`,
        icon: "error",
        confirmButtonText: "Aceptar"});
@@ -462,7 +401,8 @@ const [colorVality,setColorVality]=useState('red');
       setColorVality('red')
     }
   };
-  const [selectedFiles, setSelectedFiles] = useState([]);
+/* dar vista previa a los pdf */
+const [selectedFiles, setSelectedFiles] = useState([]);
 
   const FileChange = (event, index) => {
     const newFiles = [...selectedFiles];
@@ -470,98 +410,44 @@ const [colorVality,setColorVality]=useState('red');
     newFiles[index] = file;
     setSelectedFiles(newFiles);
   };
-  const TextOfBinary =({valor})=>{
-    const [labelColor, setLabelColor] = useState('');
-    const [nuevoTexto,setNuevoTexto] = useState('');
-    const [LogoPdf,setLogo]=useState('');
-    /* const valorBinario = valor */
-    /* const nuevoTexto = valor ? 'Fue cargado':'No fue cargado'; */
-    useEffect(()=>{
-      if(valor=== 1){
-        setLabelColor('#008F39')
-        setNuevoTexto('Cargado')
-        /* setLogo({Logo_pdf}) */
-
-      }else if(valor===0){
-        setLabelColor('#CB3234')
-        setNuevoTexto('No fue cargado')
-        setLogo(null)
-      }else{
-        setLabelColor(null)
-        setNuevoTexto('')
-      }
-    },[valor]);
-    
-    return (
-      <label className="" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto}  {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
-    )
-  }
-  const mostrarImagen=(valor)=>{
-    if(valor===1){
-      return <img src={Logo_pdf} style={{width:100}}></img>
-    }
-  }
-  const handleValidacion=(e)=>{
-    e = e.target.value
-    if(user.role==='admin'){
-      return navigate('/validacion/admin');
-    }else if(user.role==='agencias' && user.role==='cartera'){
-      return navigate('/validar/tercero');
-    }else{
-      return navigate('/validar/Proveedor');
-    }
-  }
-  const changeSearch = (e)=>{
-    const file = e.target.files[0]; 
-    const {id,value} = e.target;
-    /* value = 1; */
-    console.log(value);
-    if(file){
-      setCompare({
-        ...compare,
-        [id]:1,
-      });
-    }else{
-      setCompare({
-        ...compare,
-        [id]:0,
-      })
-    }
-  }
     return(
     <div className=" wrapper d-flex justify-content-center w-100 m-auto " style={{userSelect:'none'}}>
     <div
       className=" login-wrapper shadow rounded-4 border border-3 pt-4 mt-5 overflow-auto" style={{backgroundColor:'white',userSelect:'none'}}
     >
-    <div className="w-100 d-flex flex-row" >
-          <Button style={{height:35}} onClick={(e)=>window.history.back(e)} variant="contained" className="d-flex justify-content-start"><RiArrowGoBackFill className="me-1" />back</Button>
-          <div style={{width:10}}></div>
-          <h1 className="mb-3"><strong>Actualizar Información Del Proveedor</strong></h1>
-          
+    <center>
+      <section className="d-flex flex-row justify-content-between align-items-center mb-2">
+        <div className="d-flex flex-column">
+          <center>
+          <Fade cascade='true'>
+          <label className="fs-3 fw-bold m-1 ms-4 me-4 text-danger mb-2" style={{fontSize:100}}><strong>CENTROS COMERCIALES Y PARQUEADEROS</strong></label>
+          </Fade>
+          </center>
+          <hr className="my-1" />
         </div>
+      </section>
+    </center>
       <form className="" onSubmit={handleSubmit}>
-        <div className=" rounded shadow-sm p-3 mb-3" style={{backgroundColor:'#C7C8CA'}}>
+        <div className="bg-light rounded shadow-sm p-3 mb-3">
           <div className="d-flex flex-column gap-1">
             <div>
               <div className="d-flex flex-row">
               <div className="d-flex flex-column me-4 " style={{width:450}}>
               <label className="fw-bold" style={{fontSize:18}}>AGENCIA</label>
               <select
-                /* ref={selectBranchRef} */
+                ref={selectBranchRef}
                 className="form-select form-select-sm w-100"
                 required
-                value={search.agencia}
-                onChange={handlerChangeSearch}
-                id="agencia"
-/*                 onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
- */              >
+                
+                onChange={(e)=>setAgencia(JSON.parse(e.target.value))}
+              >
                 <option selected value='' disabled>
                   -- Seleccione la Agencia --
                 </option>
                 {agencias
                   .sort((a, b) => a.id - b.id)
                   .map((elem) => (
-                    <option id={elem.id} value={elem.id}>
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                       {elem.id + " - " + elem.description}
                     </option>
                   ))}
@@ -606,12 +492,10 @@ const [colorVality,setColorVality]=useState('red');
                   <input
                     id="cedula"
                     type="number"
-                    disabled
                     className="form-control form-control-sm"
                     min={10000000}
                     max={999999999}
                     required
-                    style={{backgroundColor:'grey'}}
                     pattern="[0-9]"
                     value={search.cedula}
                     onChange={handlerChangeSearch}
@@ -641,11 +525,8 @@ const [colorVality,setColorVality]=useState('red');
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Departamento:</label>
                 <select                    
-                    /* onChange={(e)=>setDepartamento(JSON.parse(e.target.value))} */
-                    /* ref={selectDepartamentoRef} */
-                    id="departamento"
-                    value={search.departamento}
-                    onChange={handlerChangeSearch}
+                    onChange={(e)=>setDepartamento(JSON.parse(e.target.value))}
+                    ref={selectDepartamentoRef}
                     className="form-select form-select-sm m-100 me-3"
                     required   
                  >
@@ -655,7 +536,7 @@ const [colorVality,setColorVality]=useState('red');
                       {departamentos
                       .sort((a,b)=>a.id - b.id)
                       .map((elem)=>(
-                        <option key={elem.id} id={elem.id} value={elem.codigo}>
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
                           {elem.description} 
                         </option>
                       ))
@@ -665,14 +546,11 @@ const [colorVality,setColorVality]=useState('red');
                 <div className="d-flex flex-row w-100">
                 <label className="me-1">Ciudad:</label>
                 <select
-                    /* ref={selectCiudadRef} */
-                    id="ciudad"
-                    value={search.ciudad}
-                    onChange={handlerChangeSearch}
+                    ref={selectCiudadRef}
                     className="form-select form-select-sm w-100"
                     required
-                    /* disabled={departamento ? false : true} */
-                    /* onChange={(e)=>setCiudad(JSON.parse(e.target.value))} */ 
+                    disabled={departamento ? false : true}
+                    onChange={(e)=>setCiudad(JSON.parse(e.target.value))} 
                   >
                     
                   <option selected value='' disabled>
@@ -681,8 +559,8 @@ const [colorVality,setColorVality]=useState('red');
                   {ciudades
                   .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
-                    elem.id == search.departamento ?
-                    <option id={elem.id} value={elem.codigo}>
+                    elem.id === departamento.id ?
+                    <option id={elem.id} value={JSON.stringify(elem)}>
                     {elem.description}
                     </option>
                     : 
@@ -727,7 +605,7 @@ const [colorVality,setColorVality]=useState('red');
                   </input>
                 </div>
               </div>
-              <div className="d-flex flex-row align-items-start  w-100">
+              <div className="d-flex flex-row align-items-start  w-100 mb-4">
                   <label className="me-1">Correo electrónico:</label>
                   <input
                     id="correoElectronico"
@@ -745,16 +623,13 @@ const [colorVality,setColorVality]=useState('red');
  */}                  <p className="ps-3" style={{color:Span}}><strong>{Validacion}</strong></p>
 {/*                   <span className="validity fw-bold"></span>
  */}              </div>
-              <div className="d-flex flex-column mb-4 w-100">
+              {/* <div className="d-flex flex-column mb-4 w-100">
                 <label className="me-1">Actividad Económica:</label>
                 <select                    
-                    /* onChange={(e)=>setActividad(JSON.parse(e.target.value))}
-                    ref={selectActividadRef} */
-                    style={{width:762}}
-                    id="actividadEconomica"
-                    value={search.actividadEconomica}
-                    onChange={handlerChangeSearch}
-                    className="form-select form-select-sm "
+                    onChange={(e)=>setActividad(JSON.parse(e.target.value))}
+                    ref={selectActividadRef}
+                    style={{width:770}}
+                    className="form-select form-select-sm m-100 me-3"
                     required   
                  >
                    <option selected value='' disabled>
@@ -763,15 +638,15 @@ const [colorVality,setColorVality]=useState('red');
                       {actividades
                       .sort((a,b)=>a.id - b.id)
                       .map((elem)=>(
-                        <option key={elem.id} id={elem.id} value={elem.id}>
+                        <option key={elem.id} id={elem.id} value={JSON.stringify(elem)}>
                           {elem.id + '-' + elem.description} 
                         </option>
                       ))
                     }
                     </select>
-                </div>
+                </div> */}
               <hr className="my-1" />  
-            </div>   
+            </div> 
             <label className="fw-bold mt-1" style={{fontSize:20}}>DATOS FACTURA ELECTRÓNICA</label>
             <div className="d-flex flex-row align-items-start mt-2 ">
                   <label className="me-1 mb-3"><strong>Correo para la factura electrónica:</strong></label>
@@ -790,39 +665,28 @@ const [colorVality,setColorVality]=useState('red');
                   <p  className="ps-3" style={{color:color}}><strong>{mensaje}</strong></p>
                   {/* <span className="validity fw-bold"></span> */}
               </div>
-              <hr className="my-1" />
-                 
-            <div className="w-100 mt-1">
+              <hr className="my-1" />        
+              <div className="w-100 mt-1">
               <label className="fw-bold" style={{fontSize:20}}>DOCUMENTOS OBLIGATORIOS</label>
-            </div>
-            <div className="d-flex flex-row ">
-                <div className="ps-2 w-50">
-                <div className="d-flex flex-column mb-3" >
-                  <div className="d-flex flex-row">
+              <div className="d-flex flex-row ">
+              <div className="pe-2 w-50">
                   <label className="fw-bold mt-1 me-2">RUT: </label>
                   <label className="ms-2 mt-1 ">(AÑO 2023) </label>
 
-                  </div>
-                  <div className="d-flex flex-column">
-                    <TextOfBinary valor={search.docRut}></TextOfBinary>
-                    {search.docRut === 1 &&(
-                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Rut-${search.razonSocial}.pdf`} />
-                    )}
-                    </div>                   </div>  
-                  <div className=" rounded-2 pt-1" >
+                  <div className=" rounded-2" >
                   <div className="d-flex flex-row">
                   <input
-                    id="docRut"
+                    id="Rut"
                     type="file"
-                    placeholder="docRut"
-                    className="form-control form-control-sm border border-5 rounded-3"
+                    placeholder="Rut"
+                    className="form-control form-control-sm  border border-5 rounded-3"
                     accept=".pdf"
                     style={{backgroundColor:'#f3f3f3',width:338}}
                     /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,1),changeSearch(e))}
+                    onChange={(e) => (handleFileChange('Rut',e),setDocRut(1),FileChange(e,1))}
                   />
                   {selectedFiles[1] && (
-                    <div className="d-flex justify-content-start pt-1 ps-2" style={{width:50}}>
+                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:50}}>
                     <a href={URL.createObjectURL(selectedFiles[1])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
@@ -831,74 +695,58 @@ const [colorVality,setColorVality]=useState('red');
                   </div>
                   </div>
                 </div>
-
-                <div className="ps-2 w-50">
-                <div className="d-flex flex-column mb-3" >
-                  <label className="fw-bold mt-1 me-2 ">INFOLAFT: </label>
-                  <div className="d-flex flex-column">
-                    <TextOfBinary valor={search.docInfemp}></TextOfBinary>
-                    {search.docInfemp === 1 &&(
-                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Infemp-${search.razonSocial}.pdf`} />
-                    )}
-                  </div>
-                  </div> 
+                <div className=" w-50">
+                  <label className="fw-bold mt-1 ">INFOLAFT: </label>
                   <div className=" rounded-2" >
-                  <div className="d-flex flex row">
-                    <div className="" style={{width:340}}>
+                    <div className="d-flex flex-row">
                   <input
-                    id="docInfemp"
+                    id="Infemp"
                     type="file"
-                    placeholder="docInfemp"
-                    className="form-control form-control-sm w-100 border border-5 rounded-3"
+                    placeholder="Infemp"
+                    className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"
-                    style={{backgroundColor:'#f3f3f3'}}
-                    /* onChange={(e) => (handleFileChange(e, 1),setDocInfrl(1))} */
-                    onChange={(e) => (handleFileChange('Infemp',e),setDocInfemp(1),FileChange(e,2),changeSearch(e))}
-                  /></div>
+                    style={{backgroundColor:'#f3f3f3',width:338}}
+                    /* onChange={(e) => (handleFileChange(e, 0),setDocRut(1))} */
+                    /* second form */
+                    onChange={(e) => (handleFileChange('Infemp', e),setDocInfemp(1),FileChange(e,2))}
+                  />
                   {selectedFiles[2] && (
-                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:70}}>
+                    <div className="d-flex justify-content-start ps-1 pt-1" style={{width:50}}>
                     <a href={URL.createObjectURL(selectedFiles[2])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
                   </div>
-                  )}
+                  )} 
                   </div>
                   </div>
                 </div>
-
-              </div> 
-                        
+              </div>
+            </div>
+              <div className="d-flex flex-row ">
+                
               <div className="d-flex flex-column mt-1 " >
-            <div className="d-flex flex-column mb-3" >
                   <label className="fw-bold mt-1 me-2">OTROS: </label>
-                  <div className="d-flex flex-column">
-                    <TextOfBinary valor={search.docOtros}></TextOfBinary>
-                    {search.docOtros === 1 &&(
-                      <CarpetaArchivoLink carpeta={`${search.cedula}-${search.razonSocial}`} archivo={`Otros-${search.razonSocial}.pdf`} />
-                    )}
-                  </div>
-                  </div>
                   <div className="d-flex flex-row">
                   <input
-                    id="docOtros"
+                    id="DocOtros"
                     type="file"
-                    style={{backgroundColor:'#f3f3f3',width:720}}
+                    style={{backgroundColor:'#f3f3f3',width:730}}
                     /* onChange={(e)=>(handleFileChange(e, 12),setDocOtros(1))} */
-                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,11),changeSearch(e))}
+                    onChange={(e)=>(handleFileChange('Otros',e),setDocOtros(1),FileChange(e,5))}
                     className="form-control form-control-sm border border-5 rounded-3"
                     accept=".pdf"                  />
-                    {selectedFiles[11] && (
-                    <div className="d-flex justify-content-start ps-4" style={{width:70}}>
-                    <a href={URL.createObjectURL(selectedFiles[11])} target="_blank" rel="noopener noreferrer">
+                    {selectedFiles[5] && (
+                    <div className="d-flex justify-content-start ps-2 pt-1" style={{width:60}}>
+                    <a href={URL.createObjectURL(selectedFiles[5])} target="_blank" rel="noopener noreferrer">
                     <FaEye />Ver
                     </a>
                   </div>
                   )}
                   </div>
                 </div>
+            </div>
           </div>
-          <hr className="my-1 mt-4" />
-
+        </div>
         <div className="d-flex flex-column mb-3">
           <label className="fw-bold" style={{fontSize:18}}>OBSERVACIONES</label>
           <textarea
@@ -908,7 +756,6 @@ const [colorVality,setColorVality]=useState('red');
             className="form-control border border-3"
             style={{ minHeight: 70, maxHeight: 100, fontSize: 12 }}
           ></textarea>
-        </div>
         </div>
         <Modal show={loading} centered>
           <Modal.Body>
@@ -934,9 +781,9 @@ const [colorVality,setColorVality]=useState('red');
             className="fw-bold w-100 ms-2 me-3"
             onSubmit={handleSubmit}
           >
-            ACTUALIZAR
+            REGISTRAR
           </button>
-          <Button variant="contained" className="w-100 ms-2" onClick={refreshForm}>CANCELAR</Button>
+          <Button variant="secondary" className="w-100 ms-2" onClick={refreshForm}>CANCELAR</Button>
           </div>
           </Fade>
           <div className="" style={{width:50}}>

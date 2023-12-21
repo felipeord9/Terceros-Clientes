@@ -277,6 +277,8 @@ export default function MostartInfo(){
         return navigate('/editar/info/PJC')
       }else if(data.tipoFormulario==='PJCR'){
         return navigate('/editar/info/PJCR')
+      }else if(data.tipoFormulario==='CCP'){
+        return navigate('/editar/info/CCP')
       }
     }
 

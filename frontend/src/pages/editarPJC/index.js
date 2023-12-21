@@ -362,7 +362,7 @@ export default function EditarPJC(){
             setLoading(false)
             setFiles([])
             Swal.fire({
-              title: 'Creación exitosa!',
+              title: 'Actualización exitosa!',
               text: `El Cliente "${search.razonSocial.toLocaleUpperCase()}" con Número 
               de documento "${search.cedula}" se ha actualizado de manera satisfactoria`,
               icon: 'success',
@@ -400,7 +400,7 @@ export default function EditarPJC(){
       })
       .catch((err)=>{
         setLoading(false);
-        deleteFile(folderName);
+        
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `

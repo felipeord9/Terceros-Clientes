@@ -386,7 +386,7 @@ export default function EditPNC(){
       })
       .catch((err)=>{
         setLoading(false);
-        deleteFile(folderName);
+        
         Swal.fire({
           title: "¡Ha ocurrido un error!",
             text: `

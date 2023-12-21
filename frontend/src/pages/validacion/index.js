@@ -115,6 +115,8 @@ export default function ValidacionAdmin(){
             navigate('/info/valid')
           }else if(data.tipoFormulario==='PJCR'){
             navigate('/info/valid')
+          }else if(data.tipoFormulario==='CCP'){
+            navigate('/informacion/valid')
           }
           })
           .catch((error)=>{
