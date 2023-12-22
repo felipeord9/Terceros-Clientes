@@ -72,7 +72,7 @@ export default function InicioAdmin(){
                 <MenuItem value={70} onClick={(e)=>navigate('/tipo/proveedor')} className="" style={{color:'red'}}><strong>Proveedores varios (Agencias)</strong></MenuItem>
                 <center>
                 <hr style={{width:300, color:'black'}}/></center>
-                <MenuItem value={50} onClick={(e)=>navigate('/Parqueaderos')}><strong className="ps-2 ">PARQUEADEROS</strong></MenuItem>
+                <MenuItem value={50} onClick={(e)=>navigate('/Parqueaderos')}><strong className="ps-2 ">C.COMERCIALES Ó PARQUEADEROS</strong></MenuItem>
                 </Select>
               </FormControl>
             </Box>

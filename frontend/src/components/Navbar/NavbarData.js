@@ -65,9 +65,9 @@ export const NavBarData = [
     path:'/validacion/admin',
     icon:<RiPassValidLine />,
     cName:'nav-text',
-    access:['admin']
+    access:['admin','cartera','compras','agencias']
   },
-  {
+  /* {
     title:'Validación Existencia',
     path:'/validar/tercero',
     icon:<RiPassValidLine />,
@@ -80,7 +80,7 @@ export const NavBarData = [
     icon:<RiPassValidLine />,
     cName:'nav-text',
     access:['compras','agencias']
-  },
+  }, */
   
   {title:'Persona natural - contado',
     path:'/contado/persona/natural',
@@ -107,7 +107,7 @@ export const NavBarData = [
     access:['admin','cartera','agencias']
   },
   {
-    title: "Parqueaderos",
+    title: "C.Comerciales ó Parqueaderos",
     path: "/Parqueaderos",
     icon: <FaCar />,
     cName: "nav-text",

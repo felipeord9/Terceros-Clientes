@@ -17,6 +17,7 @@ import AuthContext from "../../context/authContext";
 import Button from '@mui/material/Button';
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoMdPersonAdd } from "react-icons/io";
+import gifSuccess from '../../assest/gif_success.gif' 
 
 export default function ValidacionAdmin(){
   const { user, setUser } = useContext(AuthContext);
@@ -205,6 +206,72 @@ export default function ValidacionAdmin(){
         })
     }
 
+    const validacionCompleta =(e)=>{
+      e.preventDefault();
+      validarCliente(search.cedula)
+      .then(({data})=>{
+        Swal.fire({
+          icon:"success",
+          title:`¡"${data.razonSocial}" es un@ <strong>CLIENTE</strong>¡`,
+          text:'Presiona "Aceptar" para ver la información en pantalla',
+          showConfirmButton:true,
+          confirmButtonColor:'green',
+          confirmButtonText:'Aceptar'
+        })
+        localStorage.setItem('data',JSON.stringify(data));
+          if(data.tipoFormulario==='PNC'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PNCR'){
+            navigate('/info/validacion')
+          }else if(data.tipoFormulario==='PJC'){
+            navigate('/info/valid')
+          }else if(data.tipoFormulario==='PJCR'){
+            navigate('/info/valid')
+          }else if(data.tipoFormulario==='CCP'){
+            navigate('/informacion/valid')
+          }
+      })
+      .catch((error)=>{
+            validarProveedor(search.cedula)
+            .then(({data})=>{
+              Swal.fire({
+                icon:'success',
+                title:`¡"${data.razonSocial}" es un@ <strong>PROVEEDOR</strong>¡`,
+                text:`Presiona "Aceptar" para ver la información en pantalla`,
+                showConfirmButton:true,
+                confirmButtonColor:'green',
+                confirmButtonText:'Aceptar'
+              })
+              localStorage.setItem('data',JSON.stringify(data));
+              if(data.tipoFormulario==='PMN' || data.tipoFormulario==='PS' || data.tipoFormulario==='PVN'){
+                navigate('/informacion/validacion')
+              }else if(data.tipoFormulario==='PMJ' || data.tipoFormulario==='PVJ' ){
+                navigate('/informacion/valid')
+              }
+            })
+            .catch((error)=>{
+              Swal.fire({
+                icon:'warning',
+                title:`El número de idenficación "<strong>${search.cedula}</strong>" no está registrado en nuestra base de datos`,
+                text:'¿Desea resgistrarlo?',
+                showConfirmButton:true,
+                confirmButtonColor:'green',
+                cancelButtonColor:'red',
+                confirmButtonText:'Sí',
+                cancelButtonText:'No',
+                showCancelButton:true,
+              }).then(({isConfirmed})=>{
+                if(isConfirmed){
+                  handleClickInicio(e);
+                }
+              })
+            })
+          
+
+      })
+        
+    }
+
     const handleClickInicio=(e)=>{
       e = e.target.value
       if(user.role==='agencias' || user.role==='cartera'){
@@ -283,8 +350,9 @@ export default function ValidacionAdmin(){
         </div>
         <center>
         <div className="mt-3 mb-3">
-          <button onClick={(e)=>handleSearch(e)} className="ms-3 mt-1">Buscar Cliente</button>
-          <button  style={{backgroundColor:'#4169E1'}} onClick={(e)=>searchProveedor(e)} className="ms-3 mt-1">Buscar Proveedor</button>
+          {/* <button onClick={(e)=>handleSearch(e)} className="ms-3 mt-1">Buscar Cliente</button>
+          <button  style={{backgroundColor:'#4169E1'}} onClick={(e)=>searchProveedor(e)} className="ms-3 mt-1">Buscar Proveedor</button> */}
+          <button /* style={{backgroundColor:'green'}} */ onClick={(e)=>validacionCompleta(e)} className="ms-3 mt-1">VALIDAR EXISTENCIA</button>
         </div>
         </center>
       </div>

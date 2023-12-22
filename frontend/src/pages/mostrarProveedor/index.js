@@ -232,13 +232,14 @@ export default function MostrarProveedor(){
 
     const handleClickBack=(e)=>{
       e = e.target.value
-      if(user.role==='agencias' || user.role==='cartera'){
+      /* if(user.role==='agencias' || user.role==='cartera'){
         return navigate('/validar/tercero')
       }else if(user.role==='compras'){
         return navigate('/validar/Proveedor')
       }else{
         return navigate('/validacion/admin')
-      }
+      } */
+      return navigate('/validacion/admin')
     }
 
     const TextOfBinary =({valor})=>{

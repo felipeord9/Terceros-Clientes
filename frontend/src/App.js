@@ -50,6 +50,7 @@ import ShowProveedorWithRzs from './pages/showProRzs';
 import MpPrueba from './pages/mpPrueba';
 import Parqueaderos from './pages/parqueaderos';
 import EditarCCP from './pages/editarCCP';
+import Sucursales from './pages/sucursales';
 
 function App() {
   return(
@@ -123,6 +124,7 @@ function App() {
         <Route path='/change/password' element={<PrivateRoute component={ChangePassword}/>}/>
         <Route path='/usuarios' element={<PrivateRoute component={Users}/>}/>
         <Route path='/terceros' element={<PrivateRoute component={Terceros}/>}/>
+        <Route path='/sucursales' element={<PrivateRoute component={Sucursales}/>}/>
         <Route path='/Proveedores' element={<PrivateRoute component={Proveedores}/>}/>
         <Route path='/bitacora' element={<PrivateRoute component={Bitacora}/>}/>
         <Route path='*' element={<Page404/>}/>
