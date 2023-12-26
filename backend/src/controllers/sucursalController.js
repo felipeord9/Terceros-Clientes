@@ -108,3 +108,18 @@ module.exports = {
   deleteSucursal,
   deleteByName,
 };
+
+/* const data = await SucursalService.create({
+      cedula:body.cedula,
+      codigoSucursal:body.codigoSucursal,
+      nombreSucursal:body.nombreSucursal,
+      direccion:body.direccion,
+      ciudad:body.ciudad,
+      celular:body.celular,
+      correoFacturaElectronica:body.correoFacturaElectronica,
+      nombreContacto:body.nombreContacto,
+      celularContacto:body.celularContacto,
+      correoContacto:body.correoContacto,
+      createdAt:body.createdAt,
+      userName:body.userName,
+    }) */

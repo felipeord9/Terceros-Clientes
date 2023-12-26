@@ -6,6 +6,7 @@ import ModalUsers from "../../components/ModalUsers";
 import ModalSucursal from "../../components/ModalSucursal";
 import { findUsers } from "../../services/userService"
 import { findSucursales, findCodigo } from "../../services/sucursalService"
+import { validarCliente } from "../../services/clienteService"
 import Swal from "sweetalert2";
 
 export default function Users() {
@@ -46,7 +47,7 @@ export default function Users() {
       })
       if(filteredUsers.length > 0) {
         setSuggestions(filteredUsers)
-        /* setUltimo(filteredUsers) */
+        setUltimo(filteredUsers.length)
       } else {
         setSuggestions(sucursales)
      }
@@ -81,6 +82,41 @@ export default function Users() {
     })  
   }
 
+  const botonHabilitado = search.length > 5;
+
+  const handlerNewSucursal = (e) =>{
+    e.preventDefault();
+    validarCliente(search)
+    .then(({data})=>{
+      Swal.fire({
+        icon:'question',
+        title:'¡Atención!',
+        text:`Se creará una nueva sucursal al client@ "${data.razonSocial}" de NIT "${data.cedula}". ¿Es esto correcto?`,
+        showCancelButton:true,
+        showConfirmButton:true,
+        confirmButtonColor:'#D92121',
+        confirmButtonText:'SI',
+        cancelButtonColor:'grey',
+        cancelButtonText:'NO'
+      }).then((result)=>{
+        if(result.isConfirmed){
+          setShowModalSucursal(!showModalSucursal)
+          localStorage.setItem('length',JSON.stringify({ultimo,search}))
+          localStorage.setItem('infoSucursal',JSON.stringify(data))
+        }
+      })
+    }).catch((err)=>{
+      Swal.fire({
+        icon:'warning',
+        showConfirmButton:true,
+        confirmButtonText:'OK',
+        confirmButtonColor:'#D92121',
+        title:'¡Atención!',
+        text:'Debes ingresar el número completo de identificación para poder agregar una sucursal. Verifica que el NIT este bien escrito y en su totalidad'
+      })
+    })
+  }
+
   return (
     <div className="wrapper justify-content-center  h-100 w-100 m-auto" style={{userSelect:'none'}}>
     <div className='rounder-4'>
@@ -101,20 +137,24 @@ export default function Users() {
             className="form-control form-control-sm w-100"
             placeholder="Buscar Sucursal Por Nit"
             onChange={(e)=>(searchUsers(e),buscar(e))}
+            autoComplete="on"
             style={{width:500, fontSize:20}}
           />
           <button
             title="Nuevo usuario"
             className="d-flex  text-nowrap btn btn-sm btn-danger text-light gap-1" 
-            style={{fontSize:18}}
-            onClick={(e) => setShowModalSucursal(!showModalSucursal)}>
+            style={{fontSize:18,backgroundColor:botonHabilitado ? '#D92121' : 'grey', border:botonHabilitado ? '#D92121' : 'grey' }}
+            disabled={!botonHabilitado}
+            onClick={(e)=>handlerNewSucursal(e)}
+            /* onClick={(e) => (setShowModalSucursal(!showModalSucursal),localStorage.setItem('length',JSON.stringify({ultimo,search})))} */
+            >
               Nueva Sucursal
               <GoIcons.GoPersonAdd style={{width: 25, height: 25}} />
           </button>
         </div>
         <TableSucursales users={suggestions} setShowModal={setShowModalSucursal} setSelectedUser={setSelectedSucursal} loading={loading} style={{fontSize:20}}/>
-        <button onClick={(e)=>buscarCodigo(e)}>buscar</button>
-        <span>{ultimo}</span>
+        {/* <button onClick={(e)=>buscarCodigo(e)}>buscar</button>
+        <span>{ultimo}</span> */}
         
       </div>
     </div>

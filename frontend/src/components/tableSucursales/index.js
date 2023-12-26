@@ -18,12 +18,19 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
       sortable: true,
       width: '150px',
     },
+    /* {
+      id: "codigoSucursal",
+      name: "Cód Suc.",
+      selector: (row) => row.codigoSucursal,
+      sortable: true,
+      width: '70px',
+    }, */
     {
       id: "nombreSucursal",
       name: "Nombre Sucursal",
       selector: (row) => row.nombreSucursal,
       sortable: true,
-      width: '260px'
+      width: '325px'
     },
     {
       id: "direccion",
@@ -123,7 +130,7 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
       className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none'}}
     >
     <div className='rounder-4'>
-    <div className='login-wrapper rounder-4' style={{width:990,height:400}} >
+    <div className='login-wrapper rounder-4' style={{width:1070,height:400}} >
       <DataTable
         className="bg-light text-center border border-2 h-100"
         style={{fontSize:20 , height:450}}

@@ -72,7 +72,7 @@ const findByCodigo = async (cedula) => {
 /*     models.Clientes.sequelize.query(`ALTER SEQUENCE clientes_id_seq RESTART WITH ${id};`)
  */    /* models.Clientes.destroy(id)
     models.Clientes.sequelize.query(`DELETE FROM clientes_id WHERE ${cliente.id}`) */
-const create = async (data) => {
+const create = async (body) => {
     const newSucursal = await models.Sucursales.create(body)
     return newSucursal  
 }

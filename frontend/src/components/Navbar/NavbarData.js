@@ -114,9 +114,9 @@ export const NavBarData = [
     access: ['admin','compras','cartera','agencias']
   },
   {
-    title: "Proveedor Mcia y Convenios",
-    path: "/tipo/persona",
-    icon: <FaHandshake />,
+    title: "Proveedores varios (Agencias)",
+    path: "/tipo/proveedor",
+    icon: <FaPeopleLine />,
     cName: "nav-text",
     access: ['admin','compras']
   },
@@ -128,9 +128,9 @@ export const NavBarData = [
     access: ['admin','compras']
   },
   {
-    title: "Proveedores varios (Agencias)",
-    path: "/tipo/proveedor",
-    icon: <FaPeopleLine />,
+    title: "Proveedor Mcia y Convenios",
+    path: "/tipo/persona",
+    icon: <FaHandshake />,
     cName: "nav-text",
     access: ['admin','compras']
   },
