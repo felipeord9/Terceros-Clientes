@@ -31,8 +31,6 @@ import Terceros from './pages/terceros';
 import ValidarTercero from './pages/validarTercero';
 import ValidarProveedor from './pages/validarProveedor';
 import ValidacionAdmin from './pages/validacion';
-import MostartInfo from './pages/mostrarInfo';
-import MostrarProveedor from './pages/mostrarProveedor';
 import EditarPNC from './pages/editPNC';
 import EditarPNCR from './pages/editarPNCR';
 import EditarPJC from './pages/editarPJC';
@@ -45,12 +43,20 @@ import EditarPVJ from './pages/editarPVJ';
 import MenuPrincipalAdmin from './pages/mpAdmin';
 import MenuPrincipalClientes from './pages/mpClientes';
 import MenuPrincipalProveedores from './pages/mpProveedores';
-import ShowInfoWithRzs from './pages/showWithRzs';
-import ShowProveedorWithRzs from './pages/showProRzs';
 import MpPrueba from './pages/mpPrueba';
 import Parqueaderos from './pages/parqueaderos';
 import EditarCCP from './pages/editarCCP';
 import Sucursales from './pages/sucursales';
+import MostartPNCR from './pages/mostrarPNCR';
+import MostartPNC from './pages/mostrarPNC';
+import MostrarPMN from './pages/mostrarPMN';
+import MostrarPJCR from './pages/mostrarPJCR';
+import MostrarPJC from './pages/mostrarPJC';
+import MostrarCCP from './pages/mostrarCCP';
+import MostrarPS from './pages/mostrarPS';
+import MostrarPVN from './pages/mostrarPVN';
+import MostrarPMJ from './pages/mostrarPMJ';
+import MostrarPVJ from './pages/mostrarPVJ';
 
 function App() {
   return(
@@ -71,11 +77,16 @@ function App() {
         <Route path='/validacion/admin' element={<PrivateRoute component={ValidacionAdmin}/>}/>
 
         {/* Mostrar validacion */}
-        <Route path='/info/validacion' element={<PrivateRoute component={MostartInfo}/>}/>
-        <Route path='/info/valid' element={<PrivateRoute component={ShowInfoWithRzs}/>}/>
-        <Route path='/informacion/validacion' element={<PrivateRoute component={MostrarProveedor}/>}/>
-        <Route path='/informacion/valid' element={<PrivateRoute component={ShowProveedorWithRzs}/>}/>
-
+        <Route path='/informacion/PNC' element={<PrivateRoute component={MostartPNC}/>}/>
+        <Route path='/informacion/PNCR' element={<PrivateRoute component={MostartPNCR}/>}/>
+        <Route path='/informacion/PJC' element={<PrivateRoute component={MostrarPJC}/>}/>
+        <Route path='/informacion/PJCR' element={<PrivateRoute component={MostrarPJCR}/>}/>
+        <Route path='/informacion/CCP' element={<PrivateRoute component={MostrarCCP}/>}/>
+        <Route path='/informacion/PMN' element={<PrivateRoute component={MostrarPMN}/>}/>
+        <Route path='/informacion/PS' element={<PrivateRoute component={MostrarPS}/>}/>
+        <Route path='/informacion/PVN' element={<PrivateRoute component={MostrarPVN}/>}/>
+        <Route path='/informacion/PMJ' element={<PrivateRoute component={MostrarPMJ}/>}/>
+        <Route path='/informacion/PVJ' element={<PrivateRoute component={MostrarPVJ}/>}/>
 
         {/* Editar informacion validada */}
         <Route path='/editar/info/PNC' element={<PrivateRoute component={EditarPNC}/>}/>

@@ -206,70 +206,211 @@ export default function ValidacionAdmin(){
         })
     }
 
+    const validacionDoble=(e)=>{
+      e.preventDefault();
+
+      validarCliente(search.cedula) && validarProveedor(search.cedula)
+          Swal.fire({
+            title:'El usuario con este número de identificación es <strong>CLIENTE</strong> y <strong>PROVEEDOR</strong>',
+            text:'¿De cuál de los dos desea visualizar la informacíon en pantalla?',
+            showCancelButton:true,
+            showConfirmButton:true,
+            confirmButtonColor:'#D92121',
+            confirmButtonText:'Cliente',
+
+            showDenyButton:true,
+            denyButtonColor:'blue',
+            denyButtonText:'Proveedor'
+          })
+          .then(({ isConfirmed, isDenied }) => {
+            if(isConfirmed){
+              validarCliente(search.cedula)
+              .then(({data})=>{
+                localStorage.setItem('data',JSON.stringify(data));
+                if(data.tipoFormulario==='PNC'){
+                  navigate('/informacion/PNC')
+                }else if(data.tipoFormulario==='PNCR'){
+                  navigate('/informacion/PNCR')
+                }else if(data.tipoFormulario==='PJC'){
+                  navigate('/informacion/PJC')
+                }else if(data.tipoFormulario==='PJCR'){
+                  navigate('/informacion/PJCR')
+                }else if(data.tipoFormulario==='CCP'){
+                  navigate('/informacion/CCP')
+                }
+              })
+            }else if(isDenied){
+              validarProveedor(search.cedula)
+              .then(({data})=>{
+                localStorage.setItem('data',JSON.stringify(data));
+                if(data.tipoFormulario==='PMN'){
+                  navigate('/informacion/PMN')
+                }else if(data.tipoFormulario==='PMJ'){
+                  navigate('/informacion/PS')
+                }else if(data.tipoFormulario==='PS'){
+                  navigate('/informacion/PVN')
+                }else if(data.tipoFormulario==='PVN'){
+                  navigate('/informacion/PMJ')
+                }else if(data.tipoFormulario==='PVJ'){
+                  navigate('/informacion/PVJ')
+                }
+              })
+            }
+          })
+          .catch((error)=>{
+            console.log('no es duo')
+          })
+
+      }
+    
+
     const validacionCompleta =(e)=>{
       e.preventDefault();
-      validarCliente(search.cedula)
-      .then(({data})=>{
-        Swal.fire({
-          icon:"success",
-          title:`¡"${data.razonSocial}" es un@ <strong>CLIENTE</strong>¡`,
-          text:'Presiona "Aceptar" para ver la información en pantalla',
-          showConfirmButton:true,
-          confirmButtonColor:'green',
-          confirmButtonText:'Aceptar'
-        })
-        localStorage.setItem('data',JSON.stringify(data));
-          if(data.tipoFormulario==='PNC'){
-            navigate('/info/validacion')
-          }else if(data.tipoFormulario==='PNCR'){
-            navigate('/info/validacion')
-          }else if(data.tipoFormulario==='PJC'){
-            navigate('/info/valid')
-          }else if(data.tipoFormulario==='PJCR'){
-            navigate('/info/valid')
-          }else if(data.tipoFormulario==='CCP'){
-            navigate('/informacion/valid')
-          }
-      })
-      .catch((error)=>{
-            validarProveedor(search.cedula)
-            .then(({data})=>{
+        /* ((validarProveedor(search.cedula)) && (validarCliente(search.cedula))) */
+        validarProveedor(search.cedula)
+        .then(()=>{
+          validarCliente(search.cedula)
+          .then(()=>{
               Swal.fire({
-                icon:'success',
-                title:`¡"${data.razonSocial}" es un@ <strong>PROVEEDOR</strong>¡`,
-                text:`Presiona "Aceptar" para ver la información en pantalla`,
-                showConfirmButton:true,
-                confirmButtonColor:'green',
-                confirmButtonText:'Aceptar'
-              })
-              localStorage.setItem('data',JSON.stringify(data));
-              if(data.tipoFormulario==='PMN' || data.tipoFormulario==='PS' || data.tipoFormulario==='PVN'){
-                navigate('/informacion/validacion')
-              }else if(data.tipoFormulario==='PMJ' || data.tipoFormulario==='PVJ' ){
-                navigate('/informacion/valid')
-              }
-            })
-            .catch((error)=>{
-              Swal.fire({
-                icon:'warning',
-                title:`El número de idenficación "<strong>${search.cedula}</strong>" no está registrado en nuestra base de datos`,
-                text:'¿Desea resgistrarlo?',
-                showConfirmButton:true,
-                confirmButtonColor:'green',
-                cancelButtonColor:'red',
-                confirmButtonText:'Sí',
-                cancelButtonText:'No',
+                title:'El usuario con este número de identificación es <strong>CLIENTE</strong> y <strong>PROVEEDOR</strong>',
+                text:'¿De cuál de los dos desea visualizar la informacíon en pantalla?',
                 showCancelButton:true,
-              }).then(({isConfirmed})=>{
+                showConfirmButton:true,
+                confirmButtonColor:'#D92121',
+                confirmButtonText:'Cliente',
+                showDenyButton:true,
+                denyButtonColor:'blue',
+                denyButtonText:'Proveedor'
+              })
+              .then(({ isConfirmed, isDenied }) => {
                 if(isConfirmed){
-                  handleClickInicio(e);
+                  validarCliente(search.cedula)
+                  .then(({data})=>{
+                    localStorage.setItem('data',JSON.stringify(data));
+                    if(data.tipoFormulario==='PNC'){
+                      navigate('/informacion/PNC')
+                    }else if(data.tipoFormulario==='PNCR'){
+                      navigate('/informacion/PNCR')
+                    }else if(data.tipoFormulario==='PJC'){
+                      navigate('/informacion/PJC')
+                    }else if(data.tipoFormulario==='PJCR'){
+                      navigate('/informacion/PJCR')
+                    }else if(data.tipoFormulario==='CCP'){
+                      navigate('/informacion/CCP')
+                    }
+                  })
+                }else if(isDenied){
+                  validarProveedor(search.cedula)
+                  .then(({data})=>{
+                    localStorage.setItem('data',JSON.stringify(data));
+                    if(data.tipoFormulario==='PMN'){
+                      navigate('/informacion/PMN')
+                    }else if(data.tipoFormulario==='PMJ'){
+                      navigate('/informacion/PMJ')
+                    }else if(data.tipoFormulario==='PS'){
+                      navigate('/informacion/PS')
+                    }else if(data.tipoFormulario==='PVN'){
+                      navigate('/informacion/PVN')
+                    }else if(data.tipoFormulario==='PVJ'){
+                      navigate('/informacion/PVJ')
+                    }
+                  })
+                }
+              })
+            }).catch((error)=>{
+              validarProveedor(search.cedula)
+              .then(({data})=>{
+                Swal.fire({
+                  icon:'success',
+                  title:`¡"${data.razonSocial}" es un@ <strong>PROVEEDOR</strong>¡`,
+                  text:`Presiona "Aceptar" para ver la información en pantalla`,
+                  showConfirmButton:true,
+                  confirmButtonColor:'green',
+                  confirmButtonText:'Aceptar'
+                })
+                localStorage.setItem('data',JSON.stringify(data));
+                if(data.tipoFormulario==='PMN'){
+                  navigate('/informacion/PMN')
+                }else if(data.tipoFormulario==='PMJ'){
+                  navigate('/informacion/PMJ')
+                }else if(data.tipoFormulario==='PS'){
+                  navigate('/informacion/PS')
+                }else if(data.tipoFormulario==='PVN'){
+                  navigate('/informacion/PVN')
+                }else if(data.tipoFormulario==='PVJ'){
+                  navigate('/informacion/PVJ')
                 }
               })
             })
-          
-
-      })
-        
+        })
+            .catch((error)=>{
+              validarCliente(search.cedula)
+              .then(({data})=>{
+                Swal.fire({
+                  icon:"success",
+                  title:`¡"${data.razonSocial}" es un@ <strong>CLIENTE</strong>¡`,
+                  text:'Presiona "Aceptar" para ver la información en pantalla',
+                  showConfirmButton:true,
+                  confirmButtonColor:'green',
+                  confirmButtonText:'Aceptar'
+                })
+                localStorage.setItem('data',JSON.stringify(data));
+                if(data.tipoFormulario==='PNC'){
+                  navigate('/informacion/PNC')
+                }else if(data.tipoFormulario==='PNCR'){
+                  navigate('/informacion/PNCR')
+                }else if(data.tipoFormulario==='PJC'){
+                  navigate('/informacion/PJC')
+                }else if(data.tipoFormulario==='PJCR'){
+                  navigate('/informacion/PJCR')
+                }else if(data.tipoFormulario==='CCP'){
+                  navigate('/informacion/CCP')
+                }
+              })
+              .catch((error)=>{
+                validarProveedor(search.cedula)
+              .then(({data})=>{
+                Swal.fire({
+                  icon:'success',
+                  title:`¡"${data.razonSocial}" es un@ <strong>PROVEEDOR</strong>¡`,
+                  text:`Presiona "Aceptar" para ver la información en pantalla`,
+                  showConfirmButton:true,
+                  confirmButtonColor:'green',
+                  confirmButtonText:'Aceptar'
+                })
+                localStorage.setItem('data',JSON.stringify(data));
+                if(data.tipoFormulario==='PMN'){
+                  navigate('/informacion/PMN')
+                }else if(data.tipoFormulario==='PMJ'){
+                  navigate('/informacion/PMJ')
+                }else if(data.tipoFormulario==='PS'){
+                  navigate('/informacion/PS')
+                }else if(data.tipoFormulario==='PVN'){
+                  navigate('/informacion/PVN')
+                }else if(data.tipoFormulario==='PVJ'){
+                  navigate('/informacion/PVJ')
+                }
+              })
+              .catch((error)=>{
+                Swal.fire({
+                  icon:'warning',
+                  title:`El número de idenficación "<strong>${search.cedula}</strong>" no está registrado en nuestra base de datos`,
+                  text:'¿Desea resgistrarlo?',
+                  showConfirmButton:true,
+                  confirmButtonColor:'green',
+                  cancelButtonColor:'red',
+                  confirmButtonText:'Sí',
+                  cancelButtonText:'No',
+                  showCancelButton:true,
+                }).then(({isConfirmed})=>{
+                  if(isConfirmed){
+                    handleClickInicio(e);
+                  }
+                })
+              })
+              })
+            })
+      
     }
 
     const handleClickInicio=(e)=>{
@@ -352,7 +493,7 @@ export default function ValidacionAdmin(){
         <div className="mt-3 mb-3">
           {/* <button onClick={(e)=>handleSearch(e)} className="ms-3 mt-1">Buscar Cliente</button>
           <button  style={{backgroundColor:'#4169E1'}} onClick={(e)=>searchProveedor(e)} className="ms-3 mt-1">Buscar Proveedor</button> */}
-          <button /* style={{backgroundColor:'green'}} */ onClick={(e)=>validacionCompleta(e)} className="ms-3 mt-1">VALIDAR EXISTENCIA</button>
+          <button /* style={{backgroundColor:'green'}} */ onClick={(e)=>(validacionCompleta(e))} className="ms-3 mt-1">VALIDAR EXISTENCIA</button>
         </div>
         </center>
       </div>

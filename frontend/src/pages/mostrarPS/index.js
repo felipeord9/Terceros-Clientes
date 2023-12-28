@@ -32,7 +32,8 @@ const CarpetaArchivoLink = ({ carpeta, archivo }) => {
 
 };
 
-export default function ShowProveedorWithRzs(){
+
+export default function MostrarPS(){
   const { user, setUser } = useContext(AuthContext);
   const navigate =useNavigate()
     const [cedula,setCedula] = useState('');
@@ -50,6 +51,7 @@ export default function ShowProveedorWithRzs(){
     const [info,setInfo]=useState({
       cedula:'',
       razonSocial:'',
+      
       ciudad:'',
       direccion:'',
       celular:'',
@@ -78,6 +80,7 @@ export default function ShowProveedorWithRzs(){
       docCerBan:'',
       docValAnt:'',
       docOtros:'',
+
     })
     useEffect(()=>{
       const datosTercero = localStorage.getItem('data');
@@ -178,21 +181,23 @@ export default function ShowProveedorWithRzs(){
           tipoFormulario:data.tipoFormulario,
           solicitante:data.solicitante,
           docVinculacion:data.docVinculacion,
-          docComprAntc:data.docComprAntc,
-          docCtalnst:data.docCtalnst,
-          docPagare:data.docPagare,
-          docRut:data.docRut,
-          docCcio:data.docCcio,
-          docCrepL:data.docCrepL,
-          docEf:data.docEf,
-          docRefcom:data.docRefcom,
-          docCvbo:data.docCvbo,
-          docFirdoc:data.docFirdoc,
-          docInfemp:data.docInfemp,
-          docInfrl:data.docInfrl,
-          docCerBan:data.docCerBan,
-          docValAnt:data.docValAnt,
-          docOtros:data.docOtros,
+            docComprAntc:data.docComprAntc,
+            docCtalnst:data.docCtalnst,
+            docPagare:data.docPagare,
+            docRut:data.docRut,
+            docCcio:data.docCcio,
+            docCrepL:data.docCrepL,
+            docEf:data.docEf,
+            docRefcom:data.docRefcom,
+            docRefcom2:data.docRefcom2,
+            docRefcom3:data.docRefcom3,
+            docCvbo:data.docCvbo,
+            docFirdoc:data.docFirdoc,
+            docInfemp:data.docInfemp,
+            docInfrl:data.docInfrl,
+            docCerBan:data.docCerBan,
+            docValAnt:data.docValAnt,
+            docOtros:data.docOtros,
         })
         })
         .catch((error)=>{
@@ -227,14 +232,14 @@ export default function ShowProveedorWithRzs(){
 
     const handleClickBack=(e)=>{
       e = e.target.value
-      /* if(user.role==='agencias' || user.role==='cartera'){
+      if(user.role==='agencias' || user.role==='cartera'){
         return navigate('/validar/tercero')
       }else if(user.role==='compras'){
         return navigate('/validar/Proveedor')
       }else{
         return navigate('/validacion/admin')
-      } */
-      return navigate('/validacion/admin')
+      }
+      /* return navigate('/validacion/admin') */
     }
 
     const TextOfBinary =({valor})=>{
@@ -247,8 +252,7 @@ export default function ShowProveedorWithRzs(){
         if(valor=== 1){
           setLabelColor('#008F39')
           setNuevoTexto('Cargado')
-          setLogo({Logo_pdf})
-          
+          setLogo(({Logo_pdf}))
         }else if(valor===0){
           setLabelColor('#CB3234')
           setNuevoTexto('No fue cargado')
@@ -259,7 +263,7 @@ export default function ShowProveedorWithRzs(){
         }
       },[valor]);
       return (
-        <label className="mb-2" style={{color:labelColor, height:18}}><strong className="">{nuevoTexto} {/* {mostrarImagen(valor)} */} {/* <img src={LogoPdf} style={{width:100}}></img> */}</strong></label>
+        <label className="mb-2" style={{color:labelColor, height:18}}><strong>{nuevoTexto} {/* {mostrarImagen(valor)} */}</strong></label>
       )
     }
     const mostrarImagen=(valor)=>{
@@ -267,7 +271,6 @@ export default function ShowProveedorWithRzs(){
         return <img src={Logo_pdf} style={{width:100}}></img>
       }
     }
-
     const [tipoForm,setTipoForm]=useState();
     const handleEditClient=(e)=>{
       if(data.tipoFormulario==='PMN'){
@@ -284,23 +287,19 @@ export default function ShowProveedorWithRzs(){
         return navigate('/editar/info/CCP')
       }
     }
-
     return(
-      <div className=" wrapper d-flex justify-content-center w-100 h-auto m-auto" style={{userSelect:'none'}}>
-
-      <div
-        className=" login-wrapper shadow rounded-4 border border-3 p-3 pt-4 mt-5 pb-3 mb-5 overflow-auto" style={{backgroundColor:'white',width:1000}}
-      >
+      <div className=" wrapper d-flex justify-content-center align-items-center vh-100 w-100 m-auto " style={{userSelect:'none'}}>
+      <div className='rounder-4'>
+      <div className='login-wrapper p-2 mt-5 shadow-lg border-light rounded-4 border border-3 bg-gradient d-flexjustify-content-between ' style={{backgroundColor:'white'}}>
         <div className="w-100 d-flex flex-row" >
           <Button style={{height:35}} onClick={(e)=>handleClickBack(e)} variant="contained" className="d-flex justify-content-start"><RiArrowGoBackFill className="me-1" />back</Button>
-          <div style={{width:160}}></div>
-          <h1 className="mb-3"><strong>Información Del Cliente</strong></h1>
-          <div style={{width:110}}></div>
-          <button onClick={(e)=>handleEditClient(e)} style={{height:55,width:150}}><CiEdit />Actualizar</button>
-          {/* <span>{data.tipoFormulario}</span> */}
+          <div style={{width:120}}></div>
+          <h1 className="mb-3"><strong>Información Del Proveedor</strong></h1>
+          <div style={{width:90}}></div>
+          <button onClick={(e)=>navigate('/editar/info/PS')} style={{height:55,width:150}}><CiEdit />Actualizar</button>
         </div>
       <div className="w-100 rounded-4 p-2" style={{backgroundColor:'#C7C8CA'}}>
-      <div className="d-flex flex-row mt-2 mb-3">
+      <div className="d-flex flex-row mt-2 mb-2">
                 <div className="d-flex flex-column align-items-start w-25 me-4">
                   <label className="me-1"><strong>Número de Identifiación:</strong></label>
                   {data ? (
@@ -354,7 +353,7 @@ export default function ShowProveedorWithRzs(){
                   )}
                 </div>
       </div>
-      <div className="d-flex flex-row mt-2 mb-3">
+      <div className="d-flex flex-row mt-2 mb-2">
                 <div className="d-flex flex-column align-items-start w-25 me-4">
                   <label className="me-1 fw-bold">Dirección:</label>
                   {data ? (
@@ -424,15 +423,9 @@ export default function ShowProveedorWithRzs(){
             <p>no hay nada</p>
           )}
         </div>
-      <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
+      <div className="d-flex flex-row mt-2">
+                <div className="d-flex flex-column align-items-start w-25 me-4 " >
                   <label className="me-1 fw-bold">Doc_Vinculacion:</label>
-                  {/* <input
-                  id="docVinculacion"     
-                  value={info.docVinculacion}              
-                  className="form-control form-control-sm"                   
-                  disabled
-                  /> */}
                   {data ? (
 
                     <TextOfBinary valor={data.docVinculacion}>{info.docVinculacion}</TextOfBinary>
@@ -440,47 +433,21 @@ export default function ShowProveedorWithRzs(){
                     <p>no hay nada</p>
                   )}
                   {info.docVinculacion === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Vinculacion-${info.razonSocial}.pdf`}/>
-                  )}
-                  {/* <img className="pt-1" src={Logo_pdf} style={{width:100}}></img> */}
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Vinculacion-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
+                    )}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_ComprAntc:</label>
-                  {/* <input
-                  id="docComprAntc"     
-                  value={info.docComprAntc}              
-                  className="form-control form-control-sm"                   
-                  disabled
-                  >
-                  </input> */}
+                  <div className="d-flex flex-column align-items-start w-25 me-4" >
+                  <label className="me-1 fw-bold">Doc_Rut:</label>
                   {data ? (
-                  <TextOfBinary valor={data.docComprAntc}>{info.docComprAntc}</TextOfBinary>
+                  <TextOfBinary valor={data.docRut}>{info.docRut}</TextOfBinary>
                   ):(
                     <p>no hay nada</p>
                   )}
-                  {info.docComprAntc === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`ComprAntc-${info.razonSocial}.pdf`}/>
+                  {info.docRut === 1 && (
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Rut-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
                     )}
                   </div>
-                  <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_Refcom:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docRefcom}>{info.docRefcom}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docRefcom === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Refcom-${info.razonSocial}.pdf`}/>
-                    )}
-                  {info.docRefcom2 === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Refcom2-${info.razonSocial}.pdf`}/>
-                    )}
-                  {info.docRefcom3 === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Refcom3-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                
-                <div className="d-flex flex-column align-items-start w-25 mb-2" >
+                <div className="d-flex flex-column align-items-start w-25" >
                   <label className="me-1 fw-bold">Doc_Infemp:</label>
                   {data ? (
                   <TextOfBinary valor={data.docInfemp}>{info.docInfemp}</TextOfBinary>
@@ -488,93 +455,11 @@ export default function ShowProveedorWithRzs(){
                     <p>no hay nada</p>
                   )}
                   {info.docInfemp === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Infemp-${info.razonSocial}.pdf`}/>
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Infemp-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
                     )}
                   </div>
-      </div>
-      
-      
-      <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_Rut:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docRut}></TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docRut === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Rut-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_Ccio:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docCcio}>{info.docCcio}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docCcio === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Ccio-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_CrepL:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docCrepL}>{info.docCrepL}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docCrepL === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`CrepL-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25 mb-2" >
-                  <label className="me-1 fw-bold">Doc_Ef:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docEf}>{info.docEf}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docEf === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Ef-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-      </div>
-      <div className="d-flex flex-row mt-2 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_Infrl:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docInfrl}>{info.docInfrl}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docInfrl === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Infrl-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_CerBan:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docCerBan}>{info.docCerBan}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docCerBan === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Certban-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25 me-4 mb-2" >
-                  <label className="me-1 fw-bold">Doc_ValAnt:</label>
-                  {data ? (
-                  <TextOfBinary valor={data.docValAnt}>{info.docValAnt}</TextOfBinary>
-                  ):(
-                    <p>no hay nada</p>
-                  )}
-                  {info.docValAnt === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`ValAnt-${info.razonSocial}.pdf`}/>
-                    )}
-                  </div>
-                <div className="d-flex flex-column align-items-start w-25  mb-2" >
+                
+                <div className="d-flex flex-column align-items-start w-25 " >
                   <label className="me-1 fw-bold">Doc_Otros:</label>
                   {data ? (
                   <TextOfBinary valor={data.docOtros}>{info.docOtros}</TextOfBinary>
@@ -582,13 +467,13 @@ export default function ShowProveedorWithRzs(){
                     <p>no hay nada</p>
                   )}
                   {info.docOtros === 1 && (
-                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.razonSocial}`} archivo={`Otros-${info.razonSocial}.pdf`}/>
+                    <CarpetaArchivoLink carpeta={`${info.cedula}-${info.primerApellido}-${info.segundoApellido}-${info.primerNombre}-${info.otrosNombres}`} archivo={`Otros-${info.primerApellido} ${info.segundoApellido} ${info.primerNombre} ${info.otrosNombres}.pdf`}/>
                     )}
                   </div>
       </div>
       <center>
-      <div className="d-flex flex-row mt-4 mb-2">
-                <div className="d-flex flex-column align-items-start w-25 me-5" >
+      <div className="d-flex flex-row mt-2 mb-2">
+                <div className="d-flex flex-column align-items-start w-75 me-5" >
                   <label className="me-1 fw-bold">Fecha Creación:</label>
                   {data ? (
                       <input
@@ -601,7 +486,7 @@ export default function ShowProveedorWithRzs(){
                     <p>no hay nada</p>
                   )}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 me-5" >
+                <div className="d-flex flex-column align-items-start w-75 me-5" >
                   <label className="me-1 fw-bold">Usuario Creador:</label>
                   {data ? (
                       <input
@@ -614,7 +499,7 @@ export default function ShowProveedorWithRzs(){
                     <p>no hay nada</p>
                   )}
                 </div>
-                <div className="d-flex flex-column align-items-start w-25 " >
+                <div className="d-flex flex-column align-items-start w-75 ">
                   <label className="me-1 fw-bold">Tipo formato:</label>
                   {data ? (
                       <input
@@ -622,7 +507,6 @@ export default function ShowProveedorWithRzs(){
                       className="form-control form-control-sm"                   
                       disabled
                       value={data.tipoFormulario}
-                      onChange={(e)=>setTipoForm(e)}
                     ></input>
                   ):(
                     <p>no hay nada</p>
@@ -631,9 +515,8 @@ export default function ShowProveedorWithRzs(){
       </div>
       </center>
       </div>
+      </div>
     </div>
     </div>
-    
-
     )
-}
+                  }

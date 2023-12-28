@@ -115,15 +115,15 @@ export default function ValidarTercero(){
           })
           localStorage.setItem('data',JSON.stringify(data));
           if(data.tipoFormulario==='PNC'){
-            navigate('/info/validacion')
+            navigate('/informacion/PNC')
           }else if(data.tipoFormulario==='PNCR'){
-            navigate('/info/validacion')
+            navigate('/informacion/PNCR')
           }else if(data.tipoFormulario==='PJC'){
-            navigate('/info/valid')
+            navigate('/informacion/PJC')
           }else if(data.tipoFormulario==='PJCR'){
-            navigate('/info/valid')
+            navigate('/informacion/PJCR')
           }else if(data.tipoFormulario==='CCP'){
-            navigate('/informacion/valid')
+            navigate('/informacion/CCP')
           }
           })
           .catch((error)=>{
