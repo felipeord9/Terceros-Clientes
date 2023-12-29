@@ -8,6 +8,8 @@ import { findUsers } from "../../services/userService"
 import { findSucursales, findCodigo } from "../../services/sucursalService"
 import { validarCliente } from "../../services/clienteService"
 import Swal from "sweetalert2";
+import { BsBuildingFillAdd } from "react-icons/bs";
+import { BsBuildingAdd } from "react-icons/bs";
 
 export default function Users() {
   const [sucursales, setSucursales] = useState([]);
@@ -40,7 +42,8 @@ export default function Users() {
     if(value !== "") {
       const filteredUsers = sucursales.filter((elem) => {
         if(
-          elem.cedula.includes(value)
+          elem.cedula.includes(value) ||
+          elem.nombreSucursal.includes(value.toUpperCase())
         ) {
           return elem
         }
@@ -90,8 +93,8 @@ export default function Users() {
     .then(({data})=>{
       Swal.fire({
         icon:'question',
-        title:'¡Atención!',
-        text:`Se creará una nueva sucursal al client@ "${data.razonSocial}" de NIT "${data.cedula}". ¿Es esto correcto?`,
+        title:'Validando Información',
+        text:`Se creará una nueva sucursal a nombre del client@ "${data.razonSocial}" de NIT "${data.cedula}". ¿Es esto correcto?`,
         showCancelButton:true,
         showConfirmButton:true,
         confirmButtonColor:'#D92121',
@@ -112,7 +115,7 @@ export default function Users() {
         confirmButtonText:'OK',
         confirmButtonColor:'#D92121',
         title:'¡Atención!',
-        text:'Debes ingresar el número completo de identificación para poder agregar una sucursal. Verifica que el NIT este bien escrito y en su totalidad'
+        text:'Debes ingresar el número de identificación completo para poder agregar una sucursal. Verifica que esté bien escrito y en su totalidad'
       })
     })
   }
@@ -134,22 +137,24 @@ export default function Users() {
           <input
             type="search"
             value={search}
-            className="form-control form-control-sm w-100"
+            className="form-control form-control-sm w-100 rounded-2"
             placeholder="Buscar Sucursal Por Nit"
             onChange={(e)=>(searchUsers(e),buscar(e))}
             autoComplete="on"
             style={{width:500, fontSize:20}}
           />
           <button
-            title="Nuevo usuario"
-            className="d-flex  text-nowrap btn btn-sm btn-danger text-light gap-1" 
+            title="Nueva Sucursal"
+            className="d-flex pt-2 text-nowrap btn btn-sm btn-danger text-light gap-1" 
             style={{fontSize:18,backgroundColor:botonHabilitado ? '#D92121' : 'grey', border:botonHabilitado ? '#D92121' : 'grey' }}
             disabled={!botonHabilitado}
             onClick={(e)=>handlerNewSucursal(e)}
             /* onClick={(e) => (setShowModalSucursal(!showModalSucursal),localStorage.setItem('length',JSON.stringify({ultimo,search})))} */
             >
+              {/* <BsBuildingAdd style={{width: 25, height: 25}}/> */}
+              {/* <GoIcons.GoPersonAdd style={{width: 25, height: 25}} /> */}
+              <BsBuildingFillAdd style={{width: 25, height: 25}}/>
               Nueva Sucursal
-              <GoIcons.GoPersonAdd style={{width: 25, height: 25}} />
           </button>
         </div>
         <TableSucursales users={suggestions} setShowModal={setShowModalSucursal} setSelectedUser={setSelectedSucursal} loading={loading} style={{fontSize:20}}/>

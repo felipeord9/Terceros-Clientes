@@ -423,7 +423,19 @@ export default function ValidacionAdmin(){
         return navigate('/inicio/admin')
       }
     }
-
+    const handleClickImagen=(e)=>{
+      e = e.target.value
+      if( user.role==='cartera'){
+        /* return navigate('/inicio') */
+        return navigate('/menu/principal/Clientes')
+      }else if(user.role==='compras' || user.role==='agencias'){
+        /* return navigate('/compras') */
+        return navigate('/menu/principal/Proveedores')
+      }else{
+        /* return navigate('/inicio/admin') */
+        return navigate('/menu/principal/admin')
+      }
+    }
     const handleClickBack=(e)=>{
       e = e.target.value
       if(user.role==='agencias' || user.role==='cartera'){
@@ -468,7 +480,7 @@ export default function ValidacionAdmin(){
         <div className="w-100" >
           <Button style={{height:35}} onClick={(e)=>handleClickInicio(e)} variant="contained" className="d-flex justify-content-start"><IoMdPersonAdd  className="me-1" />Ir a registro</Button>
         </div>
-        <img src={Logo} style={{width:450,height:200}} />
+        <img onClick={handleClickImagen} src={Logo} style={{width:450,height:200, cursor: "pointer"}} />
       </div>
       
       <div>

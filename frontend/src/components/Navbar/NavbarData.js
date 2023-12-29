@@ -81,8 +81,8 @@ export const NavBarData = [
     cName:'nav-text',
     access:['compras','agencias']
   },
-  
-  {title:'Persona natural - contado',
+  {
+    title:'Persona natural - contado',
     path:'/contado/persona/natural',
     icon:<RiContactsBook2Fill/>,
     cName:'nav-text',
@@ -150,7 +150,8 @@ export const NavBarData = [
   },{
     title:'Proveedores',
     path: '/Proveedores',
-    icon: <PiFloppyDiskBackFill />,
+    /* icon: <PiFloppyDiskBackFill />, */
+    icon: <BsClipboardCheckFill />,
     cName: "nav-text",
     access: ['admin']
   },{

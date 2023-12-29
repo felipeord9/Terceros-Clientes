@@ -8,6 +8,7 @@ import DepartmentContext  from "../../context/departamentoContext";
 import { Fade } from "react-awesome-reveal";
 import { createProveedor, deleteProveedor } from '../../services/proveedorService';
 import { createCliente, deleteCliente } from '../../services/clienteService'
+import { createSucursal, deleteSucursalByName } from '../../services/sucursalService'
 import { getAllDepartamentos } from "../../services/departamentoService";
 import { getAllCiudades } from "../../services/ciudadService";
 import { getAllActividad} from '../../services/actividadService';
@@ -265,6 +266,29 @@ export default function Parqueaderos(){
         const clientName = search.razonSocial.toUpperCase();
         formData.append('clientName',clientName)
         //ejecutamos nuestra funcion que creara el cliente
+        const sucur = {
+          cedula: search.cedula,
+          codigoSucursal: 1,
+          nombreSucursal: search.razonSocial.toUpperCase(),
+          direccion: search.direccion,
+          ciudad: ciudad.description,
+          celular: search.celular,
+          correoFacturaElectronica: search.correoElectronico.toLowerCase(),
+          nombreContacto: search.razonSocial.toUpperCase(),
+          celularContacto: search.celular,
+          correoContacto: search.correoFacturaElectronica,
+          createdAt:new Date(),
+          userName:user.name
+        }
+        createSucursal(sucur)
+        .then(()=>{
+          console.log('sucursal creada')
+        }).catch((err)=>{
+          Swal.fire({
+            title:'¡Uops!',
+            text:'Ha ocurrido un error al momento de crear la sucursal de este cliente. Informa a el área de sistemas.'
+          })
+        })
         createCliente(body)
         .then(({data}) => {
           const info={
@@ -291,6 +315,7 @@ export default function Parqueaderos(){
           }) 
           .catch((err)=>{
             setLoading(false);
+            deleteSucursalByName(search.razonSocial.toUpperCase())
             if(!data){
               deleteFile(folderName);
             }else{

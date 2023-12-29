@@ -98,7 +98,7 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
                 .catch((err)=>{
                   Swal.fire({
                     title:'Algo salió mal',
-                    text:'Ha ocurrido un error al borrar el usuario, intentalo de nuevo. Si el problema persiste, comunicate con el área de sistemas',
+                    text:'Ha ocurrido un error al borrar la sucursal, intentalo de nuevo. Si el problema persiste, comunicate con el área de sistemas',
                     icon:'error',
                     showConfirmButton:'true',
                     confirmButtonColor:'green'
@@ -109,7 +109,7 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
             .catch((err)=>{
               Swal.fire({
                 title:'Algo salió mal',
-                text:'Ha ocurrido un error al borrar el usuario, intentalo de nuevo. Si el problema persiste, comunicate con el área de sistemas',
+                text:'Ha ocurrido un error al borrar la sucursal, intentalo de nuevo. Si el problema persiste, comunicate con el área de sistemas',
                 icon:'error',
                 showConfirmButton:'true',
                 confirmButtonColor:'green'
@@ -127,10 +127,9 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
   
   return (
     <div
-      className="wrapper justify-content-center d-flex flex-column rounded" style={{userSelect:'none'}}
+      className="wrapper justify-content-center d-flex flex-column rounded w-100 h-100" style={{userSelect:'none',fontSize:20}}
     >
-    <div className='rounder-4'>
-    <div className='login-wrapper rounder-4' style={{width:1070,height:400}} >
+    <div className='login-wrapper justify-content-center shadow border border-2 rounded-4 ' style={{width:1070,height:400,backgroundColor:'white'}} >
       <DataTable
         className="bg-light text-center border border-2 h-100"
         style={{fontSize:20 , height:450}}
@@ -155,7 +154,6 @@ export default function TableSucursales({ users, loading, setSelectedUser, setSh
         noDataComponent={
           <div style={{padding: 24}}>No hay ningún registro en la base de datos...</div>}  
       />
-    </div>
     </div>
     </div>
   )

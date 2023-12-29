@@ -107,9 +107,9 @@ export default function ModalSucursal({
   const [ciudad, setCiudad] = useState(null);
 
   const selectCiudadRef=useRef();
-  /* useEffect(()=>{
+  useEffect(()=>{
     getAllCiudades().then((data) => setCiudades(data));
-  }) */
+  },[]);
 
   const handleCreateNewSucursal = (e) => {
     e.preventDefault();
@@ -235,7 +235,7 @@ export default function ModalSucursal({
           <form onSubmit={user ? handleUpdateSucursal : handleCreateNewSucursal}>
           <div>
             {/* <span>{data.ultimo+1}</span> */}
-                <h4>Información Sucursal</h4>
+                <h4 className="mb-2">Información Sucursal</h4>
               <div className="d-flex flex-row w-100">
               <div className="d-flex flex-column w-50 pe-4">
               <TextField  
@@ -251,12 +251,8 @@ export default function ModalSucursal({
                 size="small"
                 color="error"
               />
-              
-               
               </div>
-              
               </div>
-
               {!user && (
                 <div className="d-flex flex-row w-100 mt-2">
                 <div className="d-flex w-50">
@@ -320,7 +316,7 @@ export default function ModalSucursal({
                   onChange={handleChange}
                   autoComplete="off"
                   required
-                  label="Celular"
+                  label="Celular Sucursal"
                   variant="outlined"
                   size="small"
                   color="error"
@@ -336,7 +332,7 @@ export default function ModalSucursal({
                   onChange={handleChange}
                   autoComplete="off"
                   required
-                  label="Dirección"
+                  label="Dirección Sucursal"
                   variant="outlined"
                   size="small"
                   color="error"
@@ -345,7 +341,7 @@ export default function ModalSucursal({
               </div>
               
               <div className="d-flex flex-column w-100 mt-2">
-                <TextField
+                {/* <TextField
                   id="ciudad"
                   type="text"
                   value={info.ciudad.toUpperCase()}
@@ -353,12 +349,12 @@ export default function ModalSucursal({
                   onChange={handlerChangeSearch}
                   autoComplete="off"
                   required
-                  label="Ciudad"
+                  label="Ciudad Sucursal"
                   variant="outlined"
                   size="small"
                   color="error"
-                />
-                {/* <select
+                /> */}
+                <select
                     id="ciudad"
                     value={info.ciudad}
                     onChange={handlerChangeSearch}
@@ -368,19 +364,19 @@ export default function ModalSucursal({
                   >
                     
                   <option selected value='' disabled>
-                    -- Seleccione la Ciudad --
+                    -- Seleccione la Ciudad de la Sucursal --
                   </option>  
                   {ciudades
                   .sort((a,b)=>a.id - b.id)
                   .map((elem)=>(
                     
-                    <option id={elem.id} value={elem.codigo}>
+                    <option id={elem.id} value={elem.description}>
                     {elem.description}
                     </option>
                     
                   ))
                 }
-                  </select> */}
+                  </select>
               </div>
 
               <div className="d-flex flex-row w-100 mt-2">

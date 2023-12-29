@@ -69,7 +69,7 @@ function App() {
         <Route path='/login' element={<Login/>}/>
 {/*         <Route path='/recovery/password' element={<RecoveryPassword/>}/>
  */}        <Route path='/send/recovery' element={<SendRecovery/>}/>
-        <Route path='/recuperacion/contrasena//:token' element={<RecoveryPassword/>} />
+        <Route path='/recuperacion/contrasena/:token' element={<RecoveryPassword/>} />
 
         {/* Validacion de tercero */}
         <Route path='/validar/tercero' element={<PrivateRoute component={ValidarTercero}/>}/>
@@ -106,26 +106,22 @@ function App() {
         <Route path='/menu/principal/Proveedores' element={<PrivateRoute component={MenuPrincipalProveedores}/>}/>
         <Route path='/menu/principal/Prueba' element={<PrivateRoute component={MpPrueba}/>}/>
 
+        {/* inicio admin */}
+        <Route path='/inicio/admin' element={<PrivateRoute component={InicioAdmin}/>}/>
         {/* Inicios agencias y cartera */}
         <Route path='/inicio' element={<PrivateRoute component={Inicio}/>}/>
-
         {/* inicio compras */}
         <Route path='/compras' element={<PrivateRoute component={Inicio2}/>}/>
-        {/* ruta proveedor/convenio - natural */}
+        {/* ruta proveedor/convenio */}
         <Route path='/tipo/persona' element={<PrivateRoute component={TipoPersona}/>}/>
         <Route path='/proveedor/convenio/natural' element={<PrivateRoute component={ConvenioNatural}/>}/>
         <Route path='/proveedor/convenio/juridica' element={<PrivateRoute component={ConvenioJuridico}/>}/>
-
         {/* ruta prestador de servicios */}
         <Route path='/prestador/servicios' element={<PrivateRoute component={PrestadorServicios}/>}/>
-
         {/* ruta proveedor varios  */}
         <Route path='/tipo/proveedor' element={<PrivateRoute component={Tipo}/>}/>
         <Route path='/proveedor/varios/natural' element={<PrivateRoute component={VariosNatural}/>}/>
         <Route path='/proveedor/varios/juridico' element={<PrivateRoute component={VariosJuridico}/>}/>
-
-        {/* inicio admin */}
-        <Route path='/inicio/admin' element={<PrivateRoute component={InicioAdmin}/>}/>
 
         <Route path='/contado/persona/natural' element={<PrivateRoute component={ContadoPersonaNatural}/>}/>
         <Route path='/contado/persona/juridica' element={<PrivateRoute component={ContadoPersonaJuridica}/>}/>

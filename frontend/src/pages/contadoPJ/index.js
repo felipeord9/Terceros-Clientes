@@ -291,7 +291,7 @@ export default function ContadoPersonaJuridica(){
         const sucur = {
           cedula: search.cedula,
           codigoSucursal: 1,
-          nombreSucursal: search.nombreSucursal.toUpperCase(),
+          nombreSucursal: search.razonSocial.toUpperCase()+' - '+ search.nombreSucursal.toUpperCase(),
           direccion: search.direccionSucursal,
           ciudad: city.description,
           celular: search.celularSucursal,
