@@ -298,8 +298,12 @@ const ClienteSchema={
         type:DataTypes.STRING,
         allowNull:false,
         field:'tipo_formulario'
+    },
+    nombreComercial:{
+        type:DataTypes.STRING,
+        allowNull:true,
+        field:'nombre_comercial'
     }
-    
 };
 
 class Cliente extends Model{

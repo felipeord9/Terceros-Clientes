@@ -17,6 +17,7 @@ const ProveedorRoutes = require('./proveedorRoutes')
 const ClasificacionRoutes = require('./clasificacionRoute')
 const DocumentRoutes = require('./documentRoutes')
 const SucursalRoutes = require('./sucursalRoutes')
+const PreAprovacionRoutes = require('./preAprovacionRoutes')
 
 function routerApi(app) {
     const router = express.Router()
@@ -41,6 +42,7 @@ function routerApi(app) {
     router.use('/regimen',RegimenRoutes)
     router.use('/sucursales',SucursalRoutes)
     router.use('/clientes',ClienteRoutes)
+    router.use('/pre/aprovacion',PreAprovacionRoutes)
     router.use('/detalles',DetalleRoutes)
     router.use('/clasificacion',ClasificacionRoutes)}
 

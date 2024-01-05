@@ -14,6 +14,7 @@ const { ACTIVIDAD_ECONOMICA_TABLE, ActividadEconomicaSchema} = require("../model
 const { CLASIFICACION_TABLE,ClasificacionSchema } = require('../models/clasificacionModel')
 const { BITACORA_TABLE,BitacoraSchema } = require('../models/bitacoraModel')
 const { SUCURSAL_TABLE,SucursalSchema } = require('../models/sucursalModel')
+const { PRE_APROVACION_TABLE,PreAprovacionSchema } = require('../models/preAprovacionModel')
 
 /** @type {import('sequelize-cli').Migration} */
 
@@ -32,11 +33,13 @@ module.exports = {
     await queryInterface.createTable(PROVEEDOR_TABLE,ProveedorSchema);
     await queryInterface.createTable(DETALLE_TABLE,DetalleSchema);
     await queryInterface.createTable(REGIMEN_FISCAL_TABLE,RegimenFiscalSchema);
+    await queryInterface.createTable(PRE_APROVACION_TABLE,PreAprovacionSchema);
     await queryInterface.createTable(AGENCY_TABLE, AgencySchema);
     await queryInterface.createTable(CLASIFICACION_TABLE,ClasificacionSchema);
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable(PRE_APROVACION_TABLE);
     await queryInterface.dropTable(SUCURSAL_TABLE);
     await queryInterface.dropTable(DEPARTAMENTO_TABLE);
     await queryInterface.dropTable(DETALLE_TABLE);

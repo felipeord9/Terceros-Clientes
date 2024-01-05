@@ -76,6 +76,7 @@ const createCliente = async (req,res,next)=>{
             clasificacion:body.clasificacion,
             agencia:body.agencia,
             tipoFormulario:body.tipoFormulario,  
+            nombreComercial: body.nombreComercial,
         })
         res.status(201).json({
             message:'Created',

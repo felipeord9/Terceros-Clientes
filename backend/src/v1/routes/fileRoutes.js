@@ -80,6 +80,9 @@ router.post('/', upload.fields([
   { name: 'Infrl' },
   { name: 'Otros'},
   { name: 'ValAnt'},
+  { name: 'VboAg' },
+  { name: 'VboDc' },
+  { name: 'VboDf' },
 ]), async (req, res) => {
   const folderName = req.body.folderName;
   const originalFolderName = req.body.originalFolderName;

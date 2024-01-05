@@ -13,6 +13,7 @@ const { Proveedor, ProveedorSchema} = require('./proveedoresModel')
 const { ActividadEconomica,ActividadEconomicaSchema } = require('./actividadModel')
 const { Bitacora,BitacoraSchema } = require('./bitacoraModel')
 const { Sucursal,SucursalSchema } = require('./sucursalModel')
+const { PreAprovacion,PreAprovacionSchema } = require('./preAprovacionModel')
 
 
 function setupModels(sequelize) {
@@ -31,8 +32,10 @@ function setupModels(sequelize) {
   ResponsabilidadFiscal.init(ResponsabilidadFiscalSchema,ResponsabilidadFiscal.config(sequelize))
   Cliente.init(ClienteSchema,Cliente.config(sequelize))
   ActividadEconomica.init(ActividadEconomicaSchema,ActividadEconomica.config(sequelize))
+  PreAprovacion.init(PreAprovacionSchema,PreAprovacion.config(sequelize))
 
 
+  PreAprovacion.associate(sequelize.models)
   Bitacora.associate(sequelize.models)
   Sucursal.associate(sequelize.models)
   User.associate(sequelize.models)

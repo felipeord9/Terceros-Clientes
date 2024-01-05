@@ -29,6 +29,11 @@ const SucursalSchema = {
         allowNull:false,
         field:'direccion'
     },
+    departamento:{
+        type:DataTypes.STRING,
+        allowNull:false,
+        field:'departamento'
+    },
     ciudad:{
         type:DataTypes.STRING,
         allowNull:false,
