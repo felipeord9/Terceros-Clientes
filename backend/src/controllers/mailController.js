@@ -184,14 +184,15 @@ const sendMail = async (req, res, next) => {
 
       const attachments = [
         {
-          filename: `No-${body.seller.co}-PDV-${body.id}.pdf`,
+          /* filename: `No-${body.nombreTercero}-PDV-${body.tercero}.pdf`, */
+          filename: `No.pdf`,
           content: pdfBuffer,
           contentType: "application/pdf",
         },
-        {
+        /* {
           filename: `No-${body.seller.co}-PDV-${body.id}.txt`,
           content: txt,
-        },
+        }, */
       ];
 
       req.file &&
@@ -204,7 +205,9 @@ const sendMail = async (req, res, next) => {
       transporter.sendMail(
         {
           from: config.smtpEmail,
-          to: "practicantesistemas@granlangostino.net",
+          /* to: "felipeord9@gmail.com", */
+          /* to: "practicantesistemas@granlangostino.net", */
+          to: body.correoEnvio,
           //to: body.seller.mailAgency,
           //cc: body.seller.mailCommercial,
           subject: "¡NUEVO PEDIDO DE VENTA!",
@@ -376,6 +379,7 @@ const sendMail = async (req, res, next) => {
         },
         (error, info) => {
           if (error) {
+            console.log(error);
             res.json({
               error,
             });

@@ -94,7 +94,8 @@ export default function MenuPrincipalAdmin(){
         color: hover ? 'white':'black',
         padding: '10px',
         cursor: 'pointer',
-        height:120,width:220,
+        height: 120,
+        width:220,
         fontSize:21,
         border: hover ? 'solid #D92121': 'solid #B9B9B9',
       };
@@ -119,8 +120,6 @@ export default function MenuPrincipalAdmin(){
     <div className='d-flex flex-row '>
     <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
     <div className="d-flex flex-row">
-        <center>        
-        </center>
         <center>
         <div className="m-3" style={{border:10,borderColor:'#D92121'}}>
         <div className=" mb-3">
@@ -128,18 +127,18 @@ export default function MenuPrincipalAdmin(){
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Tercero</BotonColorCambiante></a>
           <a onClick={(e)=>navigate('/sucursales')}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
         </div>
-        <div className="d-flex flex-row " >
+        <div className="d-flex flex-row mb-3" >
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta solicitudes</BotonColorCambiante></a>
-          <div className="d-flex justify-content-center align-items-center me-3 mb-3" style={{height:120,width:223}}>
+          <a onClick={(e)=>navigate('/consultar/certificado')}><BotonColorCambiante>Generar Certificados</BotonColorCambiante></a>
+          {/* <div className="d-flex justify-content-center align-items-center me-3 mb-3" style={{height:120,width:223}}>
           <label className='text-danger' style={{color:'black' ,marginBottom:5, fontSize:70, userSelect:'none'}}><strong>Menú </strong></label>
-          {/* <label className='text-danger' style={{color:'black', marginBottom:5, fontSize:60, userSelect:'none'}}><strong> </strong></label */}
-          </div>
+          </div> */}
           <a onClick={(e)=>navigate('/bitacora')}><BotonColorCambiante>Bitácora</BotonColorCambiante></a>
         </div>
-        <div className="">
-        <a onClick={(e)=>navigate('/usuarios')}> <BotonColorCambiante>Gestionar usuarios</BotonColorCambiante></a>
-        <a onClick={(e)=>navigate('/terceros')}>  <BotonColorCambiante>Eliminar cliente</BotonColorCambiante></a>
-        <a onClick={(e)=>navigate('/Proveedores')}><BotonColorCambiante>Eliminar proveedor</BotonColorCambiante></a>
+        <div >
+          <a onClick={(e)=>navigate('/usuarios')}><BotonColorCambiante>Gestionar usuarios</BotonColorCambiante></a>
+          <a onClick={(e)=>navigate('/terceros')}><BotonColorCambiante>Eliminar cliente</BotonColorCambiante></a>
+          <a onClick={(e)=>navigate('/Proveedores')}><BotonColorCambiante>Eliminar proveedor</BotonColorCambiante></a>
         </div>
         </div>
         </center>

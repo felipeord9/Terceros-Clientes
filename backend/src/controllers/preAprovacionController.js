@@ -40,10 +40,10 @@ const createPreAprovacion = async (req,res,next)=>{
             estadoVboDf: body.estadoVboDf,
             nivelEndeudamiento: body.nivelEndeudamiento,
             cupoRecomendado: body.cupoRecomendado,
-            plazoRecomendado: body.plazoRecomendado,
             cupoAprovado: body.cupoAprovado,
             plazoAprovado: body.plazoAprovado,
             fechaCreacion: body.fechaCreacion,
+            plazoRecomendado: body.plazoRecomendado,
         })
         res.status(201).json({
             message:'Created',

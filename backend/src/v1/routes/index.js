@@ -18,6 +18,7 @@ const ClasificacionRoutes = require('./clasificacionRoute')
 const DocumentRoutes = require('./documentRoutes')
 const SucursalRoutes = require('./sucursalRoutes')
 const PreAprovacionRoutes = require('./preAprovacionRoutes')
+const CertificadoRoutes = require('./certificadoRoutes')
 
 function routerApi(app) {
     const router = express.Router()
@@ -32,6 +33,7 @@ function routerApi(app) {
     router.use('/actividad',ActividadRoutes)
     router.use('/responsabilidad',ResponsabilidadRoutes)
     router.use('/ciudades',CiudadRoutes )
+    router.use('/certificados',CertificadoRoutes)
     router.use('/departamentos',DepartamentoRoutes )
     router.use('/documents',DocumentRoutes)
     router.use('/precios',PrecioRoutes)

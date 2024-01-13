@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "2.5.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js ",
@@ -43,5 +42,6 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "description": ""
 }

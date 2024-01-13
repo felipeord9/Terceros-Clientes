@@ -38,7 +38,7 @@ export default function MenuPrincipalProveedores(){
       e = e.target.value
       if(user.role==='cartera'){
         return navigate('/inicio')
-      }else if(user.role==='compras' || user.role==='agencias'){
+      }else if(user.role==='compras' || user.role==='agencias' || user.role==='comprasnv'){
         return navigate('/compras')
       }else{
         return navigate('/inicio/admin')
@@ -49,7 +49,7 @@ export default function MenuPrincipalProveedores(){
       e = e.target.value
       if(user.role==='cartera'){
         return navigate('/validar/tercero')
-      }else if(user.role==='compras' || user.role==='agencias'){
+      }else if(user.role==='compras' || user.role==='agencias' || user.role==='comprasnv'){
         return navigate('/validar/Proveedor')
       }else{
         return navigate('/validacion/admin')
@@ -134,6 +134,9 @@ export default function MenuPrincipalProveedores(){
         <div className=" mb-3">
           <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Proveedor</BotonColorCambiante></a>
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Proveedor</BotonColorCambiante></a>
+          {user.role==='comprasnv' && (
+            <a onClick={(e)=>navigate('/consultar/certificado')}><BotonColorCambiante>Certificados</BotonColorCambiante></a>
+          )}
 {/*           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
  */}        </div>
         </div>

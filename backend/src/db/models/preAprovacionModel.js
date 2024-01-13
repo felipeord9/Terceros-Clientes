@@ -20,7 +20,7 @@ const PreAprovacionSchema={
         field:'razon_social'
     },
     fechaRenovaCcio:{
-        type:DataTypes.DATE,
+        type:DataTypes.STRING,
         allowNull:false,
         field:'fecha_last_renova_ccio'
     },
