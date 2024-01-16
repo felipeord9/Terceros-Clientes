@@ -8,7 +8,8 @@ const pdf = require('html-pdf');
 const path = require('path');
 const fsExtra = require('fs-extra');
 const nodemailer = require('nodemailer');
-
+const numeroALetras = require('numero-a-letras');
+const conversor = require('conversor-numero-a-letras-es-ar');
 
 const find = async () => {
   const certificados = await models.Certificado.findAll()
@@ -65,6 +66,14 @@ const update = async (id, changes) => {
 }
 
 const sendCertificado = async (body)=>{
+  let ClaseConversor = conversor.conversorNumerosALetras;
+  let miConversor = new ClaseConversor();
+  const valor = body.retenidoFinal;
+  const numeroNormal = valor.replace(/[,.']/g, "");
+  var letras = miConversor.convertToText(numeroNormal);
+  /* const valor = body.retenidoFinal;
+  const numeroNormal = valor.replace(/[,.']/g, "");
+  const letras = numeroALetras.NumerosALetras(numeroNormal) */
   try{
     function crearArchivoHTML() {
       const html = `
@@ -99,6 +108,11 @@ const sendCertificado = async (body)=>{
             padding: 8px;
             text-align: left;
           }
+          .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+          }
         </style>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -116,13 +130,14 @@ const sendCertificado = async (body)=>{
             src="https://sucursales.granlangostino.com/wp-content/uploads/2022/12/cropped-Logo-el-gran-langostino.png"
             alt="Logo de la empresa"
           />
-          <br/>
-            <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
-              EL GRAN LANGOSTINO S.A.S.
-            </h2>
-            <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835001216</h2>
-            <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 - 32 417</p>
-            <p style="margin: 0.3rem 0; font-size: 12px;">YUMBO</p>
+          <br/><br/>
+          <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
+            EL GRAN LANGOSTINO S.A.S.
+          </h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835.001.216-8</h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">OFICINA PRINCIPAL
+          <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 # 32-417</p>
+          <p style="margin: 0.3rem 0; font-size: 12px;">ACOPI - YUMBO</p>
         </div>
         <br/>
         <h1 style="text-align: center; font-size: 22px; font-weight: bold; margin:0 ;">CERTIFICADO DE RETENCION POR ICA</h1>
@@ -159,38 +174,42 @@ const sendCertificado = async (body)=>{
               <table style="width: 100%; height: auto;">
                 <thead>
                   <tr>
-                  <th style="width: 350px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">TASA %</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
+                  <th style="width: 340px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
+                  <th style="width: 45px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
                   <th style="justify-content: center; text-align: center; font-size: 12px">CIUDAD ICA</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${body.filtro.map((elem) => {
                     return `
                         <tr>
-                          <td style="width: 350px; font-size: 12px">${elem.concepto}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
+                          <td style="width: 340px; font-size: 12px">${elem.concepto}</td>
+                          <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${elem.base}</td>
                           <td style="justify-content: center; text-align: center; font-size: 12px">${elem.ciudadIca}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${elem.valorRetenido}</td>
                         </tr>
                         `;
                   })}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td style="width: 350px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.baseFinal}</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.retenidoFinal}</td>
+                    <td style="width: 340px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
+                    <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">----------</td>
+                    <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
+                    <td style="justify-content: center; text-align: center; font-size: 12px">----------------</td>
+                    <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
-            <br/><br/><br/>
+            <br/>
+            <p style="margin: 0; width: 100%; font-size: 16px; "><strong style="margin-right: 0.5rem; font-size: 12px">Valor Retenido: </strong>${
+              letras
+            } Pesos</p>
+            <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
         </div>
@@ -222,7 +241,7 @@ const sendCertificado = async (body)=>{
       const message = {
         from: 'Certificados@granlangostino.net',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de retención por ICA',
+        subject: 'Certificado de retención por ICA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención por ICA, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,
@@ -232,16 +251,38 @@ const sendCertificado = async (body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Cordial saludo ${body.nombreTercero},</p>
-        Su certificado de retención por ICA se ha generado de manera exitosa, 
-        estará adjunto al final de este correo.
-
-        <p>Si tiene alguna duda, queja o sugerencia, contactenos y con gusto lo atenderemos</p>`,
+        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
+        <p>Señores</p>
+        <p>${body.nombreTercero}</p>
+        <br/>
+        <p>Cordial saludo </p>
+        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR ICA del año agravable 2023.</p>
+        <br/>
+        <p>Cualquier duda o información adicional, por favor responder a:</p>
+        <p>${body.usuarioEmisor}</p>
+        <p>${body.correoEmisor}</h6>
+        <p>Tels. 695 46 78 Ext. 104</p>
+        <br/><br/>
+        <p><u>Aviso Legal</u></p>
+          <p>
+            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
+            correo electrónico y todos los archivos adjuntos a éste contienen
+            información de carácter confidencial y/o uso privativo de EL GRAN
+            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+            por error, por favor elimínelo y comuníquese con el remitente para
+            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+            copia de la información ahí contenida, gracias. En caso contrario
+            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+        </p>
+        `,
       };
       const auto ={
         from: 'Certificados@granlangostino.net',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de retención por ICA',
+        subject: 'Certificado de retención por ICA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención por ICA, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,
@@ -284,6 +325,11 @@ const sendCertificado = async (body)=>{
 }
 
 const certificadoRfte = async(body)=>{
+  let ClaseConversor = conversor.conversorNumerosALetras;
+  let miConversor = new ClaseConversor();
+  const valor = body.retenidoFinal;
+  const numeroNormal = valor.replace(/[,.']/g, "");
+  var letras = miConversor.convertToText(numeroNormal);
   try{
     function crearArchivoHTML() {
       const html = `
@@ -318,6 +364,11 @@ const certificadoRfte = async(body)=>{
             padding: 8px;
             text-align: left;
           }
+          .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+          }
         </style>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -335,13 +386,14 @@ const certificadoRfte = async(body)=>{
             src="https://sucursales.granlangostino.com/wp-content/uploads/2022/12/cropped-Logo-el-gran-langostino.png"
             alt="Logo de la empresa"
           />
-          <br/>
-            <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
-              EL GRAN LANGOSTINO S.A.S.
-            </h2>
-            <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835001216</h2>
-            <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 - 32 417</p>
-            <p style="margin: 0.3rem 0; font-size: 12px;">YUMBO</p>
+          <br/><br/>
+          <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
+            EL GRAN LANGOSTINO S.A.S.
+          </h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835.001.216-8</h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">OFICINA PRINCIPAL
+          <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 # 32-417</p>
+          <p style="margin: 0.3rem 0; font-size: 12px;">ACOPI - YUMBO</p>
         </div>
         <br/>
         <h1 style="text-align: center; font-size: 22px; font-weight: bold; margin:0 ;">CERTIFICADO DE RETENCION EN LA FUENTE</h1>
@@ -378,38 +430,42 @@ const certificadoRfte = async(body)=>{
               <table style="width: 100%; height: auto;">
                 <thead>
                   <tr>
-                  <th style="width: 350px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">TASA %</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
+                  <th style="width: 340px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
+                  <th style="width: 45px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
                   <th style="justify-content: center; text-align: center; font-size: 12px">CIUDAD ICA</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${body.filtro.map((elem) => {
                     return `
                         <tr>
-                          <td style="width: 350px; font-size: 12px">${elem.concepto}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
+                          <td style="width: 340px; font-size: 12px">${elem.concepto}</td>
+                          <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
                           <td style="justify-content: center; text-align: center; font-size: 12px">${elem.ciudadIca}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
                         </tr>
                         `;
                   })}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td style="width: 350px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.baseFinal}</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.retenidoFinal}</td>
+                  <td style="width: 340px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
+                  <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">----------</td>
+                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">----------------</td>
+                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
-            <br/><br/><br/>
+            <br/>
+            <p style="margin: 0; width: 100%; font-size: 16px; "><strong style="margin-right: 0.5rem; font-size: 12px">Valor Retenido: </strong>${
+              letras
+            } Pesos</p>
+            <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
         </div>
@@ -441,7 +497,7 @@ const certificadoRfte = async(body)=>{
       const message = {
         from: 'Certificados@granlangostino.net',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de retención en la fuente',
+        subject: 'Certificado de retención en la fuente - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención en la fuente, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,
@@ -451,16 +507,37 @@ const certificadoRfte = async(body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Cordial saludo ${body.nombreTercero},</p>
-        Su certificado de retención en la fuente se ha generado de manera exitosa, 
-        estará adjunto al final de este correo.
-
-        <p>Si tiene alguna duda, queja o sugerencia, contactenos y con gusto lo atenderemos</p>`,
+        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
+        <p>Señores</p>
+        <p>${body.nombreTercero}</p>
+        <br/>
+        <p>Cordial saludo </p>
+        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN EN LA FUENTE del año agravable 2023.</p>
+        <br/>
+        <p>Cualquier duda o información adicional, por favor responder a:</p>
+        <p>${body.usuarioEmisor}</p>
+        <p>${body.correoEmisor}</h6>
+        <p>Tels. 695 46 78 Ext. 104</p>
+        <br/><br/>
+        <p><u>Aviso Legal</u></p>
+          <p>
+            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
+            correo electrónico y todos los archivos adjuntos a éste contienen
+            información de carácter confidencial y/o uso privativo de EL GRAN
+            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+            por error, por favor elimínelo y comuníquese con el remitente para
+            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+            copia de la información ahí contenida, gracias. En caso contrario
+            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+        </p>`,
       };
       const auto ={
         from: 'Certificados@granlangostino.net',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de  retención en la fuente ',
+        subject: 'Certificado de  retención en la fuente - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención en la fuente, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,
@@ -502,6 +579,11 @@ const certificadoRfte = async(body)=>{
 }
 
 const sendCertificadoIva = async (body)=>{
+  let ClaseConversor = conversor.conversorNumerosALetras;
+  let miConversor = new ClaseConversor();
+  const valor = body.retenidoFinal;
+  const numeroNormal = valor.replace(/[,.']/g, "");
+  var letras = miConversor.convertToText(numeroNormal);
   try{
     function crearArchivoHTML() {
       const html = `
@@ -553,13 +635,14 @@ const sendCertificadoIva = async (body)=>{
             src="https://sucursales.granlangostino.com/wp-content/uploads/2022/12/cropped-Logo-el-gran-langostino.png"
             alt="Logo de la empresa"
           />
-          <br/>
-            <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
-              EL GRAN LANGOSTINO S.A.S.
-            </h2>
-            <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835001216</h2>
-            <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 - 32 417</p>
-            <p style="margin: 0.3rem 0; font-size: 12px;">YUMBO</p>
+          <br/><br/>
+          <h2 style="font-size: 16px; font-weight: bolder; margin: 0">
+            EL GRAN LANGOSTINO S.A.S.
+          </h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">Nit: 835.001.216-8</h2>
+          <h2 style="font-size: 14px; font-weight: bolder; margin: 0">OFICINA PRINCIPAL
+          <p style="margin: 0.3rem 0; font-size: 12px;">CL 13 # 32-417</p>
+          <p style="margin: 0.3rem 0; font-size: 12px;">ACOPI - YUMBO</p>
         </div>
         <br/>
         <h1 style="text-align: center; font-size: 22px; font-weight: bold; margin:0 ;">CERTIFICADO DE RETENCION POR IVA</h1>
@@ -596,38 +679,42 @@ const sendCertificadoIva = async (body)=>{
               <table style="width: 100%; height: auto;">
                 <thead>
                   <tr>
-                  <th style="width: 350px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">TASA %</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
+                  <th style="width: 340px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
+                  <th style="width: 45px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
                   <th style="justify-content: center; text-align: center; font-size: 12px">CIUDAD ICA</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
+                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${body.filtro.map((elem) => {
                     return `
                         <tr>
-                          <td style="width: 350px; font-size: 12px">${elem.concepto}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
+                          <td style="width: 340px; font-size: 12px">${elem.concepto}</td>
+                          <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
                           <td style="justify-content: center; text-align: center; font-size: 12px">${elem.ciudadIca}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
+                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
                         </tr>
                         `;
                   })}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td style="width: 350px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.baseFinal}</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">-----------------</td>
-                    <td style="justify-content: center; text-align: center; font-size: 12px">$${body.retenidoFinal}</td>
+                  <td style="width: 340px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
+                  <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">----------</td>
+                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">----------------</td>
+                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
-            <br/><br/><br/>
+            <br/>
+            <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">Valor Retenido: </strong>${
+              letras
+            } Pesos</p>
+            <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
         </div>
@@ -658,7 +745,7 @@ const sendCertificadoIva = async (body)=>{
       const message = {
         from: 'Certificados@granlangostino.net',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de retención por IVA',
+        subject: 'Certificado de retención por IVA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención por IVA, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,
@@ -668,16 +755,37 @@ const sendCertificadoIva = async (body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Cordial saludo ${body.nombreTercero},</p>
-        Su certificado de retención por IVA se ha generado de manera exitosa, 
-        estará adjunto al final de este correo.
-
-        <p>Si tiene alguna duda, queja o sugerencia, contactenos y con gusto lo atenderemos</p>`,
+        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
+        <p>Señores</p>
+        <p>${body.nombreTercero}</p>
+        <br/>
+        <p>Cordial saludo </p>
+        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR IVA del año agravable 2023.</p>
+        <br/>
+        <p>Cualquier duda o información adicional, por favor responder a:</p>
+        <p>${body.usuarioEmisor}</p>
+        <p>${body.correoEmisor}</h6>
+        <p>Tels. 695 46 78 Ext. 104</p>
+        <br/><br/>
+        <p><u>Aviso Legal</u></p>
+          <p>
+            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
+            correo electrónico y todos los archivos adjuntos a éste contienen
+            información de carácter confidencial y/o uso privativo de EL GRAN
+            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+            por error, por favor elimínelo y comuníquese con el remitente para
+            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+            copia de la información ahí contenida, gracias. En caso contrario
+            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+        </p>`,
       };
       const auto ={
         from: 'Certificados@granlangostino.net',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
-        subject: 'Certificado de  retención por IVA ',
+        subject: 'Certificado de  retención por IVA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
               Su certificado de retención por IVA, se ha generado de manera exitosa, 
               lo podrá visualizar en la parte inferior de este correo.`,

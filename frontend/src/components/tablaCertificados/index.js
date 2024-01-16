@@ -10,6 +10,8 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import AuthContext from "../../context/authContext";
 import { sendMail } from "../../services/mailService";
 import { sendCertificado , sendCertiIVA , sendCertifiRFTE , updateCertificado } from "../../services/certificadoService";
+import numberToWords from 'number-to-words';
+import numeral from 'numeral';
 
 const style = {
   position: 'absolute',
@@ -25,7 +27,7 @@ const style = {
   borderRadius:5,
 };
 
-export default function TableCertificados({ terceros, loading }) {
+export default function TableCertificados({ terceros, loading, ciudad }) {
   const { user, setUser } = useContext(AuthContext);
   const [selectedCliente, setSelectedTercero] = useState();
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ export default function TableCertificados({ terceros, loading }) {
     codCiudad:'',
     correoEnvio:'',
     emailTercero:'',
+    sumaCredito:'',
   })
   const [update,setUpdate]=useState({
     correoEnvio:'',
@@ -44,14 +47,19 @@ export default function TableCertificados({ terceros, loading }) {
     usuarioEnvio:user.rowId,
     fechaEnvio:new Date(),
   })
+  const [generar,setGenerar]=useState([]);
   useEffect(()=>{
     const data = localStorage.getItem('certificado');
+    const generar = localStorage.getItem('generar');
     if(data){
       setInfo(JSON.parse(data));
     }
+    if(generar){
+      setGenerar(JSON.parse(generar));
+    }
   })
   const columns = [
-    {
+     {
       id: "tipoCertificado",
       name: "Tipo",
       selector: (row) => row.tipoCertificado,
@@ -60,39 +68,25 @@ export default function TableCertificados({ terceros, loading }) {
     },
     {
       id: "cuenta",
-      name: "cuenta ",
+      name: "Cuenta ",
       selector: (row) => row.cuenta,
       sortable: true,
       width: '110px'
     },
     {
       id: "concepto",
-      name: "concepto",
+      name: "Concepto",
       selector: (row) => row.concepto,
       sortable: true,
-      width: '220px',
+      width: '270px',
     }, 
     {
-      id: "sumaDebito",
-      name: "Debito ",
-      selector: (row) => row.sumaDebito,
+      id: "tasa",
+      name: "Tasa",
+      selector: (row) => row.tasa,
       sortable: true,
       width: '120px',
-    },
-    {
-        id: "sumaCredito",
-        name: "Credito",
-        selector: (row) => row.sumaCredito,
-        sortable: true,
-        width: '120px'
-      },
-      {
-        id: "sumaMovimiento",
-        name: "Movimiento",
-        selector: (row) => row.sumaMovimiento,
-        sortable: true,
-        width: '120px',
-      }, {
+    }, {
         id: "sumaValorBase",
         name: "Base",
         selector: (row) => row.sumaValorBase,
@@ -100,18 +94,56 @@ export default function TableCertificados({ terceros, loading }) {
         width: '120px',
       },{
         id: "ciudadIca",
-        name: "ciudad Ica",
+        name: "Ciudad Ica",
         selector: (row) => row.ciudadIca,
         sortable: true,
         width: '120px',
       },{
-        id: "tasa",
-        name: "Tasa",
-        selector: (row) => row.tasa,
-        sortable: true,
-        width: '120px',
+        id:'valorRetenido',
+        name:'Valor Retenido',
+        selector: (row) => row.valorRetenido,
+        sortable:true,
+        width:150
       }
   ]
+  /* hallar los totales de la tabla */
+  /* const calculateTotal=(key)=>{
+    const filtrar = generar.filter((item)=>item.includes(key));
+    const suma=generar.reduce((acumular,item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal
+    })
+    const totalBase = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });  
+    return totalBase;
+  } */
+
+    const suma = generar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.valorRetenido).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalRetenido = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
+
+    const suma2 = generar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0); 
+    const totalBase = suma2.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
+
+    const totalRow ={tipoCertificado:'TOTAL',cuenta:'',
+    concepto:'',tasa:'',sumaValorBase:totalBase,ciudadIca:'',
+    valorRetenido:totalRetenido}
+
+  const dataTable = [...generar,totalRow];
+
   const cleanForm = () => {
     setUpdate({
       nombreSolicitante: "",
@@ -134,6 +166,278 @@ export default function TableCertificados({ terceros, loading }) {
   const [filtroRICA,setFiltroRICA]=useState([]);
   const [base,setBase] = useState(0);
   const [retenido,setRetenido] = useState(0);
+
+  const handlerBotonUnido = (e) =>{
+    e.preventDefault();
+    if(generar[0].tipoCertificado===('RICA')){
+      const filtroTipo = generar.filter((elem)=>{
+        if(elem.tipoCertificado.includes('RICA')){
+          return elem
+        }
+      })
+      setFiltroRICA(filtroTipo);
+      const filtrar = generar.filter((item)=>item.tipoCertificado.includes('RICA'));
+      const suma = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalBase = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
+    setBase(suma);
+    /* hallar el total retenido */
+    const suma2 = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.valorRetenido).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalRetenido = suma2.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setRetenido(suma2);
+    setOpenRIVA(false);
+      Swal.fire({
+        title:'¡Lee atentamente!',
+        text:`Se le enviara un correo con el certificado RETEICA a ${info.nombreTercero} a la direccion ${update.correoEnvio}. Si es correcto de click en "ENVIAR", sino de click en "CANCELAR"`,
+        showCancelButton:true,
+        showConfirmButton:true,
+        confirmButtonColor:'#D92121',
+        confirmButtonText:'ENVIAR',
+        cancelButtonColor:'grey',
+        cancelButtonText:'CANCELAR',
+        icon:'question'
+      }).then(({isConfirmed})=>{
+        if(isConfirmed){
+          const body={
+            filtro: filtroTipo,
+            correoEnvio: update.correoEnvio,
+            nombreTercero: info.nombreTercero,
+            cedula: info.tercero,
+            direccion: info.direccion,
+            fechaFormateada: fechaFormateada,
+            fechaExpedicion: new Date(),
+            ciudad: ciudad,
+            baseFinal: totalBase,
+            retenidoFinal: totalRetenido, 
+            correoEmisor: user.email,
+            usuarioEmisor: user.name,
+          }
+          sendCertificado(body)
+          .then(()=>{
+            const actualizar ={
+              correoEnvio: update.correoEnvio,
+              usuarioEnvio: user.rowId,
+              nombreSolicitante: update.nombreSolicitante,
+              fechaEnvio:new Date(),
+            }
+            const id = `${info.tercero}${filtrar[0].cuenta}`
+            updateCertificado(id,actualizar)
+            Swal.fire({
+              icon:'success',
+              title:'¡Felicidades!',
+              text:'Se ha enviado el correo de manera satisfactoria. revisa tu correo para verificar la información',
+              timer:4000,
+              showConfirmButton:true,
+              confirmButtonColor:'green'
+            })
+            cleanForm();
+          }).catch((err)=>{
+            Swal.fire({
+              icon:'warning',
+              title:'¡ERROR',
+              showConfirmButton:true,
+              confirmButtonColor:'red',
+              text:'Ha ocurrido un error a la hora de generar y enviar el certificado, intenta nuevamente, si el problema persiste comunicate con el área de sistemas.'
+            })
+            cleanForm();
+            console.log(err)
+          })
+        }else{
+          cleanForm();
+        }
+      })
+    } 
+    if(generar[0].tipoCertificado===('RIVA')/* generar.filter((item)=>item.tipoCertificado.includes('RIVA')) */){
+      const filtroTipo = generar.filter((elem)=>{
+        if(elem.tipoCertificado.includes('RIVA')){
+          return elem
+        }
+      })
+      setFiltroRIVA(filtroTipo);
+    const filtrar = generar.filter((item)=>item.tipoCertificado.includes('RIVA'));
+    const suma = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalBase = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
+    setBase(suma);
+    /* hallar el total retenido */
+    const suma2 = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.valorRetenido).replace(/[,.]/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalRetenido = suma2.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setRetenido(suma2);
+    setOpenRIVA(false);
+    Swal.fire({
+      title:'¡Lee atentamente!',
+      text:`Se le enviara un correo con el certificado RETEIVA a ${info.nombreTercero} a la direccion ${update.correoEnvio}. Si es correcto de click en "ENVIAR", si no de click en "CANCELAR"`,
+      showCancelButton:true,
+      showConfirmButton:true,
+      confirmButtonColor:'#D92121',
+      confirmButtonText:'ENVIAR',
+      cancelButtonColor:'grey',
+      cancelButtonText:'CANCELAR',
+      icon:'question'
+    }).then(({isConfirmed})=>{
+      if(isConfirmed){
+        const body={
+          filtro: filtroTipo,
+          correoEnvio: update.correoEnvio,
+          nombreTercero: info.nombreTercero,
+          cedula: info.tercero,
+          direccion: info.direccion,
+          fechaFormateada: fechaFormateada,
+          fechaExpedicion: new Date(),
+          ciudad: ciudad,
+          baseFinal: totalBase,
+          retenidoFinal: totalRetenido, 
+          correoEmisor: user.email,
+          usuarioEmisor: user.name,
+        }
+        sendCertiIVA(body)
+        .then(()=>{
+          const actualizar ={
+            correoEnvio: update.correoEnvio,
+            usuarioEnvio: user.rowId,
+            nombreSolicitante: update.nombreSolicitante,
+            fechaEnvio:new Date(),
+          }
+          const id = `${info.tercero}${filtrar[0].cuenta}`
+          updateCertificado(id,actualizar)
+          Swal.fire({
+            icon:'success',
+            title:'¡Felicidades!',
+            text:'Se ha enviado el correo de manera satisfactoria. revisa tu correo para verificar la información',
+            timer:4000,
+            showConfirmButton:true,
+            confirmButtonColor:'green'
+          })
+          cleanForm();
+        }).catch((err)=>{
+          Swal.fire({
+            icon:'warning',
+            title:'¡ERROR',
+            showConfirmButton:true,
+            confirmButtonColor:'red',
+            text:'Ha ocurrido un error a la hora de generar y enviar el certificado, intenta nuevamente, si el problema persiste comunicate con el área de sistemas.'
+          })
+          cleanForm();
+          console.log(err)
+        })
+      }else{
+        cleanForm();
+      }
+    })
+    } 
+    if(generar[0].tipoCertificado===('RFTE')/* generar.filter((item)=>item.tipoCertificado.includes('RFTE')) */){
+      const filtroTipo = generar.filter((elem)=>{
+        if(elem.tipoCertificado.includes('RFTE')){
+          return elem
+        }
+      })
+      setFiltroRFTE(filtroTipo);
+      const filtrar = generar.filter((item)=>item.tipoCertificado.includes('RFTE'));
+      const suma = filtrar.reduce((acumular, item)=>{
+        const numeroNormal = parseFloat((item.base).replace(/[,.]/g, ''))
+        return acumular + numeroNormal;
+      },0);    
+      const totalBase = suma.toLocaleString(undefined,{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });    
+      setBase(suma);
+      /* hallar el total retenido */
+      const suma2 = filtrar.reduce((acumular, item)=>{
+        const numeroNormal = parseFloat((item.valorRetenido).replace(/[,.]/g, ''))
+        return acumular + numeroNormal;
+      },0);    
+      const totalRetenido = suma2.toLocaleString(undefined,{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      setRetenido(suma2);
+    setOpenRIVA(false);
+    Swal.fire({
+      title:'¡Lee atentamente!',
+      text:`Se le enviara un correo con el certificado RETEFUENTE a ${info.nombreTercero} a la direccion ${update.correoEnvio}. Si es correcto de click en "ENVIAR", si no de click en "CANCELAR"`,
+      showCancelButton:true,
+      showConfirmButton:true,
+      confirmButtonColor:'#D92121',
+      confirmButtonText:'ENVIAR',
+      cancelButtonColor:'grey',
+      cancelButtonText:'CANCELAR',
+      icon:'question'
+    }).then(({isConfirmed})=>{
+      if(isConfirmed){
+        const body={
+          filtro: filtroTipo,
+          correoEnvio: update.correoEnvio,
+          nombreTercero: info.nombreTercero,
+          cedula: info.tercero,
+          direccion: info.direccion,
+          fechaFormateada: fechaFormateada,
+          fechaExpedicion: new Date(),
+          ciudad: ciudad,
+          baseFinal: totalBase,
+          retenidoFinal: totalRetenido, 
+          correoEmisor: user.email,
+          usuarioEmisor: user.name,
+        }
+        sendCertifiRFTE(body)
+        .then(()=>{
+          const actualizar ={
+            correoEnvio: update.correoEnvio,
+            usuarioEnvio: user.rowId,
+            nombreSolicitante: update.nombreSolicitante,
+            fechaEnvio:new Date(),
+          }
+          const id = `${info.tercero}${filtrar[0].cuenta}`
+          updateCertificado(id,actualizar)
+          Swal.fire({
+            icon:'success',
+            title:'¡Felicidades!',
+            text:'Se ha enviado el correo de manera satisfactoria. revisa tu correo para verificar la información',
+            timer:4000,
+            showConfirmButton:true,
+            confirmButtonColor:'green'
+          })
+          cleanForm();
+        }).catch((err)=>{
+          Swal.fire({
+            icon:'warning',
+            title:'¡ERROR',
+            showConfirmButton:true,
+            confirmButtonColor:'red',
+            text:'Ha ocurrido un error a la hora de generar y enviar el certificado, intenta nuevamente, si el problema persiste comunicate con el área de sistemas.'
+          })
+          cleanForm();
+          console.log(err)
+        })
+      }else{
+        cleanForm();
+      }
+    })
+    }
+  }
+
   const handlerFiltroRica=(e)=>{
     e.preventDefault();
     const filtroTipo = terceros.filter((elem)=>{
@@ -144,11 +448,25 @@ export default function TableCertificados({ terceros, loading }) {
     setFiltroRICA(filtroTipo);
     /* hallar el total de la base */
     const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RICA'));
-    const suma = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.base),0);
+    const suma = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalBase = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
     setBase(suma);
     /* hallar el total retenido */
-    const sumaRetenido = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.valorRetenido),0);
-    setRetenido(sumaRetenido);
+    const suma2 = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.valorRetenido).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalRetenido = suma2.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setRetenido(suma2);
     setOpenRICA(false);
       Swal.fire({
         title:'¡Lee atentamente!',
@@ -171,10 +489,9 @@ export default function TableCertificados({ terceros, loading }) {
             fechaFormateada: fechaFormateada,
             fechaExpedicion: new Date(),
             ciudad: info.codCiudad,
-            baseFinal: suma,
-            retenidoFinal: sumaRetenido, 
+            baseFinal: totalBase,
+            retenidoFinal: totalRetenido, 
             correoEmisor: user.email,
-
           }
           sendCertificado(body)
           .then(()=>{
@@ -222,11 +539,26 @@ export default function TableCertificados({ terceros, loading }) {
     })
     setFiltroRIVA(filtroTipo);
     const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RIVA'));
-    const suma = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.base),0);
+    const suma = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalBase = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });    
     setBase(suma);
     /* hallar el total retenido */
-    const sumaRetenido = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.valorRetenido),0);
-    setRetenido(sumaRetenido);
+    const suma2 = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.valorRetenido).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal;
+    },0);    
+    const totalRetenido = suma2.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    const sumaRetenido = filtrar.reduce((acumular,item)=>parseFloat(acumular) + parseFloat(item.valorRetenido),0);
+    setRetenido(suma2);
     setOpenRIVA(false);
     Swal.fire({
       title:'¡Lee atentamente!',
@@ -249,8 +581,8 @@ export default function TableCertificados({ terceros, loading }) {
           fechaFormateada: fechaFormateada,
           fechaExpedicion: new Date(),
           ciudad: info.codCiudad,
-          baseFinal: suma,
-          retenidoFinal: sumaRetenido, 
+          baseFinal: totalBase,
+          retenidoFinal: totalRetenido, 
           correoEmisor: user.email,
         }
         sendCertiIVA(body)
@@ -299,10 +631,10 @@ export default function TableCertificados({ terceros, loading }) {
     })
     setFiltroRFTE(filtroTipo);
     const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RFTE'));
-    const suma = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.base),0);
+    const suma = filtrar.reduce((acumular,item)=>parseFloat(acumular) + parseFloat(item.base),0);
     setBase(suma);
     /* hallar el total retenido */
-    const sumaRetenido = filtrar.reduce((acumular,item)=>parseInt(acumular) + parseInt(item.valorRetenido),0);
+    const sumaRetenido = filtrar.reduce((acumular,item)=>parseFloat(acumular) + parseFloat(item.valorRetenido),0);
     setRetenido(sumaRetenido);
     setOpenRFTE(false);
     Swal.fire({
@@ -373,14 +705,14 @@ export default function TableCertificados({ terceros, loading }) {
   const [openRIVA,setOpenRIVA]=useState(false);
   const handleOpenModalRIVA=(e)=>{
     e.preventDefault();
-    const filtro = terceros.filter((elem)=>{
+    /* const filtro = terceros.filter((elem)=>{
       if(elem.tipoCertificado.includes('RIVA')){
         return elem
       }
     })
-    if(filtro.length>0){
+    if(filtro.length>0){ */
       setOpenRIVA(true)
-    }else{
+    /* }else{
       Swal.fire({
         icon:'warning',
         title:'¡Oups...!',
@@ -389,7 +721,7 @@ export default function TableCertificados({ terceros, loading }) {
         confirmButtonColor:'red',
         showConfirmButton:true
       })
-    }
+    } */
   }
   const handleCloseModalRIVA=()=>{
     cleanForm();
@@ -399,14 +731,14 @@ export default function TableCertificados({ terceros, loading }) {
   const [openRICA,setOpenRICA]=useState(false);
   const handleOpenModalRICA=(e)=>{
     e.preventDefault();
-    const filtro = terceros.filter((elem)=>{
+    /* const filtro = terceros.filter((elem)=>{
       if(elem.tipoCertificado.includes('RICA')){
         return elem
       }
     })
-    if(filtro.length>0){
+    if(filtro.length>0){ */
        setOpenRICA(true)
-    }else{
+    /* }else{
       Swal.fire({
         icon:'warning',
         title:'¡Oups...!',
@@ -415,7 +747,7 @@ export default function TableCertificados({ terceros, loading }) {
         confirmButtonColor:'red',
         showConfirmButton:true
       })
-    }
+    } */
   }
   const handleCloseModalRICA=()=>{
     cleanForm();
@@ -501,19 +833,47 @@ export default function TableCertificados({ terceros, loading }) {
   };
   const fechaFormateada = fechaActual.toLocaleDateString(undefined, formatoFecha);
 
+  const formatearNumero = (numero) => {
+    return numero.toLocaleString('es-ES', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  };
+
+  const prueba =(e)=>{
+    e.preventDefault();
+    const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RFTE'));
+    const suma = filtrar.reduce((acumular, item)=>{
+      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
+      return acumular + numeroNormal;
+    },0);
+    const resultadoFormateado = suma.toLocaleString(undefined,{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    /* hallar el total retenido */
+    const sumaRetenido = filtrar.reduce((acumular,item)=>parseFloat(acumular) + parseFloat(item.valorRetenido),0);
+    Swal.fire({
+      title:`${suma} ------- ${resultadoFormateado}`
+    })
+  }
+
   return (
     <div
       className="wrapper justify-content-center d-flex flex-column rounded w-100 h-100" style={{userSelect:'none',fontSize:20}}
     >
     <div className='login-wrapper justify-content-center shadow border border-2 rounded-4 ' style={{width:1000,maxHeight:350,backgroundColor:'white'}} >
     <div className='d-flex w-100 justify-content-start mb-2'>
-      <Button onClick={(e)=>navigate('/consultar/certificado')} variant='contained'><RiArrowGoBackFill className="me-1" />Volver</Button>
+      <Button onClick={(e)=>window.history.back(e)} variant='contained'><RiArrowGoBackFill className="me-1" />Volver</Button>
     </div> 
+      {/* <Button variant='contained' onClick={convertir}>prueba</Button> */}
       <DataTable
         className="bg-light text-center border border-2 h-100 w-100"
         style={{fontSize:20}}
         columns={columns}
-        data={terceros}
+        /* data={generar} */
+        data={dataTable}
         fixedHeaderScrollHeight={200}
         progressPending={loading}
         progressComponent={
@@ -529,11 +889,12 @@ export default function TableCertificados({ terceros, loading }) {
         dense
         striped
         fixedHeader
+        paginationTotalRows={dataTable}
         noDataComponent={
           <div style={{padding: 24}}>Ningún resultado encontrado...</div>} 
       />
       <div className='d-flex w-100 justify-content-center mt-2'>
-        <Button variant='contained' color="success" className='me-4' onClick={handleOpenModalRIVA}>Certificado ReteIva</Button>
+        <Button variant='contained' color="error" className='me-4' onClick={handleOpenModalRIVA}>Generar Certificado</Button>
           <Modal
             open={openRIVA}
             onClose={handleCloseModalRIVA}
@@ -542,7 +903,7 @@ export default function TableCertificados({ terceros, loading }) {
           >
             <Box sx={style}>
               <div className='d-flex w-100 h-100 flex-column'>
-              <form onSubmit={handlerFiltroRiva}>
+              <form onSubmit={handlerBotonUnido}>
                 <center>
                 <h1 className='text-danger'>GENERAR CERTIFICADO</h1>
                 </center>
@@ -588,14 +949,14 @@ export default function TableCertificados({ terceros, loading }) {
                 </div>
                 <center>
                 <div className='w-100 justify-content-center mt-2'>
-                  <button onSubmit={handlerFiltroRiva}>Enviar</button>
+                  <button onSubmit={handlerBotonUnido}>Enviar</button>
                 </div>
                 </center>
                 </form>
               </div>
             </Box>
           </Modal>
-        <Button onClick={handleOpenModalRICA} variant='contained' color="info" className='me-4'>Certificado ReteIca</Button>
+        {/* <Button onClick={handleOpenModalRICA} variant='contained' color="info" className='me-4'>Certificado ReteIca</Button>
           <Modal
               open={openRICA}
               onClose={handleCloseModalRICA}
@@ -656,8 +1017,8 @@ export default function TableCertificados({ terceros, loading }) {
                 </form>
               </div>
               </Box>
-            </Modal>
-        <Button onClick={handleOpenModalRFTE} variant='contained' color="error" >Certificado retefuente</Button>
+            </Modal> */}
+        {/* <Button onClick={handleOpenModalRFTE} variant='contained' color="error" >Certificado retefuente</Button>
           <Modal
               open={openRFTE}
               onClose={handleCloseModalRFTE}
@@ -717,7 +1078,7 @@ export default function TableCertificados({ terceros, loading }) {
                 </form>
               </div>
               </Box>
-            </Modal>
+            </Modal> */}
       </div>
       </div>
     </div>

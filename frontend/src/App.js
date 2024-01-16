@@ -60,7 +60,7 @@ import MostrarPVJ from './pages/mostrarPVJ';
 import PreAprovacionNatural from './pages/preAprovacionNatural';
 import ConsultarCertificado from './pages/consultarCertificado';
 import InfoCertificado from './pages/infoCertificado';
-
+import GenerateCertificado from './pages/generateCertificado';
 
 function App() {
   return(
@@ -132,6 +132,7 @@ function App() {
         <Route path='/credito/persona/natural' element={<PrivateRoute component={CreditoPersonaNatural}/>}/>
         <Route path='/consultar/certificado' element={<PrivateRoute component={ConsultarCertificado}/>}/>
         <Route path='/informacion/tercero/certificados' element={<PrivateRoute component={InfoCertificado}/>}/>
+        <Route path='/generar/certificados' element={<PrivateRoute component={GenerateCertificado}/>}/>
         <Route path='/credito/persona/juridica' element={<PrivateRoute component={CreditoPersonaJuridica}/>}/>
         <Route path='/pre/aprovacion/natural' element={<PrivateRoute component={PreAprovacionNatural}/>}/>
         <Route path='/Parqueaderos' element={<PrivateRoute component={Parqueaderos}/>} />

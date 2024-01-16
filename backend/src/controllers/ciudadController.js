@@ -12,6 +12,21 @@ const findAllCiudades = async (req, res, next) => {
   }
 }
 
+const findOneCiudad =async (req, res, next)=>{
+  try {
+    const { params: { city } } = req;
+    const data = await CiudadService.findByCodigo(city);
+
+    res.status(200).json({
+      message: 'OK',
+      data,
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
-  findAllCiudades
+  findAllCiudades,
+  findOneCiudad
 }
