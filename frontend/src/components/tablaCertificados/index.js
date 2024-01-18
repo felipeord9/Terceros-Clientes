@@ -106,20 +106,7 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
         width:150
       }
   ]
-  /* hallar los totales de la tabla */
-  /* const calculateTotal=(key)=>{
-    const filtrar = generar.filter((item)=>item.includes(key));
-    const suma=generar.reduce((acumular,item)=>{
-      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
-      return acumular + numeroNormal
-    })
-    const totalBase = suma.toLocaleString(undefined,{
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });  
-    return totalBase;
-  } */
-
+  /* hallar totales de valorRetenido y valorBase */
     const suma = generar.reduce((acumular, item)=>{
       const numeroNormal = parseFloat((item.valorRetenido).replace(/[,.]/g, ''))
       return acumular + numeroNormal;
@@ -142,8 +129,10 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     concepto:'',tasa:'',sumaValorBase:totalBase,ciudadIca:'',
     valorRetenido:totalRetenido}
 
+  /* tabla con total al final */
   const dataTable = [...generar,totalRow];
 
+  /* se formatea el fomulario */
   const cleanForm = () => {
     setUpdate({
       nombreSolicitante: "",
@@ -152,17 +141,8 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
       usuarioEnvio: ""
     })
   }
-  const [primero,setPrimero] = useState();
-  const botonPrueba = (e)=>{
-    e.preventDefault();
-    const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RICA'));
-    setPrimero(filtrar[0])
-    Swal.fire({
-      title:`${filtrar[0].cuenta}`
-    })
-  }
 
-  /* boton para RICA */
+  /* boton para todos los certificados */
   const [filtroRICA,setFiltroRICA]=useState([]);
   const [base,setBase] = useState(0);
   const [retenido,setRetenido] = useState(0);
@@ -699,8 +679,6 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     })
 
   }
-
-
   /*  */
   const [openRIVA,setOpenRIVA]=useState(false);
   const handleOpenModalRIVA=(e)=>{
@@ -789,6 +767,8 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     });
   }
   const [mostrarSpan,setMostrarSpan] = useState(false);
+
+  /* utilizar correo registrado en el input */
   const cambiarValorCorreo = (e) =>{
     e.preventDefault();
     const value = info.emailTercero
@@ -825,6 +805,7 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     }
   }
 
+  /* utilizar fecha actual sin la hora */
   const fechaActual = new Date();
   const formatoFecha = {
     day: 'numeric',
@@ -841,24 +822,6 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     });
   };
 
-  const prueba =(e)=>{
-    e.preventDefault();
-    const filtrar = terceros.filter((item)=>item.tipoCertificado.includes('RFTE'));
-    const suma = filtrar.reduce((acumular, item)=>{
-      const numeroNormal = parseFloat((item.base).replace(/'/g, '').replace(/,/g, ''))
-      return acumular + numeroNormal;
-    },0);
-    const resultadoFormateado = suma.toLocaleString(undefined,{
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    /* hallar el total retenido */
-    const sumaRetenido = filtrar.reduce((acumular,item)=>parseFloat(acumular) + parseFloat(item.valorRetenido),0);
-    Swal.fire({
-      title:`${suma} ------- ${resultadoFormateado}`
-    })
-  }
-
   return (
     <div
       className="wrapper justify-content-center d-flex flex-column rounded w-100 h-100" style={{userSelect:'none',fontSize:20}}
@@ -867,7 +830,6 @@ export default function TableCertificados({ terceros, loading, ciudad }) {
     <div className='d-flex w-100 justify-content-start mb-2'>
       <Button onClick={(e)=>window.history.back(e)} variant='contained'><RiArrowGoBackFill className="me-1" />Volver</Button>
     </div> 
-      {/* <Button variant='contained' onClick={convertir}>prueba</Button> */}
       <DataTable
         className="bg-light text-center border border-2 h-100 w-100"
         style={{fontSize:20}}

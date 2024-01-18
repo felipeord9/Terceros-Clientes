@@ -95,14 +95,17 @@ export default function MenuPrincipalProveedores(){
         color: hover ? 'white':'black',
         padding: '10px',
         cursor: 'pointer',
-        height:170,width:260,
+        height:170,
+        width:260,
         fontSize:21,
         border: hover ? 'solid #D92121': 'solid #B9B9B9',
+        transform: hover ? 'scale(1.1)' : 'scale(1)',
+        transition: 'all 0.3s ease',
       };
     
       return (
         <button
-          className="rounded-2  me-3"
+          className="rounded-2  me-4"
           style={buttonStyle}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}

@@ -70,7 +70,8 @@ const sendCertificado = async (body)=>{
   let miConversor = new ClaseConversor();
   const valor = body.retenidoFinal;
   const numeroNormal = valor.replace(/[,.']/g, "");
-  var letras = miConversor.convertToText(numeroNormal);
+  var resultado = Math.floor(numeroNormal/100)
+  var letras = miConversor.convertToText(resultado);  
   /* const valor = body.retenidoFinal;
   const numeroNormal = valor.replace(/[,.']/g, "");
   const letras = numeroALetras.NumerosALetras(numeroNormal) */
@@ -206,9 +207,9 @@ const sendCertificado = async (body)=>{
               </table>
             </div>
             <br/>
-            <p style="margin: 0; width: 100%; font-size: 16px; "><strong style="margin-right: 0.5rem; font-size: 12px">Valor Retenido: </strong>${
-              letras
-            } Pesos</p>
+            <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
+              letras.toUpperCase()
+            } PESOS</p>
             <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
@@ -230,16 +231,16 @@ const sendCertificado = async (body)=>{
       console.log(`PDF generado en: ${res.filename}`);
       // Configura el transporte del correo electrónico
       const transporter = nodemailer.createTransport({
-        host: 'mail.granlangostino.net',
+        host: 'smtp.gmail.com',
           port: 465,
           secure: true,
           auth: {
-            user: 'pedidos@granlangostino.net',
-            pass: 'lango2023'
+            user: 'oficialdecumplimiento@granlangostino.com',
+            pass: 'Ofici4l@2024'
           }
       });
       const message = {
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de retención por ICA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
@@ -280,7 +281,7 @@ const sendCertificado = async (body)=>{
         `,
       };
       const auto ={
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de retención por ICA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
@@ -329,7 +330,8 @@ const certificadoRfte = async(body)=>{
   let miConversor = new ClaseConversor();
   const valor = body.retenidoFinal;
   const numeroNormal = valor.replace(/[,.']/g, "");
-  var letras = miConversor.convertToText(numeroNormal);
+  var resultado = Math.floor(numeroNormal/100)
+  var letras = miConversor.convertToText(resultado);
   try{
     function crearArchivoHTML() {
       const html = `
@@ -430,41 +432,38 @@ const certificadoRfte = async(body)=>{
               <table style="width: 100%; height: auto;">
                 <thead>
                   <tr>
-                  <th style="width: 340px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
-                  <th style="width: 45px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
-                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">CIUDAD ICA</th>
-                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
+                  <th style="width: 360px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
+                  <th style="width: 60px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
+                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
+                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${body.filtro.map((elem) => {
                     return `
                         <tr>
-                          <td style="width: 340px; font-size: 12px">${elem.concepto}</td>
-                          <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
-                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">${elem.ciudadIca}</td>
-                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
+                          <td style="width: 360px; font-size: 12px">${elem.concepto}</td>
+                          <td style="width: 60px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
+                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
+                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
                         </tr>
                         `;
                   })}
                 </tbody>
                 <tfoot>
                   <tr>
-                  <td style="width: 340px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
-                  <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">----------</td>
-                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
-                  <td style="justify-content: center; text-align: center; font-size: 12px">----------------</td>
-                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
+                  <td style="width: 360px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
+                  <td style="width: 60px; justify-content: center; text-align: center; font-size: 12px">----------</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             <br/>
-            <p style="margin: 0; width: 100%; font-size: 16px; "><strong style="margin-right: 0.5rem; font-size: 12px">Valor Retenido: </strong>${
-              letras
-            } Pesos</p>
+            <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
+              letras.toUpperCase()
+            } PESOS</p>
             <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
@@ -486,16 +485,16 @@ const certificadoRfte = async(body)=>{
       console.log(`PDF generado en: ${res.filename}`);
       // Configura el transporte del correo electrónico
       const transporter = nodemailer.createTransport({
-        host: 'mail.granlangostino.net',
+        host: 'smtp.gmail.com',
           port: 465,
           secure: true,
           auth: {
-            user: 'pedidos@granlangostino.net',
-            pass: 'lango2023'
+            user: 'oficialdecumplimiento@granlangostino.com',
+            pass: 'Ofici4l@2024'
           }
       });
       const message = {
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de retención en la fuente - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
@@ -535,7 +534,7 @@ const certificadoRfte = async(body)=>{
         </p>`,
       };
       const auto ={
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de  retención en la fuente - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
@@ -583,7 +582,8 @@ const sendCertificadoIva = async (body)=>{
   let miConversor = new ClaseConversor();
   const valor = body.retenidoFinal;
   const numeroNormal = valor.replace(/[,.']/g, "");
-  var letras = miConversor.convertToText(numeroNormal);
+  var resultado = Math.floor(numeroNormal/100)
+  var letras = miConversor.convertToText(resultado);
   try{
     function crearArchivoHTML() {
       const html = `
@@ -679,41 +679,38 @@ const sendCertificadoIva = async (body)=>{
               <table style="width: 100%; height: auto;">
                 <thead>
                   <tr>
-                  <th style="width: 340px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
-                  <th style="width: 45px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
-                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
-                  <th style="justify-content: center; text-align: center; font-size: 12px">CIUDAD ICA</th>
-                  <th style="width: 97px; justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
+                  <th style="width: 360px; font-size: 12px">CONCEPTO DEL PAGO SUJETO A RETENCION</th>
+                  <th style="width: 60px; justify-content: center; text-align: center; font-size: 12px">TASA %</th>
+                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR BASE</th>
+                  <th style="justify-content: center; text-align: center; font-size: 12px">VALOR RETENIDO</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${body.filtro.map((elem) => {
                     return `
                         <tr>
-                          <td style="width: 340px; font-size: 12px">${elem.concepto}</td>
-                          <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
-                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
-                          <td style="justify-content: center; text-align: center; font-size: 12px">${elem.ciudadIca}</td>
-                          <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
+                          <td style="width: 360px; font-size: 12px">${elem.concepto}</td>
+                          <td style="width: 60px; justify-content: center; text-align: center; font-size: 12px">${elem.tasa} %</td>
+                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.base}</td>
+                          <td style="justify-content: center; text-align: center; font-size: 12px">$${elem.valorRetenido}</td>
                         </tr>
                         `;
                   })}
                 </tbody>
                 <tfoot>
                   <tr>
-                  <td style="width: 340px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
-                  <td style="width: 45px; justify-content: center; text-align: center; font-size: 12px">----------</td>
-                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
-                  <td style="justify-content: center; text-align: center; font-size: 12px">----------------</td>
-                  <td style="width: 97px; justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
+                  <td style="width: 360px; font-size: 12px"><strong style="font-size: 12px">TOTAL</strong></td>
+                  <td style="width: 60px; justify-content: center; text-align: center; font-size: 12px">----------</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">$ ${body.baseFinal}</td>
+                  <td style="justify-content: center; text-align: center; font-size: 12px">$ ${body.retenidoFinal}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             <br/>
-            <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">Valor Retenido: </strong>${
-              letras
-            } Pesos</p>
+            <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
+              letras.toUpperCase()
+            } PESOS</p>
             <br/><br/><br/><br/>
               <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
           </div>
@@ -734,16 +731,16 @@ const sendCertificadoIva = async (body)=>{
       console.log(`PDF generado en: ${res.filename}`);
       // Configura el transporte del correo electrónico
       const transporter = nodemailer.createTransport({
-        host: 'mail.granlangostino.net',
+        host: 'smtp.gmail.com',
           port: 465,
           secure: true,
           auth: {
-            user: 'pedidos@granlangostino.net',
-            pass: 'lango2023'
+            user: 'oficialdecumplimiento@granlangostino.com',
+            pass: 'Ofici4l@2024'
           }
       });
       const message = {
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEnvio, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de retención por IVA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},
@@ -783,7 +780,7 @@ const sendCertificadoIva = async (body)=>{
         </p>`,
       };
       const auto ={
-        from: 'Certificados@granlangostino.net',
+        from: 'oficialdecumplimiento@granlangostino.com',
         to: body.correoEmisor, // Coloca la dirección de correo del destinatario
         subject: 'Certificado de  retención por IVA - El Gran Langostino S.A.S.',
         text: `Cordial saludo ${body.nombreTercero},

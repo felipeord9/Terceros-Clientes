@@ -1,38 +1,11 @@
 import React, { useState, useContext, useEffect } from "react"
-import Logo from '../../assest/logo-gran-langostino.png'
-import useUser from '../../hooks/useUser';
 import { Navigate, useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
-import { Divider } from "@mui/material";
-import TextField from '@mui/material/TextField';
 import { Fade } from "react-awesome-reveal";
-import { validarCliente } from "../../services/clienteService"; 
-import { validarProveedor } from "../../services/proveedorService";
-import Swal from "sweetalert2";
 import AuthContext from "../../context/authContext";
-import Button from '@mui/material/Button';
-/* import { Button } from "react-bootstrap"; */
-import { RiArrowGoBackFill } from "react-icons/ri";
-import { IoMdPersonAdd } from "react-icons/io";
 
 export default function MenuPrincipalAdmin(){
   const { user, setUser } = useContext(AuthContext);
   const navigate =useNavigate()
-    const [cedula,setCedula] = useState('');
-    const [search,setSearch]=useState({
-      cedula:'',
-    })
-    const handlerChangeSearch = (e) => {
-      const { id, value } = e.target;
-      setSearch({
-        ...search,
-        [id]: value,
-      });
-    };
 
     const handleClickInicio=(e)=>{
       e = e.target.value
@@ -56,39 +29,14 @@ export default function MenuPrincipalAdmin(){
       }
     }
 
-    const TextOfBinary =({valor})=>{
-      const [labelColor, setLabelColor] = useState('');
-      const [nuevoTexto,setNuevoTexto] = useState('');
-      /* const valorBinario = valor */
-      /* const nuevoTexto = valor ? 'Fue cargado':'No fue cargado'; */
-      useEffect(()=>{
-        if(valor=== 1){
-          setLabelColor('#008F39')
-          setNuevoTexto('Cargado')
-        }else if(valor===0){
-          setLabelColor('#CB3234')
-          setNuevoTexto('No fue cargado')
-        }else{
-          setLabelColor(null)
-          setNuevoTexto('')
-        }
-      },[valor]);
-      return (
-        <label className="" style={{color:labelColor, height:18}}><strong>{nuevoTexto}</strong></label>
-      )
-    }
-
     const BotonColorCambiante = ({ children }) => {
       const [hover, setHover] = useState(false);
-    
       const handleMouseEnter = () => {
         setHover(true);
       };
-    
       const handleMouseLeave = () => {
         setHover(false);
       };
-    
       const buttonStyle = {
         backgroundColor: hover ? '#D92121' : 'whitesmoke', // Cambia los colores según tus necesidades
         color: hover ? 'white':'black',
@@ -98,11 +46,13 @@ export default function MenuPrincipalAdmin(){
         width:220,
         fontSize:21,
         border: hover ? 'solid #D92121': 'solid #B9B9B9',
+        transform: hover ? 'scale(1.1)' : 'scale(1)',
+        /* filter: hover ? 'brightness(80%)' : 'brightness(100%)', */
+        transition: 'all 0.3s ease',
       };
-    
       return (
         <button
-          className="rounded-2  me-3"
+          className="rounded-2  me-4"
           style={buttonStyle}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -121,13 +71,13 @@ export default function MenuPrincipalAdmin(){
     <Fade cascade damping={0.1} direction="down" triggerOnce='true'>
     <div className="d-flex flex-row">
         <center>
-        <div className="m-3" style={{border:10,borderColor:'#D92121'}}>
-        <div className=" mb-3">
+        <div className="ms-3 mt-3 mb-3" style={{border:10,borderColor:'#D92121'}}>
+        <div className=" mb-4">
           <a onClick={(e)=>handleClickInicio(e)}><BotonColorCambiante>Creación Tercero</BotonColorCambiante></a>
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta Tercero</BotonColorCambiante></a>
           <a onClick={(e)=>navigate('/sucursales')}><BotonColorCambiante>Creación sucursal</BotonColorCambiante></a>
         </div>
-        <div className="d-flex flex-row mb-3" >
+        <div className="d-flex flex-row mb-4" >
           <a onClick={(e)=>handleClickBack(e)}><BotonColorCambiante>Consulta solicitudes</BotonColorCambiante></a>
           <a onClick={(e)=>navigate('/consultar/certificado')}><BotonColorCambiante>Generar Certificados</BotonColorCambiante></a>
           {/* <div className="d-flex justify-content-center align-items-center me-3 mb-3" style={{height:120,width:223}}>

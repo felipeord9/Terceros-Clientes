@@ -57,7 +57,8 @@ const sendRecovery = async (email) => {
       expiresIn: '15min'
     })
     const mail = {
-      from: 'Clientes@granlangostino.net',
+      /* from: 'Clientes@granlangostino.net', */
+      from: 'oficialdecumplimiento@granlangostino.com',
       to: user.email,
       subject: 'Recuperación de contraseña',
       html: `<b>Ingresa a este link para reestablecer tu contraseña: ${config.recoveryUrl}/${token}</b>`
