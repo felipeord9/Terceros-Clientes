@@ -210,8 +210,14 @@ const sendCertificado = async (body)=>{
             <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
               letras.toUpperCase()
             } PESOS</p>
-            <br/><br/><br/><br/>
-              <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px"><strong style="margin-right: 0.5rem; font-size: 10px">ESTE CERTIFICADO SE EXPEDIDO EL:</strong>${body.fechaFormateada}</p>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px">
+                <strong style="margin-right: 0.5rem; font-size: 10px">
+                        ** OBSERVACIONES:</strong>
+                - Forma Continua Impresa por Computador No Necesita Firma Autografa (Art. 10 D.R. 836/91,
+                 recopilado Art. 1.6.1.12.12 del DUT 1625 de 2016-10-11, que regula el contenido del certificado.</p>
           </div>
         </div>
       </body>
@@ -252,32 +258,158 @@ const sendCertificado = async (body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
-        <p>Señores</p>
-        <p>${body.nombreTercero}</p>
-        <br/>
-        <p>Cordial saludo </p>
-        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR ICA del año agravable 2023.</p>
-        <br/>
-        <p>Cualquier duda o información adicional, por favor responder a:</p>
-        <p>${body.usuarioEmisor}</p>
-        <p>${body.correoEmisor}</h6>
-        <p>Tels. 695 46 78 Ext. 104</p>
-        <br/><br/>
-        <p><u>Aviso Legal</u></p>
-          <p>
-            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
-            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
-            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
-            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
-            correo electrónico y todos los archivos adjuntos a éste contienen
-            información de carácter confidencial y/o uso privativo de EL GRAN
-            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
-            por error, por favor elimínelo y comuníquese con el remitente para
-            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
-            copia de la información ahí contenida, gracias. En caso contrario
-            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
-        </p>
+        html:`
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;700;900&display=swap"
+              rel="stylesheet"
+            />
+            <title>CERTIFICADO RETENCIÓN POR ICA</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;;
+                line-height: 1.5;
+                color: #333;
+                margin: 0;
+                padding: 0;
+              }
+
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              }
+
+              .header {
+                background-color: #f03c3c;
+                padding: 5px;
+                text-align: center;
+              }
+
+              .header h1 {
+                color: #fff;
+                font-size: medium;
+                margin: 0;
+              }
+
+              .invoice-details {
+                margin-top: 20px;
+              }
+
+              .invoice-details p {
+                margin: 0;
+              }
+
+              .logo {
+                text-align: right;
+              }
+
+              .logo img {
+                max-width: 200px;
+              }
+
+              .invoice-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+              }
+
+              .invoice-table th,
+              .invoice-table td {
+                padding: 10px;
+                border: 1px solid #ccc;
+                text-align: center;
+              }
+
+              .invoice-table th {
+                background-color: #f1f1f1;
+              }
+
+              .warning {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .warning p {
+                margin: 0;
+              }
+
+              .att {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .att p {
+                margin: 0;
+              }
+
+              .att a {
+                text-decoration: none;
+              }
+
+              .footer {
+                margin-top: 20px;
+                text-align: center;
+                color: #888;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>¡TU CERTIFICADO DE RETENCIÓN POR ICA HA SIDO GENERADO!</h1>
+              </div>
+
+              <div class="invoice-details">
+                <table width="100%">
+                  <tr>
+                    <td>
+                      <p><strong>Yumbo,${body.fechaFormateada}</strong></p>
+                      <br/>
+                      <p><strong>Señores</strong></p>
+                      <p><strong>${body.nombreTercero}</strong></p>
+                      <br/>
+                      <p><strong>Cordial saludo</strong></p>
+                      <br/>
+                      <p><strong>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR ICA del año agravable 2023.</strong></p>
+                      <br/>
+                      <p><strong>Cualquier duda o información adicional, por favor responder a:</strong></p>
+                      <br/>
+                      <p>${body.usuarioEmisor}</p>
+                      <p>${body.correoEmisor}</p>
+                      <p>Tels. 695 46 78 Ext. 104</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="footer">
+                <p><u>Aviso Legal</u></p>
+                <p>
+                  SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+                  DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+                  SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+                  AGRADECEMOS NOS INFORME AL RESPECTO.</p>
+                 <p> El contenido de este mensaje de
+                  correo electrónico y todos los archivos adjuntos a éste contienen
+                  información de carácter confidencial y/o uso privativo de EL GRAN
+                  LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+                  por error, por favor elimínelo y comuníquese con el remitente para
+                  informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+                  copia de la información ahí contenida, gracias. En caso contrario
+                  podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+                </p>
+              </div>
+            </div>
+          </body>
+        </html>
         `,
       };
       const auto ={
@@ -294,8 +426,7 @@ const sendCertificado = async (body)=>{
           }
         ],
         html:`<p>Cordial saludo trabajador,</p>
-
-        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} con certificado de retención por ICA, Porfavor revise la información y si hay alguna inconsistenica comuniquese con su jefe de área
+        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} el dia ${body.fechaFormateada} con certificado        de retención por ICA, Porfavor revise la información y si hay alguna inconsistenica comuniquese con su jefe de área
         o con el área de sistemas para brindarle una atención y solución.</p>`,
       }
       transporter.sendMail(message, (error, info) => {
@@ -464,8 +595,14 @@ const certificadoRfte = async(body)=>{
             <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
               letras.toUpperCase()
             } PESOS</p>
-            <br/><br/><br/><br/>
-              <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px"><strong style="margin-right: 0.5rem; font-size: 10px">ESTE CERTIFICADO SE EXPEDIDO EL:</strong>${body.fechaFormateada}</p>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px">
+                <strong style="margin-right: 0.5rem; font-size: 10px">
+                        ** OBSERVACIONES:</strong>
+                - Forma Continua Impresa por Computador No Necesita Firma Autografa (Art. 10 D.R. 836/91,
+                 recopilado Art. 1.6.1.12.12 del DUT 1625 de 2016-10-11, que regula el contenido del certificado.</p>
           </div>
         </div>
       </body>
@@ -506,32 +643,156 @@ const certificadoRfte = async(body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
-        <p>Señores</p>
-        <p>${body.nombreTercero}</p>
-        <br/>
-        <p>Cordial saludo </p>
-        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN EN LA FUENTE del año agravable 2023.</p>
-        <br/>
-        <p>Cualquier duda o información adicional, por favor responder a:</p>
-        <p>${body.usuarioEmisor}</p>
-        <p>${body.correoEmisor}</h6>
-        <p>Tels. 695 46 78 Ext. 104</p>
-        <br/><br/>
-        <p><u>Aviso Legal</u></p>
-          <p>
-            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
-            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
-            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
-            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
-            correo electrónico y todos los archivos adjuntos a éste contienen
-            información de carácter confidencial y/o uso privativo de EL GRAN
-            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
-            por error, por favor elimínelo y comuníquese con el remitente para
-            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
-            copia de la información ahí contenida, gracias. En caso contrario
-            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
-        </p>`,
+        html:`<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;700;900&display=swap"
+              rel="stylesheet"
+            />
+            <title>CERTIFICADO RETENCIÓN EN LA FUENTE</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;;
+                line-height: 1.5;
+                color: #333;
+                margin: 0;
+                padding: 0;
+              }
+
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              }
+
+              .header {
+                background-color: #f03c3c;
+                padding: 5px;
+                text-align: center;
+              }
+
+              .header h1 {
+                color: #fff;
+                font-size: medium;
+                margin: 0;
+              }
+
+              .invoice-details {
+                margin-top: 20px;
+              }
+
+              .invoice-details p {
+                margin: 0;
+              }
+
+              .logo {
+                text-align: right;
+              }
+
+              .logo img {
+                max-width: 200px;
+              }
+
+              .invoice-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+              }
+
+              .invoice-table th,
+              .invoice-table td {
+                padding: 10px;
+                border: 1px solid #ccc;
+                text-align: center;
+              }
+
+              .invoice-table th {
+                background-color: #f1f1f1;
+              }
+
+              .warning {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .warning p {
+                margin: 0;
+              }
+
+              .att {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .att p {
+                margin: 0;
+              }
+
+              .att a {
+                text-decoration: none;
+              }
+
+              .footer {
+                margin-top: 20px;
+                text-align: center;
+                color: #888;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>¡TU CERTIFICADO DE RETENCIÓN EN LA FUENTE HA SIDO GENERADO!</h1>
+              </div>
+              <div class="invoice-details">
+                <table width="100%">
+                  <tr>
+                    <td>
+                      <p><strong>Yumbo,${body.fechaFormateada}</strong></p>
+                      <br/>
+                      <p><strong>Señores</strong></p>
+                      <p><strong>${body.nombreTercero}</strong></p>
+                      <br/>
+                      <p><strong>Cordial saludo</strong></p>
+                      <br/>
+                      <p><strong>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN EN LA FUENTE del año agravable 2023.</strong></p>
+                      <br/>
+                      <p><strong>Cualquier duda o información adicional, por favor responder a:</strong></p>
+                      <br/>
+                      <p>${body.usuarioEmisor}</p>
+                      <p>${body.correoEmisor}</p>
+                      <p>Tels. 695 46 78 Ext. 104</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="footer">
+                <p><u>Aviso Legal</u></p>
+                <p>
+                  SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+                  DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+                  SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+                  AGRADECEMOS NOS INFORME AL RESPECTO.</p>
+                 <p> El contenido de este mensaje de
+                  correo electrónico y todos los archivos adjuntos a éste contienen
+                  información de carácter confidencial y/o uso privativo de EL GRAN
+                  LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+                  por error, por favor elimínelo y comuníquese con el remitente para
+                  informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+                  copia de la información ahí contenida, gracias. En caso contrario
+                  podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+                </p>
+              </div>
+            </div>
+          </body>
+        </html>`,
       };
       const auto ={
         from: 'oficialdecumplimiento@granlangostino.com',
@@ -548,7 +809,7 @@ const certificadoRfte = async(body)=>{
         ],
         html:`<p>Cordial saludo trabajador,</p>
 
-        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} con certificado 
+        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} el dia ${body.fechaFormateada} con certificado
         de retención en la fuente, Porfavor revise la información y si hay alguna inconsistenica comuniquese con su jefe de área
         o con el área de sistemas para brindarle una atención y solución.</p>`,
       }
@@ -711,8 +972,14 @@ const sendCertificadoIva = async (body)=>{
             <p style="margin: 0; width: 100%; font-size: 15px; "><strong style="margin-right: 0.5rem; font-size: 15px">VALOR RETENIDO: </strong>${
               letras.toUpperCase()
             } PESOS</p>
-            <br/><br/><br/><br/>
-              <h3 style="font-size: 15px">Este certificado se expide el: ${body.fechaFormateada}</h3>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px"><strong style="margin-right: 0.5rem; font-size: 10px">ESTE CERTIFICADO SE EXPEDIDO EL:</strong>${body.fechaFormateada}</p>
+            <br/><br/><br/>
+              <p style="margin:0; font-size: 10px">
+                <strong style="margin-right: 0.5rem; font-size: 10px">
+                        ** OBSERVACIONES:</strong>
+                - Forma Continua Impresa por Computador No Necesita Firma Autografa (Art. 10 D.R. 836/91,
+                 recopilado Art. 1.6.1.12.12 del DUT 1625 de 2016-10-11, que regula el contenido del certificado.</p>
           </div>
         </div>
       </body>
@@ -752,32 +1019,157 @@ const sendCertificadoIva = async (body)=>{
             path: 'uploads/html.pdf' // Ruta del archivo PDF que quieres enviar
           }
         ],
-        html:`<p>Yumbo, ${body.fechaFormateada}.</p>
-        <p>Señores</p>
-        <p>${body.nombreTercero}</p>
-        <br/>
-        <p>Cordial saludo </p>
-        <p>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR IVA del año agravable 2023.</p>
-        <br/>
-        <p>Cualquier duda o información adicional, por favor responder a:</p>
-        <p>${body.usuarioEmisor}</p>
-        <p>${body.correoEmisor}</h6>
-        <p>Tels. 695 46 78 Ext. 104</p>
-        <br/><br/>
-        <p><u>Aviso Legal</u></p>
-          <p>
-            SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
-            DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
-            SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
-            AGRADECEMOS NOS INFORME AL RESPECTO.</p> <p>El contenido de este mensaje de
-            correo electrónico y todos los archivos adjuntos a éste contienen
-            información de carácter confidencial y/o uso privativo de EL GRAN
-            LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
-            por error, por favor elimínelo y comuníquese con el remitente para
-            informarle de este hecho, absteniéndose de divulgar o hacer cualquier
-            copia de la información ahí contenida, gracias. En caso contrario
-            podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
-        </p>`,
+        html:`<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;700;900&display=swap"
+              rel="stylesheet"
+            />
+            <title>CERTIFICADO RETENCIÓN POR IVA</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;;
+                line-height: 1.5;
+                color: #333;
+                margin: 0;
+                padding: 0;
+              }
+
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              }
+
+              .header {
+                background-color: #f03c3c;
+                padding: 5px;
+                text-align: center;
+              }
+
+              .header h1 {
+                color: #fff;
+                font-size: medium;
+                margin: 0;
+              }
+
+              .invoice-details {
+                margin-top: 20px;
+              }
+
+              .invoice-details p {
+                margin: 0;
+              }
+
+              .logo {
+                text-align: right;
+              }
+
+              .logo img {
+                max-width: 200px;
+              }
+
+              .invoice-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+              }
+
+              .invoice-table th,
+              .invoice-table td {
+                padding: 10px;
+                border: 1px solid #ccc;
+                text-align: center;
+              }
+
+              .invoice-table th {
+                background-color: #f1f1f1;
+              }
+
+              .warning {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .warning p {
+                margin: 0;
+              }
+
+              .att {
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .att p {
+                margin: 0;
+              }
+
+              .att a {
+                text-decoration: none;
+              }
+
+              .footer {
+                margin-top: 20px;
+                text-align: center;
+                color: #888;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>¡TU CERTIFICADO DE RETENCIÓN POR IVA HA SIDO GENERADO!</h1>
+              </div>
+
+              <div class="invoice-details">
+                <table width="100%">
+                  <tr>
+                    <td>
+                      <p><strong>Yumbo,${body.fechaFormateada}</strong></p>
+                      <br/>
+                      <p><strong>Señores</strong></p>
+                      <p><strong>${body.nombreTercero}</strong></p>
+                      <br/>
+                      <p><strong>Cordial saludo</strong></p>
+                      <br/>
+                      <p><strong>Adjunto estamos remitiendo el CERTIFICADO DE RETENCIÓN POR IVA del año agravable 2023.</strong></p>
+                      <br/>
+                      <p><strong>Cualquier duda o información adicional, por favor responder a:</strong></p>
+                      <br/>
+                      <p>${body.usuarioEmisor}</p>
+                      <p>${body.correoEmisor}</p>
+                      <p>Tels. 695 46 78 Ext. 104</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="footer">
+                <p><u>Aviso Legal</u></p>
+                <p>
+                  SU CORREO LO TENEMOS REGISTRADO DENTRO DE NUESTRA BASE DE
+                  DATOS COMO CORREO/CONTACTO CORPORATIVO (DATO PÚBLICO), POR LO TANTO,
+                  SI NO DESEA SEGUIR RECIBIENDO INFORMACIÓN DE NUESTRA EMPRESA, LE
+                  AGRADECEMOS NOS INFORME AL RESPECTO.</p>
+                 <p> El contenido de este mensaje de
+                  correo electrónico y todos los archivos adjuntos a éste contienen
+                  información de carácter confidencial y/o uso privativo de EL GRAN
+                  LANGOSTINO S.A.S y de sus destinatarios. Si usted recibió este mensaje
+                  por error, por favor elimínelo y comuníquese con el remitente para
+                  informarle de este hecho, absteniéndose de divulgar o hacer cualquier
+                  copia de la información ahí contenida, gracias. En caso contrario
+                  podrá ser objeto de sanciones legales conforme a la ley 1273 de 2009.
+                </p>
+              </div>
+            </div>
+          </body>
+        </html>`,
       };
       const auto ={
         from: 'oficialdecumplimiento@granlangostino.com',
@@ -794,7 +1186,7 @@ const sendCertificadoIva = async (body)=>{
         ],
         html:`<p>Cordial saludo trabajador,</p>
 
-        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} con certificado 
+        <p>Este correo es una copia del correo que se le envió a ${body.nombreTercero} el dia ${body.fechaFormateada} con certificado        
         de retención por IVA, Porfavor revise la información y si hay alguna inconsistenica comuniquese con su jefe de área
         o con el área de sistemas para brindarle una atención y solución.</p>`,
       }
