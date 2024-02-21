@@ -45,6 +45,16 @@ const findByEmail = async (email) => {
   return user
 }
 
+const compararContraseña = async (body)=>{
+  const user = await findByEmail(body.email);
+  const passwordMatch  = await bcrypt.compare(body.password,user.password)
+  if(passwordMatch){
+    return user
+  }else{
+    throw boom.notFound('Contraseña actual incorrecta')
+  }
+}
+
 const create = async (data) => {
   const hash = bcrypt.hashSync(data.password, 10)
   const newUser = await models.User.create({
@@ -81,5 +91,6 @@ module.exports = {
   create,
   update,
   remove,
-  removeByName
+  removeByName,
+  compararContraseña,
 }

@@ -14,6 +14,7 @@ router
   .get("/", UserController.findAllUsers)
   .get("/:id", UserController.findOneUser)
   .post('/', UserController.createUser)
+  .post('/compare',UserController.compare)
   .patch('/:id', UserController.updateUser)
   .delete('/:id', UserController.deleteUser)
   .delete('/delete/:name', UserController.deleteByName);

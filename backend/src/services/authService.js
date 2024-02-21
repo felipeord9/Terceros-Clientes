@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const crypto = require('crypto');
+const cookie = require('cookie');
 
 const MailService = require('./mailService')
 const UserService = require('./userService')
@@ -23,11 +24,18 @@ const getUser = async (email, password) => {
 const signToken = (user) => {
   const payload = {
     sub: user.id,
-    role: user.role
+    role: user.role,
   }
-  const token = jwt.sign(payload, config.jwtSecret)
+  const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '1h' })
+  const cookieConfig = cookie.serialize('token', token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    maxAge: 3600, // Tiempo de vida de la cookie en segundos
+    path: '/' // Ruta donde la cookie estará disponible
+  });
   return {
-    user, token
+    user, token , cookieConfig
   }
 }
 

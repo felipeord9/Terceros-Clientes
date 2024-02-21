@@ -14,6 +14,16 @@ const findAllProveedores = async(req,res,next)=>{
     }
 }
 
+const send = async (req, res, next) => {
+  try {
+    const { body } = req
+    const data = await ProveedorService.sendMail(body)
+    res.status(200).json(data)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createProveedor = async (req,res,next)=>{
     try{
         const {body}=req
@@ -60,6 +70,11 @@ const createProveedor = async (req,res,next)=>{
             docOtros:body.docOtros,
             agencia:body.agencia,
             tipoFormulario:body.tipoFormulario,  
+            actulizado: body.actulizado,
+            fechaActualizacion:body.fechaActualizacion,
+            pendiente:body.pendiente,
+            rechazado:body.rechazado,
+            aprobado:body.aprobado,
         })
         res.status(201).json({
             message:'Created',
@@ -147,5 +162,5 @@ module.exports = {
     validar,
     updateProveedor,
     deleteByCedula,
-    
+    send,
 }

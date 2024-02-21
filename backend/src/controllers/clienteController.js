@@ -1,4 +1,5 @@
 const ClienteService = require('../services/clienteService')
+const { models } = require("../libs/sequelize");
 
 const findAllClientes = async(req,res,next)=>{
     try{
@@ -12,6 +13,30 @@ const findAllClientes = async(req,res,next)=>{
         console.log(error)
         next(error)
     }
+}
+
+const send = async (req, res, next) => {
+  try {
+    const { body } = req
+    const data = await ClienteService.sendMail(body)
+    res.status(200).json(data)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const duo = async(req,res,next)=>{
+  try{
+    const clientes = await models.Clientes.findAll()
+    const Proveedores = await models.Proveedores.findAll()
+    const combined = [...clientes,...Proveedores]
+    res.status(200).json(
+      combined
+    )
+  }catch(error){
+    console.log(error)
+    next(error)
+  }
 }
 
 const createCliente = async (req,res,next)=>{
@@ -77,6 +102,9 @@ const createCliente = async (req,res,next)=>{
             agencia:body.agencia,
             tipoFormulario:body.tipoFormulario,  
             nombreComercial: body.nombreComercial,
+            pendiente:body.pendiente,
+            rechazado:body.rechazado,
+            aprobado:body.aprobado,
         })
         res.status(201).json({
             message:'Created',
@@ -166,5 +194,6 @@ module.exports = {
     validar,
     updateCliente,
     deleteByCedula,
-
+    duo,
+    send,
 }

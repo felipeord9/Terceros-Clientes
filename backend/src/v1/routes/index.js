@@ -19,6 +19,10 @@ const DocumentRoutes = require('./documentRoutes')
 const SucursalRoutes = require('./sucursalRoutes')
 const PreAprovacionRoutes = require('./preAprovacionRoutes')
 const CertificadoRoutes = require('./certificadoRoutes')
+const TipoFOrmularioRoutes = require('./tipoFormularioRoutes')
+const CategoriaRechazoRoutes = require('./categoriasRechazoRoutes')
+const AprobacionRoutes = require('./aprobacionRoutes')
+const RechazoRoutes = require('./rechazoRoutes')
 
 function routerApi(app) {
     const router = express.Router()
@@ -38,9 +42,13 @@ function routerApi(app) {
     router.use('/documents',DocumentRoutes)
     router.use('/precios',PrecioRoutes)
     router.use('/agencies', AgencyRoutes)
+    router.use('/tipo/formulario', TipoFOrmularioRoutes)
+    router.use('/categorias/rechazo', CategoriaRechazoRoutes)
 
     router.use('/uploadMultiple',FileRoutes)
 
+    router.use('/Rechazo',RechazoRoutes)
+    router.use('/aprobacion',AprobacionRoutes)
     router.use('/regimen',RegimenRoutes)
     router.use('/sucursales',SucursalRoutes)
     router.use('/clientes',ClienteRoutes)

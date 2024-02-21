@@ -15,7 +15,10 @@ const { Bitacora,BitacoraSchema } = require('./bitacoraModel')
 const { Sucursal,SucursalSchema } = require('./sucursalModel')
 const { PreAprovacion,PreAprovacionSchema } = require('./preAprovacionModel')
 const { Certificado, CertificadoSchema} = require('./certificadoModel')
-
+const { TipoFormulario, TipoFormularioSchema} = require('./tipoFormularioModel')
+const { CategoriaRechazo, CategoriaRechazoSchema} = require('./categoriaRechazoModel')
+const { Aprobados, AprobadosSchema} = require('./aprobadosModel')
+const { Rechazados, RechazadosSchema} = require('./rechazadosModel')
 
 function setupModels(sequelize) {
   Certificado.init(CertificadoSchema,Certificado.config(sequelize))
@@ -35,8 +38,16 @@ function setupModels(sequelize) {
   Cliente.init(ClienteSchema,Cliente.config(sequelize))
   ActividadEconomica.init(ActividadEconomicaSchema,ActividadEconomica.config(sequelize))
   PreAprovacion.init(PreAprovacionSchema,PreAprovacion.config(sequelize))
+  TipoFormulario.init(TipoFormularioSchema,TipoFormulario.config(sequelize))
+  CategoriaRechazo.init(CategoriaRechazoSchema,CategoriaRechazo.config(sequelize))
+  Aprobados.init(AprobadosSchema,Aprobados.config(sequelize))
+  Rechazados.init(RechazadosSchema,Rechazados.config(sequelize))
 
 
+  Rechazados.associate(sequelize.models)
+  Aprobados.associate(sequelize.models)
+  CategoriaRechazo.associate(sequelize.models)
+  TipoFormulario.associate(sequelize.models)
   Certificado.associate(sequelize.models)
   PreAprovacion.associate(sequelize.models)
   Bitacora.associate(sequelize.models)

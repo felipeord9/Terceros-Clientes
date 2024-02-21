@@ -8,6 +8,7 @@ const router = express.Router()
 router
     .get('/',ProveedorController.findAllProveedores)
     .post('/',ProveedorController.createProveedor)
+    .post('/send/mail',ProveedorController.send)
     .get('/:id',ProveedorController.findOneProveedor)
     .get('/numero/:cedula',ProveedorController.validar)
     .patch('/update/:id',ProveedorController.updateProveedor)

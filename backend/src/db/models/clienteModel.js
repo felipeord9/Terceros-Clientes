@@ -303,6 +303,27 @@ const ClienteSchema={
         type:DataTypes.STRING,
         allowNull:true,
         field:'nombre_comercial'
+    },
+    actulizado:{
+        type:DataTypes.STRING,
+        allowNull:true,
+    },
+    fechaActualizacion:{
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: "fecha_actualizacion",
+    },
+    pendiente:{
+        type:DataTypes.STRING,
+        allowNull:true,
+    },
+    rechazado:{
+        type:DataTypes.STRING,
+        allowNull:true
+    },
+    aprobado:{
+        type:DataTypes.STRING,
+        allowNull:true,
     }
 };
 

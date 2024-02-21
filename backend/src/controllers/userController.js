@@ -27,6 +27,23 @@ const findOneUser = async (req, res, next) => {
   }
 };
 
+const compare = async (req, res, next) =>{
+  try{
+    const { body }=req
+    console.log(body)
+    const data = await UserService.compararContraseña(body)
+    res.status(201).json({
+      message: 'Created',
+      data
+    })
+  }catch (error) {
+    console.log(error.message)
+    res.status(500).json({
+      message:'contraseña actual incorrecta'
+    })
+  }
+}
+
 const createUser = async (req, res, next) => {
   try {
     const { body } = req
@@ -92,4 +109,5 @@ module.exports = {
   updateUser,
   deleteUser,
   deleteByName,
+  compare,
 };

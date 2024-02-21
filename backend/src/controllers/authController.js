@@ -1,10 +1,13 @@
 const AuthService = require('../services/authService')
+const cookie = require('cookie');
 
 const login = async (req, res, next) => {
   try {
     const { user } = req
     delete user.dataValues.recoveryToken
-    res.status(200).json(AuthService.signToken(user))
+    /* res.status(200).json(AuthService.signToken(user)) */
+    const data = AuthService.signToken(user)
+    res.status(200).json(data)
   } catch (error) {
     next(error)
   }

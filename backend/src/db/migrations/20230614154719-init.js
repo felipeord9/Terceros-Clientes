@@ -16,11 +16,18 @@ const { BITACORA_TABLE,BitacoraSchema } = require('../models/bitacoraModel')
 const { SUCURSAL_TABLE,SucursalSchema } = require('../models/sucursalModel')
 const { PRE_APROVACION_TABLE,PreAprovacionSchema } = require('../models/preAprovacionModel')
 const { CERTIFICADO_TABLE, CertificadoSchema } = require("../models/certificadoModel");
+const { TIPO_FORMULARIO_TABLE, TipoFormularioSchema } = require("../models/tipoFormularioModel");
+const { RECHAZADOS_TABLE, RechazadosSchema } = require("../models/rechazadosModel");
+const { CATEGORIA_RECHAZO_TABLE, CategoriaRechazoSchema } = require("../models/categoriaRechazoModel");
+const { APROBADOS_TABLE, AprobadosSchema } = require("../models/aprobadosModel");
 
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    await queryInterface.createTable(RECHAZADOS_TABLE,RechazadosSchema);
+    await queryInterface.createTable(CATEGORIA_RECHAZO_TABLE,CategoriaRechazoSchema);
+    await queryInterface.createTable(APROBADOS_TABLE,AprobadosSchema);
     await queryInterface.createTable(CERTIFICADO_TABLE,CertificadoSchema);
     await queryInterface.createTable(ACTIVIDAD_ECONOMICA_TABLE,ActividadEconomicaSchema);
     await queryInterface.createTable(SUCURSAL_TABLE,SucursalSchema);
@@ -38,9 +45,14 @@ module.exports = {
     await queryInterface.createTable(PRE_APROVACION_TABLE,PreAprovacionSchema);
     await queryInterface.createTable(AGENCY_TABLE, AgencySchema);
     await queryInterface.createTable(CLASIFICACION_TABLE,ClasificacionSchema);
+    await queryInterface.createTable(TIPO_FORMULARIO_TABLE,TipoFormularioSchema);
+
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable(RECHAZADOS_TABLE);
+    await queryInterface.dropTable(CATEGORIA_RECHAZO_TABLE);
+    await queryInterface.dropTable(APROBADOS_TABLE);
     await queryInterface.dropTable(CERTIFICADO_TABLE);
     await queryInterface.dropTable(PRE_APROVACION_TABLE);
     await queryInterface.dropTable(SUCURSAL_TABLE);
@@ -58,5 +70,7 @@ module.exports = {
     await queryInterface.dropTable(CLASIFICACION_TABLE);
     await queryInterface.dropTable(DOCUMENT_TABLE);
     await queryInterface.dropTable(CLIENTE_TABLE);
+    await queryInterface.dropTable(TIPO_FORMULARIO_TABLE);
+
   },
 };

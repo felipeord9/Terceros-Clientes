@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const routerApi = require("./v1/routes");
@@ -20,6 +21,7 @@ const app = express();
 // Configuraciones de la aplicación
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors())
 /* app.use(fileUpload()) */
 app.use(morgan("dev"))

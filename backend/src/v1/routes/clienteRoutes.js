@@ -7,7 +7,9 @@ const router = express.Router()
 
 router
     .get('/',ClienteController.findAllClientes)
+    .get('/duo', ClienteController.duo)
     .post('/',ClienteController.createCliente)
+    .post('/send/mail',ClienteController.send)
     .get('/:id',ClienteController.findOneCliente)
     .get('/numero/:cedula',ClienteController.validar)
     .patch('/update/:id',ClienteController.updateCliente)
