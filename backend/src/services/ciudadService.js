@@ -14,7 +14,37 @@ const findByCodigo = async (city)=>{
   return ciudad
 }
 
+const create = async (body) =>{
+  const newCiudad = models.ciudades.create(body)
+  return newCiudad
+}
+
+const findOne = async (id) => {
+  const ciudad = await models.ciudades.findByPk(id)
+
+  if(!ciudad) throw boom.notFound('ciudad no encontrado')
+
+  return ciudad
+}
+
+const update = async (id, changes) => {
+  const ciudad = await findOne(id)
+  const updatedCiudad = await ciudad.update(changes)
+
+  return updatedCiudad
+}
+
+const remove = async (id) => {
+  const ciudad = await findOne(id)
+  await ciudad.destroy(id)
+  return id
+}
+
 module.exports = {
   find,
-  findByCodigo
+  findByCodigo,
+  findOne,
+  create,
+  update,
+  remove,
 }

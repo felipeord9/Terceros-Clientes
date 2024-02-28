@@ -107,7 +107,7 @@ router.post('/', upload.fields([
   const folderPath = path.join(`C:/Clientes-Proveedores/${folderName}`);
 
 async function crearCarpetaLocal(){
-if (!fs.existsSync(folderPath)) {
+  if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
   }
   for (const fileInputName in req.files){
@@ -243,8 +243,6 @@ if (!fs.existsSync(folderPath)) {
     }
   });
   }
-  /* await renombrar();
-  await enviar(); */
 
   //de esta manera controlamos la ejecucion de las funciones
   async function ejecutar(){

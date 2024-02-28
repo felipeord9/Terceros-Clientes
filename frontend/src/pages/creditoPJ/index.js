@@ -505,7 +505,7 @@ const [fileInputs, setFileInputs] = useState([]);
           detalleTributario: detalle.id,
           numeroDocRepLegal: search.numeroDocRepLegal,
           nameRepLegal: search.nameRepLegal.toUpperCase(),
-          tipoDocRepLegal: document.codigo,
+          tipoDocRepLegal:document.codigo,
           apellidoRepLegal: search.apellidoRepLegal.toUpperCase(),
           valorEstimado: search.valorEstimado,
           precioSugerido: precio.description,
@@ -672,7 +672,7 @@ const [fileInputs, setFileInputs] = useState([]);
           title: "¡Ha ocurrido un error!",
             text: `
               Hubo un error al momento de registrar el cliente, intente de nuevo.
-              Si el problema persiste por favor comuniquese con el área de sistemas.`,
+              Si el problema persiste por favor comuniquese con el área de sistemas. ${err}`,
             icon: "error",
             confirmButtonText: "Aceptar"});
       })
